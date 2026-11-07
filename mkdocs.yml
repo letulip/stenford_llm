@@ -53,6 +53,17 @@ nav:
       - "7. Агенты: RAG, инструменты, MCP": lectures/07-agentic-llms-rag-tools.md
       - "8. Оценка LLM": lectures/08-llm-evaluation.md
       - "9. Итоги и тренды: ViT, диффузионные LLM": lectures/09-recap-current-trends.md
+  - Актуализация 2026:
+      - updates/index.md
+      - "1. Трансформер": updates/01-transformer.md
+      - "2. Модели на базе трансформера и приёмы": updates/02-transformer-models-tricks.md
+      - "3. LLM: MoE, декодирование, промптинг": updates/03-llms-moe-decoding-prompting.md
+      - "4. Обучение LLM": updates/04-llm-training.md
+      - "5. Дообучение: RLHF, PPO, DPO": updates/05-llm-tuning-rlhf-dpo.md
+      - "6. Reasoning-модели и GRPO": updates/06-llm-reasoning.md
+      - "7. Агенты: RAG, инструменты, MCP": updates/07-agentic-llms-rag-tools.md
+      - "8. Оценка LLM": updates/08-llm-evaluation.md
+      - "9. Итоги и тренды: ViT, диффузионные LLM": updates/09-recap-current-trends.md
   - Транскрипты (EN):
       - "1. Transformer": transcripts/01-transformer.md
       - "2. Transformer-Based Models & Tricks": transcripts/02-transformer-models-tricks.md

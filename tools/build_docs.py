@@ -103,12 +103,16 @@ def main():
             banner = ('!!! info "Актуализация к ноябрю 2026"\n'
                       f'    Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: '
                       f'[читать актуализацию](../updates/{slug}.md).\n')
-            # insert after the navigation line (first line that links to ../index.md)
             lines = text.splitlines()
-            for k, l in enumerate(lines):
-                if "](../index.md)" in l:
-                    lines[k:k + 1] = [l, "", banner]
-                    break
+            # prefer replacing the source link line (inserted by build_updates_index.py) …
+            idx = next((k for k, l in enumerate(lines) if l.startswith("**Актуализация (ноябрь 2026):**")), None)
+            if idx is not None:
+                lines[idx] = banner
+            else:  # … otherwise insert after the navigation line
+                for k, l in enumerate(lines):
+                    if "](../index.md)" in l:
+                        lines[k:k + 1] = [l, "", banner]
+                        break
             text = "\n".join(lines)
         write(os.path.join(DOCS, "lectures", f"{slug}.md"), text)
 
