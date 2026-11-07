@@ -1,0 +1,63 @@
+{
+  "id": "k5Fh-UgTuCo",
+  "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 6 - LLM Reasoning",
+  "webpage_url": "https://www.youtube.com/watch?v=k5Fh-UgTuCo",
+  "uploader": "Stanford Online",
+  "upload_date": "20251114",
+  "duration": 6430,
+  "description": "For more information about Stanford’s graduate programs, visit: https://online.stanford.edu/graduate-education\n\nNovember 7, 2025\nThis lecture covers: \n• Reasoning models\n• RL for reasoning\n• GRPO\n• Scaling\n\nTo follow along with the course schedule and syllabus, visit: https://cme295.stanford.edu/syllabus/\n\nChapters:\n00:00:00 Introduction\n00:12:43 Reasoning models\n00:27:49 Benchmarks\n00:32:04 Pass@k metric\n00:48:07 Scaling with RL\n00:57:44 GRPO\n01:06:03 Comparison between GRPO and PPO\n01:16:14 Length bias\n01:25:00 DAPO, Dr. GRPO\n01:29:38 DeepSeek R1 recipe\n\nAfshine Amidi is an Adjunct Lecturer at Stanford University.\n\nShervine Amidi is an Adjunct Lecturer at Stanford University.\n\nView the course playlist: https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy",
+  "chapters": [
+    {
+      "start_time": 0,
+      "title": "Introduction",
+      "end_time": 763
+    },
+    {
+      "start_time": 763,
+      "title": "Reasoning models",
+      "end_time": 1669
+    },
+    {
+      "start_time": 1669,
+      "title": "Benchmarks",
+      "end_time": 1924
+    },
+    {
+      "start_time": 1924,
+      "title": "Pass@k metric",
+      "end_time": 2887
+    },
+    {
+      "start_time": 2887,
+      "title": "Scaling with RL",
+      "end_time": 3464
+    },
+    {
+      "start_time": 3464,
+      "title": "GRPO",
+      "end_time": 3963
+    },
+    {
+      "start_time": 3963,
+      "title": "Comparison between GRPO and PPO",
+      "end_time": 4574
+    },
+    {
+      "start_time": 4574,
+      "title": "Length bias",
+      "end_time": 5100
+    },
+    {
+      "start_time": 5100,
+      "title": "DAPO, Dr. GRPO",
+      "end_time": 5378
+    },
+    {
+      "start_time": 5378,
+      "title": "DeepSeek R1 recipe",
+      "end_time": 6430
+    }
+  ],
+  "view_count": 101752,
+  "like_count": 1388
+}

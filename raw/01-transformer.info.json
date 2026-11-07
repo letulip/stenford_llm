@@ -1,0 +1,58 @@
+{
+  "id": "Ub3GoFaUcds",
+  "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 1 - Transformer",
+  "webpage_url": "https://www.youtube.com/watch?v=Ub3GoFaUcds",
+  "uploader": "Stanford Online",
+  "upload_date": "20251017",
+  "duration": 6119,
+  "description": "For more information about Stanford’s graduate programs, visit: https://online.stanford.edu/graduate-education\n\nSeptember 26, 2025\nThis lecture covers: \n• Background on NLP and tasks\n• Tokenization\n• Embeddings\n• Word2vec, RNN, LSTM\n• Attention mechanism\n• Transformer architecture\n\nTo follow along with the course schedule and syllabus, visit: https://cme295.stanford.edu/syllabus/\n\nChapters:\n00:00:00 Introduction\n00:03:54 Class logistics\n00:09:40 NLP overview\n00:22:57 Tokenization\n00:30:28 Word representation\n00:53:23 Recurrent neural networks\n01:06:47 Self-attention mechanism\n01:13:53 Transformer architecture\n01:29:53 Detailed example\n\nAfshine Amidi is an Adjunct Lecturer at Stanford University.\n\nShervine Amidi is an Adjunct Lecturer at Stanford University.\n\nView the course playlist: https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy",
+  "chapters": [
+    {
+      "start_time": 0,
+      "title": "Introduction",
+      "end_time": 234
+    },
+    {
+      "start_time": 234,
+      "title": "Class logistics",
+      "end_time": 580
+    },
+    {
+      "start_time": 580,
+      "title": "NLP overview",
+      "end_time": 1377
+    },
+    {
+      "start_time": 1377,
+      "title": "Tokenization",
+      "end_time": 1828
+    },
+    {
+      "start_time": 1828,
+      "title": "Word representation",
+      "end_time": 3203
+    },
+    {
+      "start_time": 3203,
+      "title": "Recurrent neural networks",
+      "end_time": 4007
+    },
+    {
+      "start_time": 4007,
+      "title": "Self-attention mechanism",
+      "end_time": 4433
+    },
+    {
+      "start_time": 4433,
+      "title": "Transformer architecture",
+      "end_time": 5393
+    },
+    {
+      "start_time": 5393,
+      "title": "Detailed example",
+      "end_time": 6119
+    }
+  ],
+  "view_count": 1290143,
+  "like_count": 18650
+}

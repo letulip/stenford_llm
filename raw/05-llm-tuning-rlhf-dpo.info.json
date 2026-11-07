@@ -1,0 +1,83 @@
+{
+  "id": "PmW_TMQ3l0I",
+  "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 5 - LLM tuning",
+  "webpage_url": "https://www.youtube.com/watch?v=PmW_TMQ3l0I",
+  "uploader": "Stanford Online",
+  "upload_date": "20251114",
+  "duration": 6461,
+  "description": "For more information about Stanford’s graduate programs, visit: https://online.stanford.edu/graduate-education\n\nOctober 31, 2025\nThis lecture covers: \n• Preference tuning\n• RLHF overview\n• Reward modeling\n• RL approaches (PPO and variants)\n• DPO\n\nTo follow along with the course schedule and syllabus, visit: https://cme295.stanford.edu/syllabus/\n\nChapters:\n00:00:00 Introduction\n00:04:50 Preference tuning\n00:11:31 Data collection\n00:17:43 RLHF overview\n00:28:24 Reward model\n00:29:46 Bradley-Terry formulation\n00:46:02 Reinforcement learning\n00:53:54 PPO\n00:57:56 Advantage, value function\n01:03:39 PPO variants: Clip, KL-penalty\n01:16:20 Challenges\n01:19:58 On-policy vs off-policy\n01:22:43 Best-of-N\n01:29:47 DPO\n\nAfshine Amidi is an Adjunct Lecturer at Stanford University.\n\nShervine Amidi is an Adjunct Lecturer at Stanford University.\n\nView the course playlist: https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy",
+  "chapters": [
+    {
+      "start_time": 0,
+      "title": "Introduction",
+      "end_time": 290
+    },
+    {
+      "start_time": 290,
+      "title": "Preference tuning",
+      "end_time": 691
+    },
+    {
+      "start_time": 691,
+      "title": "Data collection",
+      "end_time": 1063
+    },
+    {
+      "start_time": 1063,
+      "title": "RLHF overview",
+      "end_time": 1704
+    },
+    {
+      "start_time": 1704,
+      "title": "Reward model",
+      "end_time": 1786
+    },
+    {
+      "start_time": 1786,
+      "title": "Bradley-Terry formulation",
+      "end_time": 2762
+    },
+    {
+      "start_time": 2762,
+      "title": "Reinforcement learning",
+      "end_time": 3234
+    },
+    {
+      "start_time": 3234,
+      "title": "PPO",
+      "end_time": 3476
+    },
+    {
+      "start_time": 3476,
+      "title": "Advantage, value function",
+      "end_time": 3819
+    },
+    {
+      "start_time": 3819,
+      "title": "PPO variants: Clip, KL-penalty",
+      "end_time": 4580
+    },
+    {
+      "start_time": 4580,
+      "title": "Challenges",
+      "end_time": 4798
+    },
+    {
+      "start_time": 4798,
+      "title": "On-policy vs off-policy",
+      "end_time": 4963
+    },
+    {
+      "start_time": 4963,
+      "title": "Best-of-N",
+      "end_time": 5387
+    },
+    {
+      "start_time": 5387,
+      "title": "DPO",
+      "end_time": 6461
+    }
+  ],
+  "view_count": 90468,
+  "like_count": 1012
+}

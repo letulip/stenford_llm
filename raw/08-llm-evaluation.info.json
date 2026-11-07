@@ -1,0 +1,98 @@
+{
+  "id": "8fNP4N46RRo",
+  "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 8 - LLM Evaluation",
+  "webpage_url": "https://www.youtube.com/watch?v=8fNP4N46RRo",
+  "uploader": "Stanford Online",
+  "upload_date": "20251202",
+  "duration": 6565,
+  "description": "For more information about Stanford’s graduate programs, visit: https://online.stanford.edu/graduate-education\n\nNovember 21, 2025\nThis lecture covers: \n• LLM-as-a-judge overview\n• Best practices and benefits\n• Biases and pitfalls\n\nTo follow along with the course schedule and syllabus, visit: https://cme295.stanford.edu/syllabus/\n\nChapters:\n00:00:00 Introduction\n00:07:08 Inter-rater agreement metrics\n00:18:24 Rule-based metrics\n00:21:00 METEOR, BLEU ROUGE\n00:28:00 LLM-as-a-judge\n00:33:44 Structured outputs\n00:36:48 Variants\n00:38:47 Position, verbosity, self-enhancement bias\n00:47:22 Best practices\n00:54:06 Factuality\n01:00:15 Agent evaluation\n01:23:50 Benchmarks\n01:25:12 Knowledge with MMLU\n01:29:34 Reasoning AIME, PIQA\n01:33:57 Coding with SWE-bench\n01:36:15 Safety with HarmBench\n01:40:51 Agents with Tau-Bench\n\nAfshine Amidi is an Adjunct Lecturer at Stanford University.\n\nShervine Amidi is an Adjunct Lecturer at Stanford University.\n\nView the course playlist: https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy",
+  "chapters": [
+    {
+      "start_time": 0,
+      "title": "Introduction",
+      "end_time": 428
+    },
+    {
+      "start_time": 428,
+      "title": "Inter-rater agreement metrics",
+      "end_time": 1104
+    },
+    {
+      "start_time": 1104,
+      "title": "Rule-based metrics",
+      "end_time": 1260
+    },
+    {
+      "start_time": 1260,
+      "title": "METEOR, BLEU ROUGE",
+      "end_time": 1680
+    },
+    {
+      "start_time": 1680,
+      "title": "LLM-as-a-judge",
+      "end_time": 2024
+    },
+    {
+      "start_time": 2024,
+      "title": "Structured outputs",
+      "end_time": 2208
+    },
+    {
+      "start_time": 2208,
+      "title": "Variants",
+      "end_time": 2327
+    },
+    {
+      "start_time": 2327,
+      "title": "Position, verbosity, self-enhancement bias",
+      "end_time": 2842
+    },
+    {
+      "start_time": 2842,
+      "title": "Best practices",
+      "end_time": 3246
+    },
+    {
+      "start_time": 3246,
+      "title": "Factuality",
+      "end_time": 3615
+    },
+    {
+      "start_time": 3615,
+      "title": "Agent evaluation",
+      "end_time": 5030
+    },
+    {
+      "start_time": 5030,
+      "title": "Benchmarks",
+      "end_time": 5112
+    },
+    {
+      "start_time": 5112,
+      "title": "Knowledge with MMLU",
+      "end_time": 5374
+    },
+    {
+      "start_time": 5374,
+      "title": "Reasoning AIME, PIQA",
+      "end_time": 5637
+    },
+    {
+      "start_time": 5637,
+      "title": "Coding with SWE-bench",
+      "end_time": 5775
+    },
+    {
+      "start_time": 5775,
+      "title": "Safety with HarmBench",
+      "end_time": 6051
+    },
+    {
+      "start_time": 6051,
+      "title": "Agents with Tau-Bench",
+      "end_time": 6565
+    }
+  ],
+  "view_count": 222706,
+  "like_count": 3330
+}

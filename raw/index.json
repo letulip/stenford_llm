@@ -1,0 +1,776 @@
+[
+  {
+    "n": 1,
+    "id": "Ub3GoFaUcds",
+    "slug": "01-transformer",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 1 - Transformer",
+    "short": "Transformer",
+    "url": "https://youtu.be/Ub3GoFaUcds",
+    "date": "September 26, 2025",
+    "duration_min": 101,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 234
+      },
+      {
+        "start_time": 234,
+        "title": "Class logistics",
+        "end_time": 580
+      },
+      {
+        "start_time": 580,
+        "title": "NLP overview",
+        "end_time": 1377
+      },
+      {
+        "start_time": 1377,
+        "title": "Tokenization",
+        "end_time": 1828
+      },
+      {
+        "start_time": 1828,
+        "title": "Word representation",
+        "end_time": 3203
+      },
+      {
+        "start_time": 3203,
+        "title": "Recurrent neural networks",
+        "end_time": 4007
+      },
+      {
+        "start_time": 4007,
+        "title": "Self-attention mechanism",
+        "end_time": 4433
+      },
+      {
+        "start_time": 4433,
+        "title": "Transformer architecture",
+        "end_time": 5393
+      },
+      {
+        "start_time": 5393,
+        "title": "Detailed example",
+        "end_time": 6119
+      }
+    ],
+    "covers": [
+      "Background on NLP and tasks",
+      "Tokenization",
+      "Embeddings",
+      "Word2vec, RNN, LSTM",
+      "Attention mechanism",
+      "Transformer architecture"
+    ],
+    "words": 12891
+  },
+  {
+    "n": 2,
+    "id": "yT84Y5zCnaA",
+    "slug": "02-transformer-models-tricks",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 2 - Transformer-Based Models & Tricks",
+    "short": "Transformer-Based Models & Tricks",
+    "url": "https://youtu.be/yT84Y5zCnaA",
+    "date": "October 3, 2025",
+    "duration_min": 107,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 90
+      },
+      {
+        "start_time": 90,
+        "title": "Recap of Transformers",
+        "end_time": 637
+      },
+      {
+        "start_time": 637,
+        "title": "Overview of position embeddings",
+        "end_time": 936
+      },
+      {
+        "start_time": 936,
+        "title": "Sinusoidal embeddings",
+        "end_time": 1556
+      },
+      {
+        "start_time": 1556,
+        "title": "T5 bias, ALiBi",
+        "end_time": 1862
+      },
+      {
+        "start_time": 1862,
+        "title": "RoPE",
+        "end_time": 2622
+      },
+      {
+        "start_time": 2622,
+        "title": "Layer normalization",
+        "end_time": 3039
+      },
+      {
+        "start_time": 3039,
+        "title": "Sparse attention",
+        "end_time": 3338
+      },
+      {
+        "start_time": 3338,
+        "title": "Sharing attention heads",
+        "end_time": 3762
+      },
+      {
+        "start_time": 3762,
+        "title": "Transformer-based models",
+        "end_time": 4298
+      },
+      {
+        "start_time": 4298,
+        "title": "BERT deep dive",
+        "end_time": 5604
+      },
+      {
+        "start_time": 5604,
+        "title": "BERT finetuning",
+        "end_time": 6210
+      },
+      {
+        "start_time": 6210,
+        "title": "Extensions of BERT",
+        "end_time": 6439
+      }
+    ],
+    "covers": [
+      "Attention approximation",
+      "MHA, MQA, GQA",
+      "Position embeddings (regular, learned)",
+      "RoPE and applications",
+      "Transformer-based architectures",
+      "BERT and its derivatives"
+    ],
+    "words": 12914
+  },
+  {
+    "n": 3,
+    "id": "Q5baLehv5So",
+    "slug": "03-llms-moe-decoding-prompting",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 3 - Tranformers & Large Language Models",
+    "short": "Transformers & Large Language Models",
+    "url": "https://youtu.be/Q5baLehv5So",
+    "date": "October 10, 2025",
+    "duration_min": 108,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 62
+      },
+      {
+        "start_time": 62,
+        "title": "Recap of Transformers-based models",
+        "end_time": 223
+      },
+      {
+        "start_time": 223,
+        "title": "LLM definition",
+        "end_time": 457
+      },
+      {
+        "start_time": 457,
+        "title": "Mixture of Experts",
+        "end_time": 763
+      },
+      {
+        "start_time": 763,
+        "title": "Dense & Sparse MoE",
+        "end_time": 947
+      },
+      {
+        "start_time": 947,
+        "title": "MoE in LLMs",
+        "end_time": 2195
+      },
+      {
+        "start_time": 2195,
+        "title": "Response generation",
+        "end_time": 2314
+      },
+      {
+        "start_time": 2314,
+        "title": "Greedy decoding & beam search",
+        "end_time": 2796
+      },
+      {
+        "start_time": 2796,
+        "title": "Sampling-based methods",
+        "end_time": 3144
+      },
+      {
+        "start_time": 3144,
+        "title": "Impact of temperature on predictions",
+        "end_time": 3893
+      },
+      {
+        "start_time": 3893,
+        "title": "Guided decoding",
+        "end_time": 4027
+      },
+      {
+        "start_time": 4027,
+        "title": "Prompting strategies",
+        "end_time": 4449
+      },
+      {
+        "start_time": 4449,
+        "title": "In-context learning",
+        "end_time": 4715
+      },
+      {
+        "start_time": 4715,
+        "title": "Chain-of-thought, self-consistency",
+        "end_time": 5100
+      },
+      {
+        "start_time": 5100,
+        "title": "Inference optimizations with KV cache",
+        "end_time": 5589
+      },
+      {
+        "start_time": 5589,
+        "title": "PagedAttention, MLA",
+        "end_time": 6525
+      }
+    ],
+    "covers": [
+      "Definition and architecture",
+      "Mixture of experts",
+      "Context length, temperature",
+      "Sampling strategies",
+      "Prompting, in-context learning",
+      "Chain of thought",
+      "Self-consistency"
+    ],
+    "words": 13346
+  },
+  {
+    "n": 4,
+    "id": "VlA_jt_3Qc4",
+    "slug": "04-llm-training",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 4 - LLM Training",
+    "short": "LLM Training",
+    "url": "https://youtu.be/VlA_jt_3Qc4",
+    "date": "October 17, 2025",
+    "duration_min": 107,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 439
+      },
+      {
+        "start_time": 439,
+        "title": "Pretraining",
+        "end_time": 806
+      },
+      {
+        "start_time": 806,
+        "title": "FLOPs, FLOPS",
+        "end_time": 994
+      },
+      {
+        "start_time": 994,
+        "title": "Scaling laws, Chinchilla law",
+        "end_time": 1489
+      },
+      {
+        "start_time": 1489,
+        "title": "Training optimizations overview",
+        "end_time": 1869
+      },
+      {
+        "start_time": 1869,
+        "title": "Data parallelism with ZeRO",
+        "end_time": 2151
+      },
+      {
+        "start_time": 2151,
+        "title": "Model parallelism",
+        "end_time": 2306
+      },
+      {
+        "start_time": 2306,
+        "title": "Flash Attention",
+        "end_time": 3157
+      },
+      {
+        "start_time": 3157,
+        "title": "Quantization",
+        "end_time": 3360
+      },
+      {
+        "start_time": 3360,
+        "title": "Mixed precision training",
+        "end_time": 3751
+      },
+      {
+        "start_time": 3751,
+        "title": "Supervised finetuning",
+        "end_time": 4161
+      },
+      {
+        "start_time": 4161,
+        "title": "Instruction tuning",
+        "end_time": 5873
+      },
+      {
+        "start_time": 5873,
+        "title": "Parameter-efficient finetuning with LoRA",
+        "end_time": 6316
+      },
+      {
+        "start_time": 6316,
+        "title": "QLoRA",
+        "end_time": 6447
+      }
+    ],
+    "covers": [
+      "Pretraining",
+      "Quantization",
+      "Hardware optimization",
+      "Supervised finetuning (SFT)",
+      "Parameter-efficient finetuning (LoRA)"
+    ],
+    "words": 13926
+  },
+  {
+    "n": 5,
+    "id": "PmW_TMQ3l0I",
+    "slug": "05-llm-tuning-rlhf-dpo",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 5 - LLM tuning",
+    "short": "LLM tuning",
+    "url": "https://youtu.be/PmW_TMQ3l0I",
+    "date": "October 31, 2025",
+    "duration_min": 107,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 290
+      },
+      {
+        "start_time": 290,
+        "title": "Preference tuning",
+        "end_time": 691
+      },
+      {
+        "start_time": 691,
+        "title": "Data collection",
+        "end_time": 1063
+      },
+      {
+        "start_time": 1063,
+        "title": "RLHF overview",
+        "end_time": 1704
+      },
+      {
+        "start_time": 1704,
+        "title": "Reward model",
+        "end_time": 1786
+      },
+      {
+        "start_time": 1786,
+        "title": "Bradley-Terry formulation",
+        "end_time": 2762
+      },
+      {
+        "start_time": 2762,
+        "title": "Reinforcement learning",
+        "end_time": 3234
+      },
+      {
+        "start_time": 3234,
+        "title": "PPO",
+        "end_time": 3476
+      },
+      {
+        "start_time": 3476,
+        "title": "Advantage, value function",
+        "end_time": 3819
+      },
+      {
+        "start_time": 3819,
+        "title": "PPO variants: Clip, KL-penalty",
+        "end_time": 4580
+      },
+      {
+        "start_time": 4580,
+        "title": "Challenges",
+        "end_time": 4798
+      },
+      {
+        "start_time": 4798,
+        "title": "On-policy vs off-policy",
+        "end_time": 4963
+      },
+      {
+        "start_time": 4963,
+        "title": "Best-of-N",
+        "end_time": 5387
+      },
+      {
+        "start_time": 5387,
+        "title": "DPO",
+        "end_time": 6461
+      }
+    ],
+    "covers": [
+      "Preference tuning",
+      "RLHF overview",
+      "Reward modeling",
+      "RL approaches (PPO and variants)",
+      "DPO"
+    ],
+    "words": 13232
+  },
+  {
+    "n": 6,
+    "id": "k5Fh-UgTuCo",
+    "slug": "06-llm-reasoning",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 6 - LLM Reasoning",
+    "short": "LLM Reasoning",
+    "url": "https://youtu.be/k5Fh-UgTuCo",
+    "date": "November 7, 2025",
+    "duration_min": 107,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 763
+      },
+      {
+        "start_time": 763,
+        "title": "Reasoning models",
+        "end_time": 1669
+      },
+      {
+        "start_time": 1669,
+        "title": "Benchmarks",
+        "end_time": 1924
+      },
+      {
+        "start_time": 1924,
+        "title": "Pass@k metric",
+        "end_time": 2887
+      },
+      {
+        "start_time": 2887,
+        "title": "Scaling with RL",
+        "end_time": 3464
+      },
+      {
+        "start_time": 3464,
+        "title": "GRPO",
+        "end_time": 3963
+      },
+      {
+        "start_time": 3963,
+        "title": "Comparison between GRPO and PPO",
+        "end_time": 4574
+      },
+      {
+        "start_time": 4574,
+        "title": "Length bias",
+        "end_time": 5100
+      },
+      {
+        "start_time": 5100,
+        "title": "DAPO, Dr. GRPO",
+        "end_time": 5378
+      },
+      {
+        "start_time": 5378,
+        "title": "DeepSeek R1 recipe",
+        "end_time": 6430
+      }
+    ],
+    "covers": [
+      "Reasoning models",
+      "RL for reasoning",
+      "GRPO",
+      "Scaling"
+    ],
+    "words": 13136
+  },
+  {
+    "n": 7,
+    "id": "h-7S6HNq0Vg",
+    "slug": "07-agentic-llms-rag-tools",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 7 - Agentic LLMs",
+    "short": "Agentic LLMs",
+    "url": "https://youtu.be/h-7S6HNq0Vg",
+    "date": "November 14, 2025",
+    "duration_min": 109,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 398
+      },
+      {
+        "start_time": 398,
+        "title": "RAG overview",
+        "end_time": 1659
+      },
+      {
+        "start_time": 1659,
+        "title": "Similarity search with SBERT and bi-encoders",
+        "end_time": 2065
+      },
+      {
+        "start_time": 2065,
+        "title": "Heuristic search with BM25",
+        "end_time": 2274
+      },
+      {
+        "start_time": 2274,
+        "title": "HyDE and contextual retrieval",
+        "end_time": 2460
+      },
+      {
+        "start_time": 2460,
+        "title": "Prompt caching",
+        "end_time": 2724
+      },
+      {
+        "start_time": 2724,
+        "title": "Re-ranking with cross-encoders",
+        "end_time": 2869
+      },
+      {
+        "start_time": 2869,
+        "title": "Retrieval evaluation with NDCG, MRR",
+        "end_time": 3568
+      },
+      {
+        "start_time": 3568,
+        "title": "Tool calling",
+        "end_time": 5182
+      },
+      {
+        "start_time": 5182,
+        "title": "Tool selection",
+        "end_time": 5357
+      },
+      {
+        "start_time": 5357,
+        "title": "Model Context Protocol (MCP)",
+        "end_time": 5516
+      },
+      {
+        "start_time": 5516,
+        "title": "Agents with ReAct",
+        "end_time": 6136
+      },
+      {
+        "start_time": 6136,
+        "title": "Safety and closing thoughts",
+        "end_time": 6562
+      }
+    ],
+    "covers": [
+      "Retrieval-augmented generation",
+      "Advanced RAG techniques",
+      "Function calling",
+      "Agents",
+      "ReAct framework"
+    ],
+    "words": 13821
+  },
+  {
+    "n": 8,
+    "id": "8fNP4N46RRo",
+    "slug": "08-llm-evaluation",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 8 - LLM Evaluation",
+    "short": "LLM Evaluation",
+    "url": "https://youtu.be/8fNP4N46RRo",
+    "date": "November 21, 2025",
+    "duration_min": 109,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 428
+      },
+      {
+        "start_time": 428,
+        "title": "Inter-rater agreement metrics",
+        "end_time": 1104
+      },
+      {
+        "start_time": 1104,
+        "title": "Rule-based metrics",
+        "end_time": 1260
+      },
+      {
+        "start_time": 1260,
+        "title": "METEOR, BLEU ROUGE",
+        "end_time": 1680
+      },
+      {
+        "start_time": 1680,
+        "title": "LLM-as-a-judge",
+        "end_time": 2024
+      },
+      {
+        "start_time": 2024,
+        "title": "Structured outputs",
+        "end_time": 2208
+      },
+      {
+        "start_time": 2208,
+        "title": "Variants",
+        "end_time": 2327
+      },
+      {
+        "start_time": 2327,
+        "title": "Position, verbosity, self-enhancement bias",
+        "end_time": 2842
+      },
+      {
+        "start_time": 2842,
+        "title": "Best practices",
+        "end_time": 3246
+      },
+      {
+        "start_time": 3246,
+        "title": "Factuality",
+        "end_time": 3615
+      },
+      {
+        "start_time": 3615,
+        "title": "Agent evaluation",
+        "end_time": 5030
+      },
+      {
+        "start_time": 5030,
+        "title": "Benchmarks",
+        "end_time": 5112
+      },
+      {
+        "start_time": 5112,
+        "title": "Knowledge with MMLU",
+        "end_time": 5374
+      },
+      {
+        "start_time": 5374,
+        "title": "Reasoning AIME, PIQA",
+        "end_time": 5637
+      },
+      {
+        "start_time": 5637,
+        "title": "Coding with SWE-bench",
+        "end_time": 5775
+      },
+      {
+        "start_time": 5775,
+        "title": "Safety with HarmBench",
+        "end_time": 6051
+      },
+      {
+        "start_time": 6051,
+        "title": "Agents with Tau-Bench",
+        "end_time": 6565
+      }
+    ],
+    "covers": [
+      "LLM-as-a-judge overview",
+      "Best practices and benefits",
+      "Biases and pitfalls"
+    ],
+    "words": 13617
+  },
+  {
+    "n": 9,
+    "id": "Q86qzJ1K1Ss",
+    "slug": "09-recap-current-trends",
+    "title": "Stanford CME295 Transformers & LLMs | Autumn 2025 | Lecture 9 - Recap & Current Trends",
+    "short": "Recap & Current Trends",
+    "url": "https://youtu.be/Q86qzJ1K1Ss",
+    "date": "December 5, 2025",
+    "duration_min": 111,
+    "chapters": [
+      {
+        "start_time": 0,
+        "title": "Introduction",
+        "end_time": 72
+      },
+      {
+        "start_time": 72,
+        "title": "Transformer",
+        "end_time": 395
+      },
+      {
+        "start_time": 395,
+        "title": "Transformer-based models & tricks",
+        "end_time": 677
+      },
+      {
+        "start_time": 677,
+        "title": "Large Language Models",
+        "end_time": 905
+      },
+      {
+        "start_time": 905,
+        "title": "LLM training",
+        "end_time": 1449
+      },
+      {
+        "start_time": 1449,
+        "title": "LLM tuning",
+        "end_time": 1781
+      },
+      {
+        "start_time": 1781,
+        "title": "LLM reasoning",
+        "end_time": 2317
+      },
+      {
+        "start_time": 2317,
+        "title": "Agentic LLMs (RAG, tool calling)",
+        "end_time": 2649
+      },
+      {
+        "start_time": 2649,
+        "title": "LLM evaluation",
+        "end_time": 2937
+      },
+      {
+        "start_time": 2937,
+        "title": "Vision Transformer",
+        "end_time": 3842
+      },
+      {
+        "start_time": 3842,
+        "title": "Diffusion-based LLMs",
+        "end_time": 5018
+      },
+      {
+        "start_time": 5018,
+        "title": "Closing thoughts",
+        "end_time": 6616
+      },
+      {
+        "start_time": 6616,
+        "title": "Thank you!",
+        "end_time": 6691
+      }
+    ],
+    "covers": [
+      "Recap",
+      "Trending topics",
+      "Closing thoughts"
+    ],
+    "words": 13881
+  }
+]
