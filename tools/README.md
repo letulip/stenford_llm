@@ -24,3 +24,5 @@ python3 -I tools/build_readme.py . summaries.json
 ```bash
 python3 -I tools/check_lecture.py lectures/*.md
 ```
+
+Сайт (MkDocs + Material): `tools/build_docs.py` генерирует `docs/` и `mkdocs.yml` из README, `lectures/`, `transcripts/` и `updates/` (пометки `> 💡` превращаются в admonition-блоки), затем `.venv/bin/mkdocs build` или `mkdocs serve`. Подробнее в разделе «Сайт» главного README.

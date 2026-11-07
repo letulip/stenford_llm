@@ -1,0 +1,36 @@
+/* Reading comfort */
+.md-typeset { font-size: 0.84rem; line-height: 1.65; }
+.md-typeset h1 { font-weight: 600; }
+.md-typeset h2 { font-weight: 600; margin-top: 2.2em; }
+.md-typeset h3 { font-weight: 600; }
+.md-grid { max-width: 72rem; }
+
+/* 💡 Дополнение blocks: warm amber instead of Material's teal "tip" */
+:root {
+  --cme-note: #d98e04;
+  --cme-note-bg: rgba(217, 142, 4, 0.08);
+}
+[data-md-color-scheme="slate"] {
+  --cme-note: #f2b134;
+  --cme-note-bg: rgba(242, 177, 52, 0.10);
+}
+.md-typeset .admonition.tip,
+.md-typeset details.tip { border-color: var(--cme-note); }
+.md-typeset .tip > .admonition-title,
+.md-typeset .tip > summary { background-color: var(--cme-note-bg); }
+.md-typeset .tip > .admonition-title::before,
+.md-typeset .tip > summary::before { background-color: var(--cme-note); }
+
+/* Tables: let long cells wrap, keep header readable */
+.md-typeset table:not([class]) { font-size: 0.78rem; display: table; width: 100%; }
+.md-typeset table:not([class]) th { font-weight: 600; }
+
+/* Blockquotes that remain (plain quotes) */
+.md-typeset blockquote { border-left-color: var(--md-primary-fg-color); }
+
+/* Timecode line under section headings */
+.md-typeset h2 + p:has(> a[href*="youtu.be"]:first-child),
+.md-typeset h2 + p:has(> a[href*="youtu.be"]:last-child) { font-size: 0.78rem; color: var(--md-default-fg-color--light); }
+
+/* KaTeX display math: a little breathing room */
+.katex-display { margin: 1em 0; overflow-x: auto; overflow-y: hidden; }

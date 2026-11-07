@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cme295-docs",
+      "runtimeExecutable": "/Users/letulip/Projects/Claude/stanford-cme295-llm/.venv/bin/mkdocs",
+      "runtimeArgs": [
+        "serve",
+        "-f",
+        "/Users/letulip/Projects/Claude/stanford-cme295-llm/mkdocs.yml",
+        "-a",
+        "127.0.0.1:8321"
+      ],
+      "port": 8321
+    }
+  ]
+}
