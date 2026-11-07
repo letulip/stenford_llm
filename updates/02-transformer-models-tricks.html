@@ -1,0 +1,1837 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/updates/02-transformer-models-tricks.html">
+      
+      
+        <link rel="prev" href="01-transformer.html">
+      
+      
+        <link rel="next" href="03-llms-moe-decoding-prompting.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>2. Модели на базе трансформера и приёмы - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы--что-изменилось-к-ноябрю-2026" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2. Модели на базе трансформера и приёмы
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lectures/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="02-transformer-models-tricks.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-осталось-верным" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что осталось верным
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-устарело-или-сдвинулось" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что устарело или сдвинулось
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#новое-о-чём-лекция-не-знала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое, о чём лекция не знала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-это-меняет-для-читателя" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это меняет для читателя
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#проверка-пометок-в-конспекте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка пометок в конспекте
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#источники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Источники
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-осталось-верным" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что осталось верным
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-устарело-или-сдвинулось" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что устарело или сдвинулось
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#новое-о-чём-лекция-не-знала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое, о чём лекция не знала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-это-меняет-для-читателя" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это меняет для читателя
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#проверка-пометок-в-конспекте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка пометок в конспекте
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#источники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Источники
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы--что-изменилось-к-ноябрю-2026">Лекция 2. Модели на базе трансформера и инженерные приёмы — что изменилось к ноябрю 2026<a class="headerlink" href="#лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы--что-изменилось-к-ноябрю-2026" title="Permanent link">¶</a></h1>
+<p><em>Лекция прочитана 3 октября 2025. Сверено с источниками 7 ноября 2026.</em></p>
+<p>← <a href="../lectures/02-transformer-models-tricks.html">Конспект лекции</a> · <a href="index.html">Все актуализации</a></p>
+<h2 id="коротко">Коротко<a class="headerlink" href="#коротко" title="Permanent link">¶</a></h2>
+<ul>
+<li>Квадратичный attention в проде обходят тремя путями сразу: локально-глобальные окна (Gemma 4, схема 5:1, апрель 2026 [9]), выученный разреженный отбор токенов (DeepSeek-V3.2, декабрь 2025 [1]; GLM-5 [7]) и гибриды с линейным attention (Qwen3.5, февраль 2026 [6]; Kimi K3, июль 2026 [4]).</li>
+<li>RoPE перестал быть безальтернативным: Kimi K3 вовсе без RoPE — NoPE во всех MLA-слоях при контексте 1M [4]; Qwen3-Next/3.5 поворачивают четверть размерностей головы [5][6]; Gemma 4 ввела p-RoPE в глобальных слоях [9].</li>
+<li>MLA вышла за пределы DeepSeek: Kimi K2/K3, GLM-5, Mistral Large 3, Sarvam [7]. DeepSeek-V4 (2026) заявляет при 1M контекста 10 % KV-кэша и 27 % FLOPs на токен от уровня V3.2 [3].</li>
+<li>RMSNorm остался, «pre-norm как стандарт» — нет: OLMo 2/3 нормируют после подслоя, Gemma 3/4 — до и после; почти везде добавился QK-norm [7]. «Cracks in the Foundation» (август 2026): такие «мелочи» меняют расширяемость контекста до 47 % [11].</li>
+<li>Encoder-only модели живы: UltraBERT (октябрь 2026) — 150M/380M с нативными 32K [13]; Ettin (ICLR 2026): при одинаковом рецепте encoder сильнее decoder'а в классификации и поиске [14].</li>
+<li>Дистилляция сместилась к on-policy: учитель потокенно оценивает собственные выборки ученика (Thinking Machines, октябрь 2025 [17]); к лету 2026 это типичный этап post-training открытых моделей [19].</li>
+</ul>
+<h2 id="что-осталось-верным">Что осталось верным<a class="headerlink" href="#что-осталось-верным" title="Permanent link">¶</a></h2>
+<ul>
+<li>Каркас 2017 года — основа всех моделей из источников; менялись те же три узла: позиции, нормализация, attention.</li>
+<li>RoPE — умолчание: в галерее из 119 архитектур альтернатива ему только NoPE-гибриды; ALiBi и T5-bias в моделях 2025–2026 не встретились. RMSNorm вместо LayerNorm — без исключений [7].</li>
+<li>GQA — типичный выбор плотных моделей среднего размера: Llama 3, Gemma 3/4, Qwen3, gpt-oss [7]. Формула KV-кэша и связь с prompt caching верны: Claude API отдаёт кэшированные входные токены за 10 % базовой цены (2,5–5 % у моделей 5.x) [20].</li>
+<li>BERT-подобные encoder'ы остаются рабочей лошадкой классификации; авторы UltraBERT называют их самым экономичным способом обрабатывать текст в объёме [13]. Предел 512 у BERT, MLM 15 % и 80/10/10, RoBERTa без NSP — пересматривать нечего.</li>
+</ul>
+<h2 id="что-устарело-или-сдвинулось">Что устарело или сдвинулось<a class="headerlink" href="#что-устарело-или-сдвинулось" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Лекция говорит:</strong> RoPE используют «почти все современные модели» (раздел 6, 37:26) → <strong>Сейчас:</strong> доминирует, но появились гибриды: SmolLM3 (июнь 2025) убирает RoPE в каждом четвёртом слое; Kimi Linear, Tiny Aya, Trinity, Sarvam (2025–2026) держат RoPE в локальных слоях, NoPE — в глобальных; Kimi K3 (2,8T параметров, 1M контекста) применяет NoPE ко всем MLA-слоям, позицию даёт рекуррентность KDA-слоёв [4][7]. Qwen3-Next/3.5 вращают лишь 64 из 256 размерностей головы [5][6].</li>
+<li><strong>Лекция говорит:</strong> окно sliding window — «порядка нескольких тысяч» токенов, Mistral — SWA на каждом слое (раздел 8, 53:24–54:22) → <strong>Сейчас:</strong> окна меньше, слои чередуются: Gemma 3/4 — 1024 токена (512 у E2B/E4B) при 5 локальных : 1 глобальный [9]; gpt-oss — 128 токенов в каждом втором слое [10]. Сама Mistral от SWA ушла: Small 3.1 его убрала, Large 3 (декабрь 2025) построена на MLA [7].</li>
+<li><strong>Лекция говорит:</strong> в недавних моделях «типично GQA» (раздел 9, 1:01:01) → <strong>Сейчас:</strong> у флагманских открытых MoE типичнее MLA (DeepSeek, Kimi K2/K3, GLM-5, Mistral Large 3) [7]; в Qwen3.5 attention-слоёв 15 из 60, остальные — Gated DeltaNet [6]. GQA остался в плотных моделях.</li>
+<li><strong>Лекция говорит:</strong> pre-norm + RMSNorm — стандарт (раздел 7, 45:38) → <strong>Сейчас:</strong> RMSNorm — да, размещение разошлось: OLMo 2/3 — post-norm внутри residual, Gemma 3/4 — RMSNorm до и после подслоя [7][9]. Добавился QK-norm (RMSNorm на query и key перед RoPE): OLMo 2/3, Gemma 3/4, Qwen3, GLM-4.5, MiniMax M2; Cohere в Tiny Aya от него отказалась из-за взаимодействия с длинным контекстом [7].</li>
+<li><strong>Лекция говорит:</strong> sparse attention — это фиксированное окно (раздел 8, 50:39) → <strong>Сейчас:</strong> DeepSeek-V3.2 заменила окно выученным отбором: лёгкий lightning indexer (ReLU, мало голов, FP8) оценивает все предыдущие токены, и в основную MLA-attention (режим MQA) попадают 2048 лучших; ядро — O(L·k) при 128K [1]. GLM-5 взяла DSA [7]; статья от 2 ноября 2026: узким местом стал сам индексатор, переиспользование его выбора между соседними слоями даёт до +14,5 % к декодированию [2].</li>
+<li><strong>Лекция говорит:</strong> окно контекста задают RoPE и длина обучения (💡 к разделу 3) → <strong>Сейчас:</strong> 1M токенов у всех текущих моделей Claude [20], Gemini 4 Argon [21], DeepSeek-V4 [3], Kimi K3 [4]; Qwen3.5 — 262K нативно и ~1,01M через YaRN с предупреждением, что статический YaRN портит короткие тексты [6]. Обзоры оценивают рабочую долю окна в 60–70 % от заявленного [22]; обзор позиционного кодирования (август 2026): умение посчитать позицию за пределами обучения не гарантирует надёжной работы там [12].</li>
+</ul>
+<h2 id="новое-о-чём-лекция-не-знала">Новое, о чём лекция не знала<a class="headerlink" href="#новое-о-чём-лекция-не-знала" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>DeepSeek-V4.</strong> Preview (V4-Pro 1,6T/49B активных, V4-Flash 284B/13B, 1M контекста) заменяет DSA гибридом Compressed Sparse Attention и Heavily Compressed Attention, добавляет Manifold-Constrained Hyper-Connections вместо residual и оптимизатор Muon; заявлено 10 % KV-кэша и 27 % FLOPs на токен относительно V3.2 на 1M [3]. Дату (апрель или июнь 2026) подтвердить не удалось.</li>
+<li><strong>Гибриды с линейным attention.</strong> Qwen3-Next (сентябрь 2025, 80B-A3B): три слоя Gated DeltaNet на один слой gated attention, 262K нативно [5]; Qwen3.5 (16 февраля 2026) перенёс схему во флагман [6]. Kimi K3: 3 Kimi Delta Attention : 1 gated MLA (69 + 24 слоя), «Attention Residuals» — attention по глубине вместо единого residual-потока, ~2,5× эффективности масштабирования против K2, контекст доращивался 8K→64K→256K→1M [4]. Nemotron 3 (Mamba-2), Ling 2.5 — та же идея [7]; без парных абляций выигрыш нельзя приписать схеме [8].</li>
+<li><strong>Gemma 4</strong> (2 апреля 2026; от E2B до 31B, 128K/256K, Apache 2.0): 5:1, последний слой всегда глобальный; в глобальных слоях 4 KV-головы с «unified keys and values» и Proportional RoPE (p-RoPE) — механизм в карте модели не раскрыт [9].</li>
+<li><strong>Что мешает длинному контексту.</strong> «Cracks in the Foundation» (AI2/CMU, 10 августа 2026, COLM): четыре «мелких» решения — нормализация, GQA, длина предобучения, sliding window — порознь незаметны, а втроём снижают качество на длинном контексте до 47 % [11]. Контртренд: MiniMax M2.5 сознательно избегает и окон, и линейных гибридов [7].</li>
+<li><strong>Encoder'ы 2025–2026.</strong> mmBERT (сентябрь 2025): мультиязычный encoder, 3T токенов, 1800+ языков [15]. Ettin (июль 2025, ICLR 2026): парные encoder/decoder 17M–1B на одном рецепте — encoder'ы сильнее в классификации и поиске, decoder'ы в генерации, а «переделка» одного в другой хуже обучения с нужной целью [14]. UltraBERT (14 октября 2026): 150M/380M, нативные 32K, два режима маскирования и дистилляция от 1,3B учителя; GLUE 89,5 против 88,4 у ModernBERT; UltraBERT-Embed-150M — 67,24 на MTEB(eng, v2) [13].</li>
+<li><strong>Embeddings.</strong> Верх рейтингов — модели на decoder-основе: Qwen3-Embedding (0.6B/4B/8B на Qwen3, июнь 2025) [16], NV-Embed-v2 на Mistral-7B, Gemini Embedding [23][24]; компактные encoder'ы (UltraBERT-Embed, nomic, MiniLM) остаются выбором по цене [13][24].</li>
+<li><strong>On-policy distillation.</strong> Thinking Machines (27 октября 2025): ученик генерирует сам, учитель даёт потокенный reverse-KL; на AIME'24 — 74,4 % за ~1800 GPU-часов против 67,6 % у RL за 17 920 (RL-цифры из отчёта Qwen3) [17]. Обзор OPD — апрель 2026 [18]; к июлю 2026 Xiaomi, Zhipu (GLM-5), Ant обучают специалистов через RL и сливают их через OPD [19]. Ограничения: далёкий учитель вызывает коллапс энтропии [19]; ученики 0.6–4B не умеют вовремя остановиться [25].</li>
+<li><strong>KV-кэш как инфраструктура.</strong> Prefix caching, выгрузка блоков в CPU/NVMe (vLLM, SGLang HiCache, LMCache с ярусами CPU/FS/S3), FP8-кэш, разнесение prefill/decode по машинам [26][27].</li>
+</ul>
+<h2 id="что-это-меняет-для-читателя">Что это меняет для читателя<a class="headerlink" href="#что-это-меняет-для-читателя" title="Permanent link">¶</a></h2>
+<ul>
+<li>Заявленный 1M контекста — не гарантия: проверяйте качество на своих длинах; оценка рабочей доли окна — 60–70 % [22].</li>
+<li>Prompt caching стал дешевле и важнее: держите стабильный префикс; на Claude чтение из кэша — 2,5–10 % цены входа [20].</li>
+<li>Выбирая открытую модель, читайте config: число KV-голов, тип attention (GQA/MLA/гибрид), окно SWA и RoPE/YaRN-настройки определяют память и поведение на длине; статический YaRN включайте, только когда вход превышает нативное окно [6].</li>
+<li>Для классификации и поиска берите encoder (UltraBERT, ModernBERT, mmBERT): дообучается на CPU-бюджете и выигрывает у decoder'а того же размера [13][14]; за максимальным качеством embeddings — к decoder-моделям вроде Qwen3-Embedding [16].</li>
+<li>Рецепт «дорогая модель размечает данные» работает, но on-policy вариант даёт больше за меньший compute [17][19]. Архитектурные «мелочи» решают, расширится ли контекст при дообучении [11] — аргумент за семейства с проверенной расширяемостью.</li>
+</ul>
+<h2 id="проверка-пометок-в-конспекте">Проверка пометок в конспекте<a class="headerlink" href="#проверка-пометок-в-конспекте" title="Permanent link">¶</a></h2>
+<ul>
+<li>«<strong>Дополнение — что изменилось с тех пор:</strong> „Фиксированный“ θ…» (раздел 6): «основной способ… контекст в сотни тысяч токенов» — слишком сильно. YaRN используют (Qwen3-Next/3.5 [5][6]), но 1M у Kimi K3 и DeepSeek-V4 получены обучением до 1M [3][4], а K3 обходится без RoPE. Точнее — «один из основных способов».</li>
+<li>«<strong>Дополнение — уточнение:</strong> Лектор не объяснил, почему pre-norm победил…» (раздел 7): история верна, но «pre-norm — стандарт» уже не универсально: OLMo 2/3 — post-norm, Gemma 3/4 — pre+post; не упомянут QK-norm [7][9].</li>
+<li>«<strong>Дополнение — на практике:</strong> Разработчику, который работает с моделями через API…» (раздел 9): «почти поголовно GQA… MLA в моделях DeepSeek» — устарело: MLA в Kimi K2/K3, GLM-5, Mistral Large 3 [7], флагманы Qwen — гибриды [6]. Про GQA верно только для плотных моделей.</li>
+<li>«<strong>Дополнение — на практике:</strong> „Хитрости с tiling“…» (раздел 8): FlashAttention и rolling-кэш описаны верно, но это Mistral 7B 2023 года — новые модели Mistral SWA не используют [7].</li>
+<li>«<strong>Дополнение — на практике:</strong> Для инженера эта карта…» (раздел 10): «модели embeddings для поиска» как пример encoder-only неточно — лидеры MTEB построены на decoder'ах [16][23][24]; encoder'ы — в компактном сегменте [13].</li>
+<li>«<strong>Дополнение — что изменилось с тех пор:</strong> Дистилляция давно вышла…» (раздел 13): верно, но не хватает on-policy distillation как основного рецепта 2026 года [17][19].</li>
+<li>Остальные пометки (разделы 3, 4, 5, пример в 9, 11, 12) противоречий с источниками не имеют.</li>
+</ul>
+<h2 id="источники">Источники<a class="headerlink" href="#источники" title="Permanent link">¶</a></h2>
+<ol>
+<li>DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models — DeepSeek-AI, arXiv 2512.02556 — 2 декабря 2025 — https://arxiv.org/abs/2512.02556 (разбор DSA по https://arxiv.org/html/2512.02556)</li>
+<li>Multi-layer Indexer: Overlapping Selection and Attention in DeepSeek Sparse Attention — Dilbaz et al., arXiv 2611.03768 — 2 ноября 2026 — https://arxiv.org/abs/2611.03768</li>
+<li>DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence — DeepSeek-AI, arXiv 2606.19348 — 2026 (на странице: 26 апреля 2026) — https://arxiv.org/abs/2606.19348</li>
+<li>Kimi K3: Open Frontier Intelligence — Kimi Team, arXiv 2607.24653 — 27 июля 2026 (v2 7 августа 2026) — https://arxiv.org/abs/2607.24653 и https://arxiv.org/html/2607.24653v1</li>
+<li>Qwen3-Next-80B-A3B-Instruct, карта модели — Qwen / Hugging Face — сентябрь 2025 — https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct</li>
+<li>Qwen3.5-397B-A17B, карта модели — Qwen / Hugging Face — февраль 2026 — https://huggingface.co/Qwen/Qwen3.5-397B-A17B</li>
+<li>LLM Architecture Gallery (индекс, страницы NoPE, QK-Norm, Hybrid Attention) — Sebastian Raschka — 2026 — https://sebastianraschka.com/llm-architecture-gallery/</li>
+<li>Hybrid Attention — Sebastian Raschka, LLM Architecture Gallery — 2026 — https://sebastianraschka.com/llm-architecture-gallery/hybrid-attention/</li>
+<li>Gemma 4 Architecture and Benchmark Notes — Sebastian Raschka — 2 апреля 2026 — https://sebastianraschka.com/blog/2026/gemma-4-release-notes.html; Gemma 4 model card — Google AI for Developers — 2026 — https://ai.google.dev/gemma/docs/core/model_card_4</li>
+<li>From GPT-2 to gpt-oss: Analyzing the Architectural Advances — Sebastian Raschka — 9 августа 2025 — https://magazine.sebastianraschka.com/p/from-gpt-2-to-gpt-oss-analyzing-the</li>
+<li>Cracks in the Foundation: Seemingly Minor Architectural Choices Impact Long Context Extension — Bertsch et al. (AI2/CMU), arXiv 2608.10296 — 10 августа 2026 — https://arxiv.org/abs/2608.10296</li>
+<li>Position Encoding in Transformers: From Absolute and Relative Methods to Rotary Position Embeddings and Long-Context Scaling — Jiguo Li, arXiv 2608.10021 — 9 августа 2026 — https://arxiv.org/abs/2608.10021</li>
+<li>UltraBERT: One Encoder for Classification and Retrieval — dmis-lab, блог Hugging Face — 14 октября 2026 — https://huggingface.co/blog/dmis-lab/ultrabert</li>
+<li>Seq vs Seq: An Open Suite of Paired Encoders and Decoders (Ettin) — Weller et al., arXiv 2507.11412 — 15 июля 2025 (v2 12 марта 2026, ICLR 2026) — https://arxiv.org/abs/2507.11412</li>
+<li>mmBERT: A Modern Multilingual Encoder with Annealed Language Learning — Marone et al., arXiv 2509.06888 — 8 сентября 2025 — https://arxiv.org/abs/2509.06888</li>
+<li>Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models — Zhang et al., arXiv 2506.05176 — 5 июня 2025 — https://arxiv.org/abs/2506.05176</li>
+<li>On-Policy Distillation — Kevin Lu, Thinking Machines Lab — 27 октября 2025 — https://thinkingmachines.ai/blog/on-policy-distillation/</li>
+<li>A Survey of On-Policy Distillation for Large Language Models — Song, Zheng, arXiv 2604.00626 — 1 апреля 2026 (v5 21 октября 2026) — https://arxiv.org/abs/2604.00626</li>
+<li>On-policy distillation, part 1: the 2026 open-model post-training shift — VESSL AI — 8 июля 2026 — https://vessl.ai/en/blog/on-policy-distillation-part-1</li>
+<li>Models overview — Claude Platform docs (Anthropic) — прочитано 7 ноября 2026 — https://platform.claude.com/docs/en/about-claude/models/overview</li>
+<li>Models — Google AI Studio docs — прочитано 7 ноября 2026 — https://aistudio.google.com/docs/models</li>
+<li>AI Model Context Window Comparison 2026: Advertised vs. Real — elvex — 13 августа 2026 — https://www.elvex.com/blog/context-length-comparison-ai-models-2026</li>
+<li>Best Embedding Models for RAG (2026) — PremAI — 17 марта 2026 — https://www.premai.io/blog/best-embedding-models-for-rag-2026-ranked-by-mteb-score-cost-and-self-hosting/</li>
+<li>Top 10 Embedding Models for RAG in 2026 — Hussain Nazary — 8 августа 2026 — https://hussain-nazary.github.io/top-10-embedding-models-2026.html</li>
+<li>Solving Without Stopping: On-Policy Distillation at Small Scale — arXiv 2609.37326 — сентябрь 2026 — https://arxiv.org/pdf/2609.37326</li>
+<li>KV Cache Offloading — vLLM production-stack docs — 2026 — https://docs.vllm.ai/projects/production-stack/en/vllm-stack-0.1.2/tutorials/kv_cache.html</li>
+<li>KV cache offloading — LLM Inference Handbook, Modular — 2026 — https://handbook.modular.com/inference-optimization/kv-cache-offloading/</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="01-transformer.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 1. Трансформер">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                1. Трансформер
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="03-llms-moe-decoding-prompting.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 3. LLM: MoE, декодирование, промптинг">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                3. LLM: MoE, декодирование, промптинг
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

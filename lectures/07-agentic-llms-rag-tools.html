@@ -1,0 +1,3206 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/lectures/07-agentic-llms-rag-tools.html">
+      
+      
+        <link rel="prev" href="06-llm-reasoning.html">
+      
+      
+        <link rel="next" href="08-llm-evaluation.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>7. Агенты: RAG, инструменты, MCP - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-7-агентные-llm-rag-вызов-инструментов-агенты" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Агенты: RAG, инструменты, MCP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Введение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#повторение-лекции-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Повторение лекции 6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-будет-в-этой-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что будет в этой лекции
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-обзор-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Обзор RAG
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Обзор RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#проблема-knowledge-cutoff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проблема: knowledge cutoff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#идея-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Идея RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-base-chunks-и-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge base: chunks и embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-этапа-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два этапа retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-семантический-поиск-sbert-и-bi-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Семантический поиск: SBERT и bi-encoders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-эвристический-поиск-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Эвристический поиск: BM25
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hyde-и-contextual-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. HyDE и contextual retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-prompt-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prompt caching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-re-ranking-с-cross-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Re-ranking с cross-encoders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-оценка-retrieval-ndcg-mrr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Оценка retrieval: NDCG, MRR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Оценка retrieval: NDCG, MRR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ndcg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDCG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mrr-precisionk-recallk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MRR, precision@k, recall@k
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-tool-calling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Tool calling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Tool calling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#от-неструктурированных-данных-к-функциям" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        От неструктурированных данных к функциям
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-найди-мне-плюшевого-мишку-поблизости" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: «найди мне плюшевого мишку поблизости»
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#три-стадии-вызова-инструмента" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три стадии вызова инструмента
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-этому-научить-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как этому научить: SFT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-обойтись-без-sft-объяснение-в-промпте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как обойтись без SFT: объяснение в промпте
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#категории-инструментов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Категории инструментов
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#много-инструментов-и-итог-раздела" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Много инструментов и итог раздела
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-tool-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Tool selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-model-context-protocol-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Model Context Protocol (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-агенты-и-react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Агенты и ReAct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Агенты и ReAct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#определение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Определение
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReAct
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-моему-мишке-холодно-сделай-что-нибудь" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: «моему мишке холодно, сделай что-нибудь»
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#несколько-агентов-и-agent2agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Несколько агентов и Agent2Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-безопасность-и-заключение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Безопасность и заключение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Безопасность и заключение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#риски" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Риски
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-класса-защит" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два класса защит
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-агенты-ещё-не-правят-миром-и-как-с-ними-работать" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему агенты ещё не «правят миром» и как с ними работать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Введение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#повторение-лекции-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Повторение лекции 6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-будет-в-этой-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что будет в этой лекции
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-обзор-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Обзор RAG
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Обзор RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#проблема-knowledge-cutoff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проблема: knowledge cutoff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#идея-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Идея RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-base-chunks-и-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge base: chunks и embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-этапа-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два этапа retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-семантический-поиск-sbert-и-bi-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Семантический поиск: SBERT и bi-encoders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-эвристический-поиск-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Эвристический поиск: BM25
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hyde-и-contextual-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. HyDE и contextual retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-prompt-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Prompt caching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-re-ranking-с-cross-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Re-ranking с cross-encoders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-оценка-retrieval-ndcg-mrr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Оценка retrieval: NDCG, MRR
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Оценка retrieval: NDCG, MRR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ndcg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDCG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mrr-precisionk-recallk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MRR, precision@k, recall@k
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-tool-calling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Tool calling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Tool calling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#от-неструктурированных-данных-к-функциям" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        От неструктурированных данных к функциям
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-найди-мне-плюшевого-мишку-поблизости" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: «найди мне плюшевого мишку поблизости»
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#три-стадии-вызова-инструмента" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три стадии вызова инструмента
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-этому-научить-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как этому научить: SFT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-обойтись-без-sft-объяснение-в-промпте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как обойтись без SFT: объяснение в промпте
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#категории-инструментов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Категории инструментов
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#много-инструментов-и-итог-раздела" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Много инструментов и итог раздела
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-tool-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Tool selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-model-context-protocol-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Model Context Protocol (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-агенты-и-react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Агенты и ReAct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Агенты и ReAct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#определение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Определение
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReAct
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-моему-мишке-холодно-сделай-что-нибудь" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: «моему мишке холодно, сделай что-нибудь»
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#несколько-агентов-и-agent2agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Несколько агентов и Agent2Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-безопасность-и-заключение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Безопасность и заключение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Безопасность и заключение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#риски" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Риски
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-класса-защит" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два класса защит
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-агенты-ещё-не-правят-миром-и-как-с-ними-работать" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему агенты ещё не «правят миром» и как с ними работать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-7-агентные-llm-rag-вызов-инструментов-агенты">Лекция 7. Агентные LLM: RAG, вызов инструментов, агенты<a class="headerlink" href="#лекция-7-агентные-llm-rag-вызов-инструментов-агенты" title="Permanent link">¶</a></h1>
+<p><em>Agentic LLMs</em> · Stanford CME295 Transformers &amp; LLMs, Autumn 2025</p>
+<p><strong>Видео:</strong> https://youtu.be/h-7S6HNq0Vg · <strong>Дата лекции:</strong> 14 ноября 2025 · <strong>Длительность:</strong> 109 мин<br />
+<strong>Лекторы:</strong> Afshine Amidi и Shervine Amidi (братья-близнецы; Netflix, до этого Google и Uber; adjunct lecturers в Stanford)<br />
+<strong>Полный транскрипт:</strong> <a href="../transcripts/07-agentic-llms-rag-tools.html">../transcripts/07-agentic-llms-rag-tools.md</a></p>
+<p>← <a href="06-llm-reasoning.html">Лекция 6. Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1</a> · <a href="../index.html">Оглавление курса</a> · <a href="08-llm-evaluation.html">Лекция 8. Оценка LLM: метрики, LLM-as-a-judge, бенчмарки</a> →</p>
+<div class="admonition info">
+<p class="admonition-title">Актуализация к ноябрю 2026</p>
+<p>Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: <a href="../updates/07-agentic-llms-rag-tools.html">читать актуализацию</a>.</p>
+</div>
+<h2 id="коротко-о-лекции">Коротко о лекции<a class="headerlink" href="#коротко-о-лекции" title="Permanent link">¶</a></h2>
+<p>До этой лекции LLM в курсе жила «сама по себе»: её предобучали, выравнивали, учили рассуждать, но отвечала она только из того, что запомнила при обучении. Седьмая лекция — о том, как связать модель с внешним миром. Первая половина (Afshine) посвящена RAG: почему нельзя просто дообучить модель или положить всё в контекст; как устроена knowledge base из chunks и embeddings; как работает двухэтапный retrieval — быстрый candidate retrieval через bi-encoder и cosine similarity, затем точный re-ranking через cross-encoder; какие есть дополнения (BM25 и гибридный поиск, HyDE, contextual retrieval, prompt caching) и как измерять качество retriever'а (NDCG, MRR, precision@k, recall@k, бенчмарк MTEB).</p>
+<p>Вторая половина (Shervine) — о действиях. Tool calling / function calling: модель видит только сигнатуру и документацию функции, предсказывает аргументы, внешний код выполняет вызов, а результат возвращается модели для ответа на естественном языке. Разбирается, как этому учить (два типа SFT-пар) и как обойтись без SFT — подробной инструкцией в промпте, которую итеративно дорабатывает reasoning-модель по результатам на eval-наборе. Дальше масштабирование: tool selection (router), стандартизация через MCP и, наконец, агенты как цикл observe → plan → act по мотивам ReAct, протокол Agent2Agent для общения агентов между собой и безопасность (data exfiltration, защита при обучении и на inference, Agent-SafetyBench, свежий отчёт Anthropic о кибератаке).</p>
+<p>Ключевые идеи: (1) знание модели ограничено датой cutoff, и правильный способ его расширять — добавлять в промпт только <em>релевантную</em> информацию; (2) retrieval — это два этапа с разными бюджетами вычислений: грубый и дешёвый отбор на recall, затем дорогое ранжирование; (3) при tool calling модель предсказывает аргументы, а не исполняет код; (4) агент отличается от инструмента циклом и рассуждением между вызовами; (5) с новыми возможностями приходят новые риски, поэтому начинать нужно с маленьких проверяемых сценариев на самой сильной модели.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-введение">Введение</a> — 00:00</li>
+<li><a href="#2-обзор-rag">Обзор RAG</a> — 06:38</li>
+<li><a href="#3-семантический-поиск-sbert-и-bi-encoders">Семантический поиск: SBERT и bi-encoders</a> — 27:39</li>
+<li><a href="#4-эвристический-поиск-bm25">Эвристический поиск: BM25</a> — 34:25</li>
+<li><a href="#5-hyde-и-contextual-retrieval">HyDE и contextual retrieval</a> — 37:54</li>
+<li><a href="#6-prompt-caching">Prompt caching</a> — 41:00</li>
+<li><a href="#7-re-ranking-с-cross-encoders">Re-ranking с cross-encoders</a> — 45:24</li>
+<li><a href="#8-оценка-retrieval-ndcg-mrr">Оценка retrieval: NDCG, MRR</a> — 47:49</li>
+<li><a href="#9-tool-calling">Tool calling</a> — 59:28</li>
+<li><a href="#10-tool-selection">Tool selection</a> — 1:26:22</li>
+<li><a href="#11-model-context-protocol-mcp">Model Context Protocol (MCP)</a> — 1:29:17</li>
+<li><a href="#12-агенты-и-react">Агенты и ReAct</a> — 1:31:56</li>
+<li>
+<p><a href="#13-безопасность-и-заключение">Безопасность и заключение</a> — 1:42:16</p>
+</li>
+<li>
+<p><a href="#ключевые-термины">Ключевые термины</a></p>
+</li>
+<li><a href="#главные-выводы">Главные выводы</a></li>
+<li><a href="#вопросы-из-зала">Вопросы из зала</a></li>
+<li><a href="#чем-можно-дополнить">Чем можно дополнить</a></li>
+</ol>
+<h2 id="1-введение">1. Введение<a class="headerlink" href="#1-введение" title="Permanent link">¶</a></h2>
+<p>⏱ 00:00–06:38 · <a href="https://youtu.be/h-7S6HNq0Vg?t=0">▶ смотреть на YouTube</a></p>
+<p>Afshine открывает лекцию: тема — практические приёмы, позволяющие LLM взаимодействовать с внешним миром и другими системами. До сих пор модель была «сама по себе»: её обучили, научили рассуждать над математикой и кодом, и теперь её нужно встроить в контекст других систем. Три темы дня: RAG, tool calling и агенты.</p>
+<h3 id="повторение-лекции-6">Повторение лекции 6<a class="headerlink" href="#повторение-лекции-6" title="Permanent link">¶</a></h3>
+<ul>
+<li>Reasoning-модели против «ванильных» LLM: раньше промпт → сразу ответ; если дать модели порассуждать перед ответом, качество на задачах типа математики и кода растёт. Reasoning-модель выдаёт цепочку рассуждений (обычно скрытую от пользователя) и затем ответ.</li>
+<li>GRPO (Group Relative Policy Optimization) — ключевой RL-алгоритм прошлой лекции. Главное отличие от ранее виденных алгоритмов: он не обучает value function. Для одного запроса генерируется группа completions, считаются их награды, и advantage каждого выхода вычисляется относительно остальных наград группы.</li>
+<li>Награды подбирают за две вещи: за наличие цепочки рассуждений и за хороший ответ. С ходом RL-обучения растёт качество на задачах вроде AIME (сложные математические задачи).</li>
+<li>Побочный эффект — length bias: ответы становятся всё длиннее, даже когда качество уже вышло на плато. Причина в формулировке loss GRPO: вклад токена зависит от того, в коротком или длинном ответе он стоит. Способы смягчения из недавних статей: DAPO (нормировочный множитель, не зависящий от положения токена) и «GRPO Done Right» (нормировка просто убрана).</li>
+</ul>
+<h3 id="что-будет-в-этой-лекции">Что будет в этой лекции<a class="headerlink" href="#что-будет-в-этой-лекции" title="Permanent link">¶</a></h3>
+<p>В прошлый раз боролись с ограниченностью рассуждений ванильной LLM. Сейчас — две другие слабости: (1) как подключить модель к постоянно меняющейся базе знаний и дать ей доступ к свежей информации; (2) как с помощью LLM выполнять действия — это часть Shervine про tool calling и агентные workflow.</p>
+<h2 id="2-обзор-rag">2. Обзор RAG<a class="headerlink" href="#2-обзор-rag" title="Permanent link">¶</a></h2>
+<p>⏱ 06:38–27:39 · <a href="https://youtu.be/h-7S6HNq0Vg?t=398">▶ смотреть на YouTube</a></p>
+<h3 id="проблема-knowledge-cutoff">Проблема: knowledge cutoff<a class="headerlink" href="#проблема-knowledge-cutoff" title="Permanent link">¶</a></h3>
+<p>Модель обучена на данных месячной давности, а вы спрашиваете её о выборах, прошедших две недели назад. Она либо не ответит, либо ответит неверно — у неё нет связи с внешними источниками, только то, что усвоено при обучении. У всех моделей в model card указана дата knowledge cutoff; у GPT-5 это 30 сентября 2024 (<a href="https://youtu.be/h-7S6HNq0Vg?t=448">07:28</a>).</p>
+<p>Почему не дообучать модель на новых данных (<a href="https://youtu.be/h-7S6HNq0Vg?t=510">08:30</a>)?
+- Менять знания LLM, не вызвав регрессий в другом, очень сложно — такой задачи стараются избегать.
+- Непрактично: если от базовой модели сделано несколько fine-tune'ов под разные use cases, обновлять веса придётся во всех — большой overhead и сопровождение.</p>
+<p>Почему не положить всё новое в промпт (<a href="https://youtu.be/h-7S6HNq0Vg?t=563">09:23</a>)? Три причины, каждой достаточно самой по себе:</p>
+<ol>
+<li><strong>Контекст ограничен.</strong> Порядок величины — сотни тысяч токенов; при прикидке «1 токен ≈ 4 символа» это сотни страниц, большая книга. Много, но для наивного подхода мало. У GPT-5 контекстное окно — 400 000 токенов.</li>
+<li><strong>Нерелевантный контекст портит ответы</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=675">11:15</a>). Даже при бесконечном контексте: если закидать модель посторонней информацией, она путается. Это измеряют тестом needle in a haystack («иголка в стоге сена»): в длинный промпт прячут факт и спрашивают о нём. На слайде — heatmap для GPT-4 одно-двухлетней давности: по оси x длина промпта, по оси y глубина, на которой спрятан факт. Начиная с некоторой длины модель перестаёт находить факт, особенно когда он лежит в первой половине промпта.</li>
+<li><strong>Деньги</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=847">14:07</a>). Оплата по токенам: чем длиннее вход, тем дороже. Для GPT-5 порядок — около $1 за миллион токенов; немного, но на всех запросах накапливается.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Подход</th>
+<th>Проблема по лекции</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Дообучить модель на новых данных</td>
+<td>Регрессии в других навыках; переобучать каждый fine-tune</td>
+</tr>
+<tr>
+<td>Положить всё в контекст</td>
+<td>Лимит контекста; деградация needle-in-a-haystack; цена за токены</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Добавить в промпт только релевантное — тема лекции</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — что изменилось с тех пор</p>
+<p>Аргумент «контекст ограничен» слабеет: у части моделей окно уже порядка миллиона токенов, и для небольшой базы (десятки документов) проще положить в промпт всё и не строить retrieval. Но два других аргумента никуда не делись: с ростом промпта растут цена и задержка каждого запроса, а качество ответов на «утопленные» в шуме факты по-прежнему падает. На практике RAG нужен ещё и там, где у разных пользователей разные права доступа к документам, и где база меняется чаще, чем вы готовы пересобирать промпт. Разумный ориентир: начинать с длинного контекста, а RAG добавлять, когда база перестаёт помещаться или дорожает.</p>
+</div>
+<h3 id="идея-rag">Идея RAG<a class="headerlink" href="#идея-rag" title="Permanent link">¶</a></h3>
+<p>RAG — Retrieval Augmented Generation: промпт дополняется <em>релевантной</em> информацией, и слово «релевантной» — суть метода (<a href="https://youtu.be/h-7S6HNq0Vg?t=913">15:13</a>). Три шага (<a href="https://youtu.be/h-7S6HNq0Vg?t=971">16:11</a>):</p>
+<ol>
+<li><strong>Retrieve</strong> — по промпту найти в knowledge base подходящие документы.</li>
+<li><strong>Augment</strong> — вставить найденное в промпт. На примере выборов: вопрос «кто победил?» превращается в «кто победил? — кстати, выборы прошли тогда-то, и победил такой-то». По сути, ответ подаётся в самом промпте.</li>
+<li><strong>Generate</strong> — отдать дополненный промпт модели и получить ответ.</li>
+</ol>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=1079">17:59</a>):</strong> а если retrieval отработает плохо? — <strong>Ответ:</strong> именно поэтому retrieval — самое важное звено; когда говорят о RAG, в основном занимаются качеством retrieval и тем, как его оценивать.</p>
+<h3 id="knowledge-base-chunks-и-embeddings">Knowledge base: chunks и embeddings<a class="headerlink" href="#knowledge-base-chunks-и-embeddings" title="Permanent link">¶</a></h3>
+<p>Сначала собирают документы, которые могут пригодиться, и режут их на chunks (фрагменты) — куски документа ограниченной длины в токенах, обычно сотни токенов. Для каждого chunk считают embedding (<a href="https://youtu.be/h-7S6HNq0Vg?t=1188">19:48</a>). Тезис лектора: слышите «retrieval» — думайте «embeddings».</p>
+<p>Три гиперпараметра knowledge base (<a href="https://youtu.be/h-7S6HNq0Vg?t=1246">20:46</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Гиперпараметр</th>
+<th>Компромисс</th>
+<th>Типичное значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Размер embedding</td>
+<td>Больше — лучше для сложных, нюансированных документов, но больше памяти и вычислений на inference</td>
+<td>Порядка тысяч, например 1 500</td>
+</tr>
+<tr>
+<td>Размер chunk</td>
+<td>Слишком мал — текст вырван из контекста; слишком велик — embedding перестаёт осмысленно представлять содержимое</td>
+<td>Около 500 токенов</td>
+</tr>
+<tr>
+<td>Перекрытие chunks</td>
+<td>Наивная нарезка без перекрытия теряет связь с предыдущим куском, нужным для понимания текущего</td>
+<td>Низкие сотни токенов</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=1299">21:39</a>):</strong> нужно ли обучать embedding-модель? — <strong>Ответ:</strong> два варианта — взять предобученную (так обычно и делают) или обучить свою. Её назначение — представлять chunks так, чтобы хорошо находились релевантные документы; как такие модели обучают, будет дальше (SBERT).</p>
+<h3 id="два-этапа-retrieval">Два этапа retrieval<a class="headerlink" href="#два-этапа-retrieval" title="Permanent link">¶</a></h3>
+<p>Методы взяты из рекомендательных систем и поиска (<a href="https://youtu.be/h-7S6HNq0Vg?t=1415">23:35</a>); LLM-сообщество заимствовало их оттуда.</p>
+<ol>
+<li><strong>Candidate retrieval</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=1467">24:27</a>) — из очень большого множества chunks грубо отобрать небольшой набор потенциально релевантных. Цель — максимизировать recall: захватить как можно больше кандидатов, которые могут подойти.</li>
+<li><strong>Ranking</strong> — иногда опциональный этап: отсортировать кандидатов так, чтобы действительно релевантные оказались наверху. Здесь можно позволить себе более тяжёлую модель, потому что кандидатов уже мало.</li>
+</ol>
+<p>Качество embeddings влияет в первую очередь на первый этап, но второй не менее важен.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=1569">26:09</a>):</strong> режем ли мы chunks наивно, просто по числу токенов? — <strong>Ответ:</strong> будут расширения, которые смягчают проблему бессмысленных границ (contextual retrieval). Кроме того, при нарезке нужно учитывать структуру файла — JSON, markdown и т. п.; в детали лекция не идёт.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Плохой chunking — самая частая причина «RAG не работает»: таблица режется посередине, и строки теряют заголовки колонок; сигнатура функции попадает в один chunk, а её описание — в другой; местоимение «он» в начале chunk'а ссылается на сущность из предыдущего. Поэтому режут не по счётчику токенов, а по структуре — по заголовкам, абзацам, элементам списка, блокам кода — и лишь внутри слишком длинного элемента по токенам (так работают «рекурсивные» сплиттеры в популярных библиотеках). Полезно также вписывать в текст chunk'а его «адрес» — название документа и путь по заголовкам: тогда и embedding, и BM25 видят, откуда фрагмент, а модель может сослаться на источник.</p>
+</div>
+<h2 id="3-семантический-поиск-sbert-и-bi-encoders">3. Семантический поиск: SBERT и bi-encoders<a class="headerlink" href="#3-семантический-поиск-sbert-и-bi-encoders" title="Permanent link">¶</a></h2>
+<p>⏱ 27:39–34:25 · <a href="https://youtu.be/h-7S6HNq0Vg?t=1659">▶ смотреть на YouTube</a></p>
+<p>Первый этап — candidate retrieval: из потенциально огромной базы отобрать, скажем, около 100 кандидатов. Используются embeddings, посчитанные при построении knowledge base, и семантический поиск по близости. Запрос тоже превращается в embedding, для каждого chunk считается similarity score — почти всегда cosine similarity — и берётся top-100 (или сколько нужно):</p>
+<div class="arithmatex">\[\cos(\mathbf{q}, \mathbf{c}) = \frac{\mathbf{q}\cdot\mathbf{c}}{\|\mathbf{q}\|\,\|\mathbf{c}\|}\]</div>
+<p>где <span class="arithmatex">\(\mathbf{q}\)</span> — embedding запроса, <span class="arithmatex">\(\mathbf{c}\)</span> — embedding chunk'а, в числителе их скалярное произведение, в знаменателе произведение длин векторов; значение 1 означает, что векторы сонаправлены.</p>
+<p><strong>Сложность поиска</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=1768">29:28</a>). База может быть огромной, поэтому вместо наивного линейного перебора применяют approximate nearest neighbor (ANN, приближённый поиск ближайших соседей): при построении базы embeddings заранее разбивают на разделы так, чтобы не сравнивать запрос со всеми. Есть готовые библиотеки; в детали лекция не идёт.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Названная лектором размерность «около 1 500» — это, по-видимому, 1536: столько измерений у распространённых embedding-моделей OpenAI (text-embedding-ada-002, text-embedding-3-small); у более крупных моделей бывает 3072 и больше. Из библиотек ANN чаще всего встречаются FAISS и индекс HNSW (граф ближайших соседей, по которому поиск идёт за логарифмическое время); те же индексы встроены в векторные базы вроде pgvector, Qdrant или Pinecone. Важная практическая деталь: запрос и chunks нужно кодировать одной и той же моделью одной и той же версии — embeddings разных моделей живут в разных пространствах и несравнимы, так что смена модели означает переиндексацию всей базы.</p>
+</div>
+<p><strong>Bi-encoder</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=1819">30:19</a>). Embeddings получают, пропуская текст через модель — обычно encoder-only, BERT-подобную (BERT был на лекции 2–3). Архитектуру называют bi-encoder, потому что запрос и chunk проходят через encoder <em>независимо друг от друга</em>, и сравниваются уже готовые векторы.</p>
+<p><strong>Sentence-BERT (SBERT)</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=1871">31:11</a>) — статья, которую лектор настоятельно советует прочитать: расширение BERT, выдающее один embedding на последовательность (запрос, документ), специально приспособленный для similarity search. Функция потерь устроена так, чтобы у релевантных пар cosine similarity была высокой, а у нерелевантных — низкой. Зная BERT, статья читается легко.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=1937">32:17</a>):</strong> какая мера сходства по умолчанию? — <strong>Ответ:</strong> cosine similarity, но в реализациях встречаются и другие расстояния, например L2; если все векторы нормированы на 1, формулы сильно упрощаются, и варианты оказываются «более или менее косинусом». <em>Примечание:</em> для единичных векторов <span class="arithmatex">\(\|\mathbf{q}-\mathbf{c}\|^2 = 2 - 2\cos(\mathbf{q},\mathbf{c})\)</span>, то есть ранжирование по L2 и по косинусу совпадает.</p>
+<p><strong>Что значит «семантический»</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=1992">33:12</a>): находятся документы с тем же смыслом, но совпадение ключевых слов никак не гарантируется — найденный chunk может не иметь ни одного общего слова с запросом.</p>
+<h2 id="4-эвристический-поиск-bm25">4. Эвристический поиск: BM25<a class="headerlink" href="#4-эвристический-поиск-bm25" title="Permanent link">¶</a></h2>
+<p>⏱ 34:25–37:54 · <a href="https://youtu.be/h-7S6HNq0Vg?t=2065">▶ смотреть на YouTube</a></p>
+<p>Иногда нужно, чтобы результаты обязательно содержали слова из запроса. Для этого есть второй способ — BM25: эвристический relevance score, функция от пересечения слов запроса и документа.</p>
+<p>Пример с плюшевыми мишками (<a href="https://youtu.be/h-7S6HNq0Vg?t=2124">35:24</a>): два медведя, Cuddly и Huggy; запрос — «где Cuddly?». BM25 по построению вернёт документы, где встречается «Cuddly». Семантический поиск такой гарантии не даёт: Huggy и Cuddly семантически близки, и среди результатов могут оказаться документы про Huggy без слова «Cuddly».</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Embedding-поиск (dense)</th>
+<th>BM25</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>На чём основан</td>
+<td>Близость embeddings (cosine)</td>
+<td>Пересечение ключевых слов</td>
+</tr>
+<tr>
+<td>Что находит</td>
+<td>Тот же смысл, даже без общих слов</td>
+<td>Документы с теми же словами, что в запросе</td>
+</tr>
+<tr>
+<td>Гарантия keyword match</td>
+<td>Нет</td>
+<td>Есть</td>
+</tr>
+</tbody>
+</table>
+<p>На практике (<a href="https://youtu.be/h-7S6HNq0Vg?t=2180">36:20</a>) смотрят на свой use case и решают, нужна ли эвристическая составляющая в relevance score; многие используют гибрид — комбинацию embedding-поиска и BM25, что для части задач даёт более релевантные документы.</p>
+<p><em>Примечание:</em> формулу BM25 на лекции не давали; стандартный вид — <span class="arithmatex">\(\text{BM25}(q,d)=\sum_{t\in q}\mathrm{IDF}(t)\cdot\frac{f(t,d)\,(k_1+1)}{f(t,d)+k_1\left(1-b+b\,\frac{|d|}{\text{avgdl}}\right)}\)</span>, где <span class="arithmatex">\(f(t,d)\)</span> — частота терма <span class="arithmatex">\(t\)</span> в документе <span class="arithmatex">\(d\)</span>, <span class="arithmatex">\(|d|\)</span> — длина документа, <span class="arithmatex">\(\text{avgdl}\)</span> — средняя длина документа в коллекции, <span class="arithmatex">\(\mathrm{IDF}(t)\)</span> — обратная документная частота терма, <span class="arithmatex">\(k_1\)</span> и <span class="arithmatex">\(b\)</span> — настраиваемые константы.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>BM25 выигрывает у embeddings там, где важны редкие точные токены: коды ошибок (<code>ECONNRESET</code>), артикулы, имена функций, номера тикетов, версии. Embedding-модель видела такие строки редко и кладёт их «где-то рядом» с похожими, а BM25 находит именно их. Гибрид обычно собирают просто: два списка кандидатов (semantic и BM25) сливают через Reciprocal Rank Fusion — каждому документу начисляют <span class="arithmatex">\(\sum 1/(k + \text{rank})\)</span> по обоим спискам (типично <span class="arithmatex">\(k = 60\)</span>) и сортируют по сумме; так не нужно калибровать несравнимые score'ы cosine и BM25. Полученный объединённый список и отдают на re-ranking.</p>
+</div>
+<h2 id="5-hyde-и-contextual-retrieval">5. HyDE и contextual retrieval<a class="headerlink" href="#5-hyde-и-contextual-retrieval" title="Permanent link">¶</a></h2>
+<p>⏱ 37:54–41:00 · <a href="https://youtu.be/h-7S6HNq0Vg?t=2274">▶ смотреть на YouTube</a></p>
+<p><strong>Несоответствие запроса и документов.</strong> Запрос обычно короткий, часто это вопрос; содержимое базы — длинные предложения. Если кодировать то и другое одним encoder'ом, embeddings получаются не очень сопоставимыми: один — для вопроса, другой — для документа.</p>
+<p><strong>HyDE</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=2330">38:50</a>) смягчает это: вместо embedding промпта сначала одним LLM-вызовом генерируется «фальшивый» документ по промпту, и уже его embedding используется для поиска chunks. Работает не всегда, применяют не все; стоит попробовать и посмотреть. <em>Примечание:</em> HyDE расшифровывается как Hypothetical Document Embeddings. Альтернатива — отдельные encoders, специально обученные для запросов и для документов; так обычно не делают из соображений сопровождения.</p>
+<p><strong>Contextual retrieval</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=2393">39:53</a>) — ответ на вопрос о наивной нарезке. Chunk, вырванный из документа, может быть непонятен. Идея: к каждому chunk'у приписать короткий текст с контекстом, нужным для его понимания. Документ разбит на n chunks; вместо того чтобы рассматривать их по отдельности, для каждого вычисляют контекст на основе всего документа.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Описанная схема «контекст для каждого chunk'а по всему документу» — это метод Contextual Retrieval, который Anthropic описала в своём блоге осенью 2024 года; там контекст приписывается и к embeddings, и к BM25-индексу (contextual BM25), а дешевизна достигается именно prompt caching, о котором лектор говорит в следующем разделе: документ кладут в кэшируемый префикс, а меняется только chunk. По их данным гибрид с контекстом заметно снижает долю неудачных retrieval. А асимметрию «короткий вопрос против длинного документа» на практике решают не двумя encoders, а одним с подсказкой о типе входа: у многих embedding-моделей есть префиксы вроде <code>query:</code> / <code>passage:</code> или параметр <code>input_type</code> — модель обучена сближать вопрос и содержащий ответ фрагмент, а не два похожих текста.</p>
+</div>
+<h2 id="6-prompt-caching">6. Prompt caching<a class="headerlink" href="#6-prompt-caching" title="Permanent link">¶</a></h2>
+<p>⏱ 41:00–45:24 · <a href="https://youtu.be/h-7S6HNq0Vg?t=2460">▶ смотреть на YouTube</a></p>
+<p>Контекст для chunk'а получают ещё одним LLM-вызовом: модели дают весь документ и chunk и просят короткое, ёмкое описание, делающее chunk понятным. Chunks много — это много вызовов и дорого. Способ удешевить — prompt caching (<a href="https://youtu.be/h-7S6HNq0Vg?t=2512">41:52</a>).</p>
+<p>Логика: модели decoder-only работают слева направо, поэтому одинаковый префикс промпта даёт одинаковые вычисления. Вместо того чтобы считать их заново для каждого chunk'а, их делают один раз, сохраняют активации, а дальше просто берут из кэша (lookup) и декодируют остаток.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=2512">41:52</a>):</strong> что за активации? — <strong>Ответ:</strong> при подаче промпта модель вычисляет активации всех слоёв, и генерация делает attention поверх них; раз модель однонаправленная, одинаковый вход даёт одинаковые активации.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=2579">42:59</a>):</strong> а если модель закрытая? — <strong>Ответ:</strong> провайдеры закрытых моделей предлагают prompt caching как опцию: на странице с ценами есть цена за обычные входные токены и за кэшированные; у OpenAI кэшированный входной токен стоит 1/10 обычной цены (<a href="https://youtu.be/h-7S6HNq0Vg?t=2636">43:56</a>).</p>
+<p>Практический совет: собирать всё, что повторяется между промптами, в начало промпта, чтобы получать эту скидку.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Кэшируется только <em>префикс</em>: провайдер сравнивает промпт с начала, и первое же отличие обнуляет кэш для всего, что ниже. Отсюда правила: описания инструментов и system prompt — наверх, а всё изменчивое (дата, имя пользователя, сам вопрос) — в конец; у некоторых API порядок фиксирован (tools → system → messages). У Anthropic точки кэширования ставятся явно (<code>cache_control</code>; есть и упрощённый режим с одной точкой на весь запрос, а минимальный кэшируемый префикс зависит от модели и начинается с 512 токенов), у OpenAI кэш включается автоматически для промптов от ~1024 токенов. Чтение из кэша стоит заметно дешевле обычной цены за входной токен (порядка 10 %, на моделях 2026 года и ниже), запись в кэш к 2026 году стала платной с наценкой у обоих провайдеров, а живёт кэш от минут до часов в зависимости от тарифа — выгода есть только при серии вызовов подряд, что для contextual retrieval (один документ, сотни chunks) и для агентов (длинная история, много ходов) как раз выполняется. Технически это сохранение KV-кэша attention-слоёв — той же механики, что ускоряет декодирование (см. <a href="03-llms-moe-decoding-prompting.html">Лекцию 3</a>).</p>
+</div>
+<p>Переход: первый этап сводит тысячи или миллионы chunks к сотням потенциально релевантных. Второй, опциональный, — отсортировать их осмысленнее и выбрать финальный top-k (<a href="https://youtu.be/h-7S6HNq0Vg?t=2695">44:55</a>).</p>
+<h2 id="7-re-ranking-с-cross-encoders">7. Re-ranking с cross-encoders<a class="headerlink" href="#7-re-ranking-с-cross-encoders" title="Permanent link">¶</a></h2>
+<p>⏱ 45:24–47:49 · <a href="https://youtu.be/h-7S6HNq0Vg?t=2724">▶ смотреть на YouTube</a></p>
+<p>Второй этап называют ranking или re-ranking — «re», потому что после первого этапа ранжирование уже есть. Вместо быстрой операции над готовыми embeddings используется более тяжёлая модель: запрос и chunk подаются в encoder <em>вместе</em>, и на выходе получается relevance score. Модель видит обе части одновременно и может уловить их взаимодействие, чего нет при сравнении двух независимых векторов.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Bi-encoder (этап 1)</th>
+<th>Cross-encoder (этап 2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Вход</td>
+<td>Запрос и chunk кодируются по отдельности</td>
+<td>Запрос и chunk в одном входе</td>
+</tr>
+<tr>
+<td>Выход</td>
+<td>Два embedding → cosine similarity</td>
+<td>Один relevance score</td>
+</tr>
+<tr>
+<td>Взаимодействие запрос–chunk</td>
+<td>Нет</td>
+<td>Есть — attention между запросом и chunk'ом</td>
+</tr>
+<tr>
+<td>Стоимость</td>
+<td>Дёшево: embeddings chunks считаются заранее</td>
+<td>Дорого: считается для каждой пары на лету</td>
+</tr>
+<tr>
+<td>Где применяется</td>
+<td>Миллионы chunks → ~100 кандидатов</td>
+<td>~100 кандидатов → финальный top-k</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=2787">46:27</a>):</strong> то есть считается attention между запросом и chunk'ом? — <strong>Ответ:</strong> да, именно так.</p>
+<p>Лектор рекомендует документацию Sentence Transformers (ссылка на слайде). Процедура проста: для каждого кандидата считается score с промптом, и получается итоговое ранжирование. Следующий вопрос — устраивает ли оно нас.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Писать cross-encoder самому обычно не нужно: есть открытые модели (например, семейство bge-reranker и cross-encoder'ы ms-marco MiniLM из Sentence Transformers) и reranking как API (Cohere Rerank и аналоги у других провайдеров) — на вход список кандидатов и запрос, на выход score'ы. Цена — задержка: 100 пар через cross-encoder на CPU могут занимать заметную долю секунды, поэтому в чатах кандидатов часто режут до 20–50. Промежуточный вариант между bi- и cross-encoder — late interaction (ColBERT): токены запроса и документа кодируются отдельно, но сравниваются попарно, что дешевле cross-encoder и точнее одного вектора на текст. Наконец, reranker'ом может быть и сама LLM, которой показывают кандидатов и просят оценить релевантность — дорого, зато без отдельной модели.</p>
+</div>
+<h2 id="8-оценка-retrieval-ndcg-mrr">8. Оценка retrieval: NDCG, MRR<a class="headerlink" href="#8-оценка-retrieval-ndcg-mrr" title="Permanent link">¶</a></h2>
+<p>⏱ 47:49–59:28 · <a href="https://youtu.be/h-7S6HNq0Vg?t=2869">▶ смотреть на YouTube</a></p>
+<p>Чтобы ответить, нужно измерять качество; метрики те же, что в поиске и рекомендациях. Постановка: после двух этапов у нас есть k chunks наверху списка, которые мы называем релевантными, и есть ground truth — какие chunks релевантны на самом деле (метки, как в бинарной классификации). Для ранжирования важно ещё и <em>где</em> в списке стоят релевантные документы; в RAG интересуют только первые k, потому что именно они попадут в промпт.</p>
+<h3 id="ndcg">NDCG<a class="headerlink" href="#ndcg" title="Permanent link">¶</a></h3>
+<p>NDCG (<a href="https://youtu.be/h-7S6HNq0Vg?t=2977">49:37</a>) оценивает качество ранжирования с учётом позиций релевантных документов: чем ближе они к первому месту, тем выше score. Формула выглядит пугающе, но делает простую вещь:</p>
+<div class="arithmatex">\[\mathrm{DCG@}k = \sum_{i=1}^{k} \frac{rel_i}{\log_2(i+1)}, \qquad \mathrm{NDCG@}k = \frac{\mathrm{DCG@}k}{\mathrm{IDCG@}k}\]</div>
+<ul>
+<li><span class="arithmatex">\(k\)</span> — число позиций, которые мы смотрим (сколько chunks идёт в промпт);</li>
+<li><span class="arithmatex">\(i\)</span> — позиция в нашем ранжировании;</li>
+<li><span class="arithmatex">\(rel_i\)</span> — релевантность chunk'а на позиции <span class="arithmatex">\(i\)</span>: 1, если он действительно релевантен, иначе 0;</li>
+<li>знаменатель растёт с рангом — это <em>discount</em>: релевантный документ на первом месте даёт больше, чем на k-м (<em>Примечание:</em> лектор говорит лишь «некоторая функция ранга»; <span class="arithmatex">\(\log_2(i+1)\)</span> — стандартный выбор);</li>
+<li><em>cumulative</em> — вклады суммируются по всем первым k позициям;</li>
+<li><span class="arithmatex">\(\mathrm{IDCG@}k\)</span> — DCG идеального ранжирования для этого запроса (все релевантные документы наверху). Делить на него (<a href="https://youtu.be/h-7S6HNq0Vg?t=3081">51:21</a>) нужно потому, что DCG сильно зависит от числа релевантных документов; после нормировки идеальное ранжирование даёт ровно 1, и score становится осмысленным и сравнимым между запросами.</li>
+</ul>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=3143">52:23</a>):</strong> откуда берётся релевантность в формуле? — <strong>Ответ:</strong> два этапа дают score для каждого найденного chunk'а; по нему chunks сортируются по убыванию. А <span class="arithmatex">\(rel_i\)</span> — это реальная метка: смотрим на k найденных chunks и по ground truth проверяем, действительно ли релевантен первый, второй и т. д.</p>
+<h3 id="mrr-precisionk-recallk">MRR, precision@k, recall@k<a class="headerlink" href="#mrr-precisionk-recallk" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Reciprocal rank</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=3247">54:07</a>) — гораздо проще: обратная величина ранга первого релевантного документа. Если первый релевантный стоит на позиции 2, ранг равен 2 и <span class="arithmatex">\(\mathrm{RR}=1/2\)</span>. Все релевантные документы ниже первого игнорируются. Метрика простая, но обычно хорошо коррелирует с NDCG, поэтому её используют. <em>Примечание:</em> MRR — среднее RR по набору запросов: <span class="arithmatex">\(\mathrm{MRR}=\frac{1}{|Q|}\sum_{q\in Q}\frac{1}{\mathrm{rank}_q}\)</span>, где <span class="arithmatex">\(Q\)</span> — набор запросов, <span class="arithmatex">\(\mathrm{rank}_q\)</span> — позиция первого релевантного документа для запроса <span class="arithmatex">\(q\)</span>.</li>
+<li><strong>Recall@k</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=3299">54:59</a>) — ранжирующий аналог recall: из всех действительно релевантных документов (положительный класс) какая доля попала в top-k.</li>
+<li><strong>Precision@k</strong> — из k выбранных документов какая доля действительно релевантна.</li>
+</ul>
+<div class="arithmatex">\[\text{Recall@}k=\frac{|\text{релевантные}\cap\text{top-}k|}{|\text{релевантные}|},\qquad \text{Precision@}k=\frac{|\text{релевантные}\cap\text{top-}k|}{k}\]</div>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Пусть для запроса релевантны два chunk'а, а retriever вернул top-3 в порядке [релевантный, нерелевантный, релевантный]. Тогда <span class="arithmatex">\(\mathrm{DCG@3} = 1/\log_2 2 + 0 + 1/\log_2 4 = 1 + 0.5 = 1.5\)</span>; идеальный порядок [релевантный, релевантный, нерелевантный] даёт <span class="arithmatex">\(\mathrm{IDCG@3} = 1 + 1/\log_2 3 \approx 1.63\)</span>, и <span class="arithmatex">\(\mathrm{NDCG@3} \approx 0.92\)</span>. Reciprocal rank равен 1 (первый же документ релевантен), precision@3 = 2/3, recall@3 = 2/2 = 1. Видно, что метрики отвечают на разные вопросы: RR — «быстро ли нашли хоть что-то», recall — «всё ли нужное попало в промпт», NDCG — «насколько хорош порядок».</p>
+</div>
+<p>Эти четыре метрики — NDCG, MRR, precision@k, recall@k — встречаются во множестве статей; лектор советует освоить их идею и формулы. Для сравнения retriever'ов есть популярный бенчмарк MTEB (Massive Text Embedding Benchmark, <a href="https://youtu.be/h-7S6HNq0Vg?t=3407">56:47</a>): прогоняете свой retriever, получаете все метрики и сравниваете решения между собой.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=3461">57:41</a>):</strong> что за encoder на этапе re-ranking? — <strong>Ответ:</strong> модель, обученная выдавать relevance score; есть предобученные, можно сделать свою. Она сложнее модели первого этапа, потому что работает с ~100 кандидатами, а не с сотнями тысяч или миллионами, и на неё можно тратить больше времени.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=3518">58:38</a>):</strong> а обучение с contrastive loss? — <strong>Ответ:</strong> в лекции не разбирается; в статье SBERT сравниваются несколько функций потерь, contrastive — одна из них.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 8</p>
+<p>Все четыре метрики оценивают только retriever и требуют размеченного набора «запрос → релевантные chunks». На практике его делают вручную для нескольких десятков типичных запросов или синтезируют: LLM генерирует вопросы к случайным chunks, и chunk-источник считается релевантным. Качество всего RAG-ответа измеряют отдельно, обычно через LLM-as-a-judge (faithfulness — опирается ли ответ на найденный контекст, answer relevance — отвечает ли он на вопрос; см. фреймворк RAGAS); как устроены такие оценки и чем они опасны — тема <a href="08-llm-evaluation.html">Лекции 8</a>.</p>
+</div>
+<p>На этом Afshine передаёт слово Shervine.</p>
+<h2 id="9-tool-calling">9. Tool calling<a class="headerlink" href="#9-tool-calling" title="Permanent link">¶</a></h2>
+<p>⏱ 59:28–1:26:22 · <a href="https://youtu.be/h-7S6HNq0Vg?t=3568">▶ смотреть на YouTube</a></p>
+<h3 id="от-неструктурированных-данных-к-функциям">От неструктурированных данных к функциям<a class="headerlink" href="#от-неструктурированных-данных-к-функциям" title="Permanent link">¶</a></h3>
+<p>Shervine называет это своей любимой частью лекции. RAG — про неструктурированные данные, «документы из слов», из которых нужно выбрать релевантные. Tool calling — про <em>структурированные</em> данные: таблица с колонками, где выход определяется значениями входов. Такую связь естественно переписать как функцию с аргументами (ID, поле и т. д.) и возвращаемым значением — отсюда второе название, function calling. В примерах LLM обычно работают с Python, потому что он легко читается, но ничто не привязывает tool calling к конкретному языку.</p>
+<p>Определение (<a href="https://youtu.be/h-7S6HNq0Vg?t=3732">1:02:12</a>) лектор берёт из статьи IBM: tool calling позволяет автономным системам выполнять сложные задачи, динамически обращаясь к внешним ресурсам и действуя через них. Два ключевых момента: есть <em>задача</em>, которую нужно выполнить, и <em>возможная</em> (не обязательная) опора на внешние ресурсы — именно она закрывает пробел в знаниях модели, о котором говорил Afshine.</p>
+<h3 id="пример-найди-мне-плюшевого-мишку-поблизости">Пример: «найди мне плюшевого мишку поблизости»<a class="headerlink" href="#пример-найди-мне-плюшевого-мишку-поблизости" title="Permanent link">¶</a></h3>
+<p>Вы в Stanford, достаёте телефон и просите LLM найти мишку рядом (<a href="https://youtu.be/h-7S6HNq0Vg?t=3790">1:03:10</a>). Без инструментов модель не знает ничего о наличии мишек в реальном времени и ответит что-то вроде «не знаю». Цель раздела — понять, что положить в преамбулу (системную часть промпта) и через какие шаги пройти, чтобы запрос выполнился.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=3849">1:04:09</a>):</strong> эти API функций заданы заранее? — <strong>Ответ:</strong> да, они определяются заранее, а не генерируются моделью на лету.</p>
+<p>Определение функции (<a href="https://youtu.be/h-7S6HNq0Vg?t=3906">1:05:06</a>): <code>find_teddy_bear</code>, которая по локации вызывает некий API и возвращает кандидатов. Что в ней важно:
+- <strong>Документация</strong> входа и выхода (docstring под функцией) — критична: по ней модель понимает, для чего функция.
+- <strong>Backend-вызов</strong> — обращение к внешнему API за доступными мишками с фильтром по близости.
+- <strong>Структурированный выход</strong> — класс, описывающий результат; именно на него модель будет опираться при финальном ответе.
+- Модель <strong>не видит реализацию</strong> (<a href="https://youtu.be/h-7S6HNq0Vg?t=4067">1:07:47</a>): ей доступны только сигнатура (API), вход/выход и основные строки документации. Код живёт в вашей кодовой базе.</p>
+<h3 id="три-стадии-вызова-инструмента">Три стадии вызова инструмента<a class="headerlink" href="#три-стадии-вызова-инструмента" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Предсказание аргументов.</strong> В начало преамбулы вставляется API функции без реализации, с полной документацией. Задача модели — не угадать реализацию, а подобрать правильные аргументы к пользовательскому запросу. В примере координаты Stanford модель берёт из контекста: разрешение на геолокацию включено, и местоположение ей известно (<a href="https://youtu.be/h-7S6HNq0Vg?t=4173">1:09:33</a>).</li>
+<li><strong>Выполнение вызова.</strong> К LLM отношения не имеет: берутся функция и аргументы, код исполняется, возвращается структурированный объект (имя мишки, локация и т. д.).</li>
+<li><strong>Финальный ответ.</strong> Результат подаётся обратно модели, чтобы она ответила пользователю естественным языком, а не JSON-подобной структурой.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>В LLM API «преамбула с API функции» — это параметр <code>tools</code>, а docstring превращается в поле <code>description</code> плюс JSON Schema аргументов. Для мишки это выглядело бы так: <code>{"name": "find_teddy_bear", "description": "Находит плюшевых мишек рядом с заданной точкой", "input_schema": {"type": "object", "properties": {"lat": {"type": "number"}, "lon": {"type": "number"}, "radius_km": {"type": "number", "description": "Радиус поиска, км"}}, "required": ["lat", "lon"]}}</code> (имя поля со схемой отличается у провайдеров: <code>input_schema</code> у Anthropic, <code>parameters</code> у OpenAI). Три стадии лектора в API видны буквально: модель отвечает не текстом, а структурированным блоком вызова с именем функции и JSON аргументов (стадия 1); ваш код выполняет функцию и отправляет результат обратно сообщением типа «tool result» (стадия 2); модель пишет финальный ответ (стадия 3). Качество поля <code>description</code> — главный рычаг: именно по нему модель решает, когда звать инструмент и что класть в аргументы.</p>
+</div>
+<h3 id="как-этому-научить-sft">Как этому научить: SFT<a class="headerlink" href="#как-этому-научить-sft" title="Permanent link">¶</a></h3>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=4117">1:08:37</a>):</strong> как вообще такое обучать? — <strong>Ответ:</strong> разбирается с <a href="https://youtu.be/h-7S6HNq0Vg?t=4280">1:11:20</a>. Лектор спрашивает аудиторию, какие этапы требуют обучения, и приходит к двум типам SFT-пар:</p>
+<ul>
+<li><strong>Tool prediction</strong>: вход — API функции и запрос пользователя; выход — вызов функции с аргументами. Модель должна распознавать связь между описанием функции и запросом.</li>
+<li><strong>Финальный ответ</strong>: вход — вся история разговора (исходный запрос, факт вызова инструмента, его результат), выход — ответ в нужном формате. Казалось бы, модель и так умеет пересказывать структурированные данные словами, но обычно хочется конкретного формата ответа, поэтому такие пары тоже нужны; вход у них длиннее, чем просто JSON.</li>
+</ul>
+<p>Примеров должно быть много, и они должны покрывать реальное распределение пользователей (<a href="https://youtu.be/h-7S6HNq0Vg?t=4451">1:14:11</a>): «найди мишку рядом» учит брать локацию из контекста пользователя; «хочу мишку в таком-то месте» — брать её из запроса; плюс варианты формулировок и multi-turn, когда просьба возникает посреди разговора.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=4398">1:13:18</a>):</strong> а если инструментов много — нужен tool selection или просто больше примеров? — <strong>Ответ:</strong> в SFT можно показывать входы с несколькими инструментами; tool selection — отдельная тема чуть позже.</p>
+<h3 id="как-обойтись-без-sft-объяснение-в-промпте">Как обойтись без SFT: объяснение в промпте<a class="headerlink" href="#как-обойтись-без-sft-объяснение-в-промпте" title="Permanent link">¶</a></h3>
+<p>Современные LLM хорошо рассуждают и на pre-training и instruction tuning видели много кода, то есть Python они уже умеют. Так ли нужно учить модель отображать запрос в вызов функции (<a href="https://youtu.be/h-7S6HNq0Vg?t=4505">1:15:05</a>)? Всё чаще SFT заменяют <em>объяснением</em> в промпте. Аудитория предлагает два пути (<a href="https://youtu.be/h-7S6HNq0Vg?t=4614">1:16:54</a>):</p>
+<ul>
+<li><strong>Few-shot learning</strong> — показать в контексте примеры вход/выход. Принятая практика, но с обобщением проблемы: конкретные примеры подгоняют модель под частные случаи, а не под всё многообразие языка.</li>
+<li><strong>Попросить модель рассуждать</strong> — написать инструкцию, объясняющую логику. Но писать такой промпт руками очень трудно.</li>
+</ul>
+<p>Практический приём (<a href="https://youtu.be/h-7S6HNq0Vg?t=4664">1:17:44</a>): те же SFT-пары использовать как evaluation set — «на такой вопрос хочу такой вызов». Текущее объяснение прогоняется по набору, получаются победы и поражения по каждому примеру (скажем, «найди мишку в Париже» не работает). Этот список со score отдаётся reasoning-модели с вопросом: что изменить в объяснении, чтобы результаты стали лучше? Так объяснение итеративно улучшается, и на практике модель справляется с этим удивительно хорошо. Вывод лектора: не писать объяснение end-to-end самому — набросать черновик и отдать доработку сильной модели с хорошим знанием логики.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=4775">1:19:35</a>):</strong> это обучение или inference? — <strong>Ответ:</strong> обучение, офлайн: итерации идут в самом начале, пока не получится фиксированный промпт. На inference этот фиксированный текст кладётся рядом с API функции, и модель знает, что делать с любым запросом.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 5</p>
+<p>Два типа SFT-пар — это обычные данные instruction tuning из <a href="05-llm-tuning-rlhf-dpo.html">Лекции 5</a>, только с вызовом функции в роли «ответа»; провайдеры уже прогнали такое обучение, поэтому разработчик на API никогда не делает SFT под свои инструменты — он идёт «путём объяснения»: поле <code>description</code>, system prompt и при необходимости пара примеров. У ряда провайдеров есть strict-режим, гарантирующий, что аргументы вызова соответствуют JSON Schema, так что ошибки формата отпадают и остаются только смысловые. А цикл «eval-набор → прогон → reasoning-модель переписывает инструкцию» — это в чистом виде automatic prompt optimization; если нужен готовый инструментарий, искать по DSPy и его оптимизаторам промптов.</p>
+</div>
+<h3 id="категории-инструментов">Категории инструментов<a class="headerlink" href="#категории-инструментов" title="Permanent link">¶</a></h3>
+<p>(<a href="https://youtu.be/h-7S6HNq0Vg?t=4828">1:20:28</a>)
+- <strong>Информационные</strong> — пример с мишкой; новости дня через инструмент Search (обход knowledge cutoff), погода, котировки.
+- <strong>Вычислительные</strong> — вместо цепочки рассуждений модель переводит запрос в код, код исполняется, ответ читается обратно.
+- <strong>Действия от имени пользователя</strong> — инструмент отправки email: модель заполняет заголовок и тело и может нажать «отправить», поскольку компонент, взаимодействующий с внешним миром, — часть API инструмента.</p>
+<h3 id="много-инструментов-и-итог-раздела">Много инструментов и итог раздела<a class="headerlink" href="#много-инструментов-и-итог-раздела" title="Permanent link">¶</a></h3>
+<p>На практике в контексте не один API, а несколько: обнять мишку, проверить его настроение, отправить подарок... Все кладут в преамбулу «на всякий случай», так как заранее неизвестно, что понадобится. Студент замечает (<a href="https://youtu.be/h-7S6HNq0Vg?t=4991">1:23:11</a>): это очень много инструментов. Верно — возникает та же needle-in-a-haystack проблема: API теряются в контексте, конфликтуют между собой.</p>
+<p>Итог (<a href="https://youtu.be/h-7S6HNq0Vg?t=5051">1:24:11</a>): от LLM, которая просто отвечала словами, мы пришли к LLM, которая взаимодействует с внешним миром, получает информацию в реальном времени и расширяет вычислительные возможности. Knowledge cutoff закрывается иначе, чем в RAG, — два метода дополняют друг друга. Три недостатка:
+1. Чем больше инструментов, тем больше лишнего в контексте; пытаясь поддержать всё, рискуешь стать посредственным во всём.
+2. Контекст конечен: при сотнях миллионов пользователей с разными задачами все инструменты в него не поместятся.
+3. Инструменты написаны руками, и у каждой LLM свой формат их описания — нужна стандартизация.</p>
+<h2 id="10-tool-selection">10. Tool selection<a class="headerlink" href="#10-tool-selection" title="Permanent link">¶</a></h2>
+<p>⏱ 1:26:22–1:29:17 · <a href="https://youtu.be/h-7S6HNq0Vg?t=5182">▶ смотреть на YouTube</a></p>
+<p>Как сделать tool use масштабируемым. Лектор ссылается на технический отчёт Google DeepMind с системой tool selector, работающей в два шага:</p>
+<ol>
+<li>Модели дают запрос и список инструментов — сколь угодно длинный, но в нём каждый инструмент представлен только именем API и парой слов о назначении. Модель выбирает те, что могут пригодиться.</li>
+<li>В контекст вместе с запросом подаются полные API только выбранных инструментов.</li>
+</ol>
+<p>В литературе то же называют router; tool selection и routing — близкие понятия. Цель — ограничить набор инструментов теми, что могут быть полезны.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=5294">1:28:14</a>):</strong> это же по сути RAG? — <strong>Ответ:</strong> можно сделать и через RAG, но не обязательно: выбор может делать сама LLM по инструкции.</p>
+<p>Переход к стандартизации (<a href="https://youtu.be/h-7S6HNq0Vg?t=5344">1:29:04</a>): описание инструмента может быть специфичным для конкретной LLM, и тогда одни и те же инструменты придётся реализовывать заново для каждой модели — дублирование, которого никто не хочет.</p>
+<h2 id="11-model-context-protocol-mcp">11. Model Context Protocol (MCP)<a class="headerlink" href="#11-model-context-protocol-mcp" title="Permanent link">¶</a></h2>
+<p>⏱ 1:29:17–1:31:56 · <a href="https://youtu.be/h-7S6HNq0Vg?t=5357">▶ смотреть на YouTube</a></p>
+<p>MCP (Model Context Protocol) — стандарт от Anthropic, задающий единый способ предъявлять инструменты моделям. Лектор даёт только «крупными мазками» словарь протокола:</p>
+<table>
+<thead>
+<tr>
+<th>Понятие</th>
+<th>Что это</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP server</td>
+<td>Инстанс, который предоставляет инструменты</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>Реализации функций, которыми должны пользоваться модели</td>
+</tr>
+<tr>
+<td>Prompts</td>
+<td>Шаблоны, показывающие, как использовать инструменты</td>
+</tr>
+<tr>
+<td>Resources</td>
+<td>Внешние базы данных, на которые опираются инструменты и промпты</td>
+</tr>
+<tr>
+<td>MCP client</td>
+<td>Компонент в LLM-хосте, с которым сервер связан один-к-одному (инфраструктурная деталь)</td>
+</tr>
+</tbody>
+</table>
+<p>Пример (<a href="https://youtu.be/h-7S6HNq0Vg?t=5459">1:30:59</a>): мишка любит поэзию, нужно порекомендовать ему книгу. LLM-хост — Claude (раз уж MCP от Anthropic). MCP server реализует продавец книг — он лучше всех умеет отдавать такой контент. Его tools — поиск и рекомендация книг; prompts — как найти конкретное название или подобрать книгу под вкус пользователя; resources — личная коллекция мишки или список самых покупаемых книг.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Сама модель «не говорит на MCP»: протокол (JSON-RPC поверх stdio или HTTP, методы вроде <code>tools/list</code> и <code>tools/call</code>) связывает MCP client в хост-приложении — IDE, десктопном клиенте, вашем агенте — с сервером, а хост уже переводит полученный список инструментов в обычный параметр <code>tools</code> для LLM API из предыдущих разделов. То есть MCP стандартизирует интеграцию, а не формат, который видит модель. Два практических следствия: каждый подключённый сервер добавляет в контекст десятки описаний, и проблема «слишком много инструментов» из раздела про tool selection наступает быстро — по состоянию на 2026 год провайдеры и фреймворки отвечают на это отложенной загрузкой схем (модель видит только имена и подгружает полное описание по запросу, то есть ровно двухшаговый tool selector из лекции); а описания инструментов стороннего сервера — недоверенный текст, который попадает в промпт, со всеми рисками из раздела о безопасности. Ревизия протокола от июля 2026 сделала MCP stateless: сессий и handshake больше нет, а связка «один клиент — один сервер», описанная в лекции, уже не часть спецификации (см. <a href="../updates/07-agentic-llms-rag-tools.html">актуализацию</a>).</p>
+</div>
+<h2 id="12-агенты-и-react">12. Агенты и ReAct<a class="headerlink" href="#12-агенты-и-react" title="Permanent link">¶</a></h2>
+<p>⏱ 1:31:56–1:42:16 · <a href="https://youtu.be/h-7S6HNq0Vg?t=5516">▶ смотреть на YouTube</a></p>
+<h3 id="определение">Определение<a class="headerlink" href="#определение" title="Permanent link">¶</a></h3>
+<p>Агент — «уровень выше» инструментов: система, которая автономно преследует цель и выполняет задачи от имени пользователя. В отличие от инструмента здесь есть рассуждение и несколько итераций — цикл. Именно рекуррентность и более высокий уровень рассуждений отличают агента от инструмента. Агентный framework не отделён от уже виденного: внутри могут быть цепочки рассуждений из прошлой лекции, а структура состоит из вызовов инструментов и итераций.</p>
+<h3 id="react">ReAct<a class="headerlink" href="#react" title="Permanent link">¶</a></h3>
+<p>Знаковая статья ReAct (Reason + Act, <a href="https://youtu.be/h-7S6HNq0Vg?t=5621">1:33:41</a>): цель часто нельзя достичь за один шаг; её нужно разложить на атомарные подшаги, выполнить каждый и собрать ответ. На лекции цикл описан стадиями observe → plan → act; в самой статье ReAct, по словам лектора, термины другие (think, observe, act), и от статьи к статье названия меняются, но интуиция одна.</p>
+<h3 id="пример-моему-мишке-холодно-сделай-что-нибудь">Пример: «моему мишке холодно, сделай что-нибудь»<a class="headerlink" href="#пример-моему-мишке-холодно-сделай-что-нибудь" title="Permanent link">¶</a></h3>
+<p>(<a href="https://youtu.be/h-7S6HNq0Vg?t=5671">1:34:31</a>)</p>
+<table>
+<thead>
+<tr>
+<th>Итерация</th>
+<th>Стадия</th>
+<th>Что происходит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Observe</td>
+<td>Запрос переводится в рабочую формулировку: мишке холодно → возможно, дело в температуре комнаты, которая пока неизвестна</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Plan</td>
+<td>Нужно узнать температуру комнаты</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Act</td>
+<td>Среди инструментов есть <code>get_current_room_temperature</code> — вызываем, получаем значение</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Observe</td>
+<td>В комнате 65 °F — холоднее, чем ожидалось</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Plan</td>
+<td>Нужно поднять температуру</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Act</td>
+<td>Вызываем функцию с аргументом «на сколько поднять»</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Observe</td>
+<td>Температура выставлена правильно → цель достигнута, выход из цикла</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Output</td>
+<td>Пользователю: «температура поднята на 5 градусов»</td>
+</tr>
+</tbody>
+</table>
+<p>Именно этот цикл делает workflow агентным: есть исходный запрос, набор доступных действий, и на каждой стадии модель проверяет, достигнута ли цель. Если да — переходит к выводу, если нет — делает ещё круг рассуждений и действий (<a href="https://youtu.be/h-7S6HNq0Vg?t=5878">1:37:58</a>).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>В реальном агентном цикле ломаются предсказуемые места: модель зацикливается, вызывая один и тот же инструмент с теми же аргументами; «галлюцинирует» результат инструмента, не вызвав его; объявляет цель достигнутой раньше времени (в примере — отчитывается о +5 градусах, не вызвав термостат); или накапливает в истории столько результатов, что начинает терять инструкции. Стандартные предохранители: лимит итераций и бюджет токенов, возврат ошибок инструмента текстом (чтобы модель могла исправиться, а не упасть), проверка, что перед словом «сделано» действительно был вызов, и обязательный лог каждого шага — те самые цепочки рассуждений, которые лектор советует читать при отладке. Reasoning-модели из <a href="06-llm-reasoning.html">Лекции 6</a> встраиваются в этот цикл естественно: стадии observe и plan становятся их скрытой цепочкой рассуждений перед каждым вызовом.</p>
+</div>
+<h3 id="несколько-агентов-и-agent2agent">Несколько агентов и Agent2Agent<a class="headerlink" href="#несколько-агентов-и-agent2agent" title="Permanent link">¶</a></h3>
+<p>Можно пойти дальше: агент для термостата, агент для распределения энергии, агент для качества воздуха. Пользователь говорит одному агенту, а агенты общаются между собой — для этого нужна стандартизация общения агентов, как MCP стандартизировал общение хоста с инструментами. Так в этом году появился протокол Agent2Agent от Google (<a href="https://youtu.be/h-7S6HNq0Vg?t=5990">1:39:50</a>); лектор советует прочитать спецификацию. Основное: агент выставляет наружу набор skills (что он умеет) с примерами, чтобы другие агенты о них знали; разработчик определяет skills и то, как агент исполняет запрос — какой статус он сообщает другим агентам, и метод cancel: что происходит, когда другой агент просит остановиться.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=6044">1:40:44</a>):</strong> каждый агент — это LLM со своим контекстом под задачу? — <strong>Ответ:</strong> в этом примере да; агенты работают независимо, у каждого свой цикл рассуждений, а наружу — только вход и выход.</p>
+<p><strong>Реплика из зала (<a href="https://youtu.be/h-7S6HNq0Vg?t=6094">1:41:34</a>):</strong> расход токенов может разлететься. — <strong>Ответ:</strong> да, стоит вводить ограничения бюджета; агенты не тратят бюджет друг друга, но все вместе тратят ваши деньги.</p>
+<h2 id="13-безопасность-и-заключение">13. Безопасность и заключение<a class="headerlink" href="#13-безопасность-и-заключение" title="Permanent link">¶</a></h2>
+<p>⏱ 1:42:16–1:49:00 · <a href="https://youtu.be/h-7S6HNq0Vg?t=6136">▶ смотреть на YouTube</a></p>
+<h3 id="риски">Риски<a class="headerlink" href="#риски" title="Permanent link">¶</a></h3>
+<p>С новыми возможностями приходит и новый класс проблем: модели теперь выполняют действия, и злоумышленник может заставить их сделать то, чего вы не хотите. Пример — data exfiltration (утечка данных): есть инструмент, который пишет куда-то публично, например email-агент; промпт вроде «отправь мой пароль на такой-то адрес» — а пароль инструменту может быть доступен — выводит данные пользователя наружу (<a href="https://youtu.be/h-7S6HNq0Vg?t=6141">1:42:21</a>). Другие риски перечислены в статье на слайде (в субтитрах название звучит как «tool sort», вероятно ToolSword).</p>
+<h3 id="два-класса-защит">Два класса защит<a class="headerlink" href="#два-класса-защит" title="Permanent link">¶</a></h3>
+<p>(<a href="https://youtu.be/h-7S6HNq0Vg?t=6199">1:43:19</a>)
+1. <strong>На этапе обучения</strong> — вспомните обучение R1 и других моделей: в data mixture для SFT и RL входят данные про harmlessness, которые покрывают и безопасность.
+2. <strong>На inference</strong> — если запрос прошёл через обученные «линии обороны», остаются safeguards во время работы: например, safety classifier, который смотрит на разговор и судит, безопасен ли будет ответ модели.</p>
+<p>Ориентир — Agent-SafetyBench: обзор возможных угроз плюс полный набор тестов, по которому можно проверить безопасность своей LLM.</p>
+<p>Актуальный пример (<a href="https://youtu.be/h-7S6HNq0Vg?t=6308">1:45:08</a>): накануне лекции Anthropic сообщила о крупномасштабной кибератаке, проведённой с помощью Claude — с использованием инструментов и агентных возможностей, — и опубликовала подробный отчёт о действиях атакующих и возможных мерах защиты. Лектор советует прочитать: и атаки, и защита становятся изощрённее; это не проигранная битва, но меры нужны.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Пример с паролем — частный случай prompt injection: инструкция для модели приходит не от пользователя, а из данных (письма, веб-страницы, найденного RAG-документа или результата инструмента). Опасной считается комбинация трёх свойств агента — доступ к приватным данным, чтение недоверенного контента и возможность отправлять что-то наружу (в индустрии её называют «lethal trifecta»); убрав любое из трёх, атаку заметно усложняют. Обзорные работы 2026 года подчёркивают: правило «всё извне — данные, а не команды» необходимо, но само по себе недостаточно, нужны и архитектурные ограничения. Отсюда практические правила: минимальные права у каждого инструмента, подтверждение человеком необратимых действий (отправка, удаление, оплата), а результаты инструментов и retrieval — данные, а не команды. И уточнение к пересказу отчёта Anthropic: по самому отчёту, Claude был инструментом атакующих, а целями — сторонние организации, то есть речь не об атаке на Anthropic; лектор, видимо, оговорился, а субтитры усилили неточность.</p>
+</div>
+<h3 id="почему-агенты-ещё-не-правят-миром-и-как-с-ними-работать">Почему агенты ещё не «правят миром» и как с ними работать<a class="headerlink" href="#почему-агенты-ещё-не-правят-миром-и-как-с-ними-работать" title="Permanent link">¶</a></h3>
+<p>(<a href="https://youtu.be/h-7S6HNq0Vg?t=6367">1:46:07</a>)
+- На каждом шаге рассуждений агент может уйти в сторону: неправильно привязать результат, ошибиться в аргументах вызова. Ошибки накапливаются — поэтому крупномасштабных агентов пока нет.
+- Такие пробелы можно закрывать через SFT, но лучше полагаться на возможности самой модели; как оценивать модели — тема следующей лекции.
+- Советы по разработке инструментов и агентов (<a href="https://youtu.be/h-7S6HNq0Vg?t=6421">1:47:01</a>): начинать с маленького простого случая («найди ближайшего мишку») и убедиться, что реализация и промпты работают; брать сначала самую способную модель, чтобы понимать потолок возможного, и лишь потом оптимизировать задержку и прочее — «start small and then start smart»; для отладки читать цепочки рассуждений модели.
+- Любимое применение агентов у лектора — AI-ассистент для кодинга: снимает умственную нагрузку при сложной «обвязке». Но учите основы и умейте писать код правильно, потому что теперь главное — ваш вкус: «generating code is cheap», а оценить, корректен ли код и делает ли он то, что нужно, — трудная часть (<a href="https://youtu.be/h-7S6HNq0Vg?t=6524">1:48:44</a>).</p>
+<h2 id="ключевые-термины">Ключевые термины<a class="headerlink" href="#ключевые-термины" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Термин</th>
+<th>Что это (как объясняли на лекции)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Knowledge cutoff</td>
+<td>Дата, до которой собраны обучающие данные; о более поздних событиях базовая модель не знает (GPT-5: 30 сентября 2024)</td>
+</tr>
+<tr>
+<td>Needle in a haystack</td>
+<td>Тест: в длинный промпт прячут факт и спрашивают о нём; с ростом длины и при факте в первой половине промпта модель его теряет</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Retrieval Augmented Generation: retrieve релевантные документы → augment промпт → generate ответ</td>
+</tr>
+<tr>
+<td>Chunk / knowledge base</td>
+<td>Фрагмент документа ограниченной длины (около 500 токенов) с перекрытием соседних в низкие сотни токенов; knowledge base — все chunks с их embeddings</td>
+</tr>
+<tr>
+<td>Embedding</td>
+<td>Векторное представление chunk'а или запроса (размерность порядка тысяч, например 1 500), по которому ищут похожее</td>
+</tr>
+<tr>
+<td>Candidate retrieval</td>
+<td>Первый этап retrieval: быстро отобрать ~100 кандидатов из миллионов chunks, максимизируя recall</td>
+</tr>
+<tr>
+<td>Ranking / re-ranking</td>
+<td>Второй, опциональный этап: более тяжёлой моделью отсортировать кандидатов и выбрать top-k</td>
+</tr>
+<tr>
+<td>Cosine similarity</td>
+<td>Стандартная мера близости embeddings; L2 при единичных нормах сводится к ней</td>
+</tr>
+<tr>
+<td>ANN</td>
+<td>Approximate nearest neighbor: разбиение embeddings при построении базы, чтобы не делать линейный перебор</td>
+</tr>
+<tr>
+<td>Bi-encoder</td>
+<td>Запрос и chunk кодируются независимо, сравниваются готовые векторы; архитектура первого этапа</td>
+</tr>
+<tr>
+<td>SBERT</td>
+<td>Sentence-BERT: расширение BERT, дающее embedding на последовательность; loss тянет cosine similarity релевантных пар вверх, нерелевантных — вниз</td>
+</tr>
+<tr>
+<td>Cross-encoder</td>
+<td>Запрос и chunk подаются в encoder вместе, attention между ними, на выходе relevance score; архитектура re-ranking</td>
+</tr>
+<tr>
+<td>BM25</td>
+<td>Эвристический relevance score по пересечению слов запроса и документа; гарантирует keyword match; часто в гибриде с embedding-поиском</td>
+</tr>
+<tr>
+<td>HyDE</td>
+<td>По промпту LLM генерирует «фальшивый» документ, и ищут по его embedding, чтобы сблизить природу запроса и документов</td>
+</tr>
+<tr>
+<td>Contextual retrieval</td>
+<td>К каждому chunk'у LLM-вызовом приписывается короткий контекст, вычисленный по всему документу</td>
+</tr>
+<tr>
+<td>Prompt caching</td>
+<td>Активации для общего префикса промпта считаются один раз и переиспользуются; у провайдеров кэшированные токены дешевле (OpenAI — 1/10)</td>
+</tr>
+<tr>
+<td>NDCG</td>
+<td>Normalized discounted cumulative gain: сумма релевантностей первых k позиций с убывающим по рангу весом, делённая на идеальный DCG</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>Обратная величина ранга первого релевантного документа (усреднённая по запросам); проще NDCG, хорошо коррелирует</td>
+</tr>
+<tr>
+<td>Precision@k / Recall@k</td>
+<td>Доля релевантных среди top-k / доля всех релевантных, попавших в top-k</td>
+</tr>
+<tr>
+<td>MTEB</td>
+<td>Massive Text Embedding Benchmark — популярный бенчмарк для сравнения retriever'ов</td>
+</tr>
+<tr>
+<td>Tool calling / function calling</td>
+<td>Модель получает API функции с документацией, предсказывает аргументы; код выполняет вызов; результат возвращается модели для ответа</td>
+</tr>
+<tr>
+<td>Tool selection / router</td>
+<td>Отдельный шаг, на котором по краткому списку инструментов модель выбирает нужные, и только их API идут в контекст</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Model Context Protocol (Anthropic): стандарт предъявления инструментов моделям — server, tools, prompts, resources, client</td>
+</tr>
+<tr>
+<td>Agent</td>
+<td>Система, автономно преследующая цель от имени пользователя: вызовы инструментов плюс рассуждение в цикле</td>
+</tr>
+<tr>
+<td>ReAct</td>
+<td>Reason + Act: разложение задачи на цикл атомарных шагов observe → plan → act до достижения цели</td>
+</tr>
+</tbody>
+</table>
+<h2 id="главные-выводы">Главные выводы<a class="headerlink" href="#главные-выводы" title="Permanent link">¶</a></h2>
+<ul>
+<li>Знания модели заканчиваются на дате cutoff. Дообучение (регрессии, переобучение всех fine-tune'ов) и «всё в контекст» (лимит окна, needle-in-a-haystack, цена за токены) не работают — RAG добавляет в промпт только релевантное.</li>
+<li>Качество RAG — это качество retrieval. Он двухэтапный: дешёвый отбор кандидатов на recall (bi-encoder, cosine similarity, ANN), затем дорогое ранжирование ~100 кандидатов cross-encoder'ом.</li>
+<li>Семантический поиск не гарантирует совпадения ключевых слов; если оно нужно, добавляйте BM25 и делайте гибрид под свой use case.</li>
+<li>Помните о несоответствии запроса и документов (HyDE, раздельные encoders) и о вырванных из контекста chunks (contextual retrieval); массовые LLM-вызовы удешевляйте prompt caching — всё повторяющееся в начало промпта.</li>
+<li>Retriever нужно измерять: NDCG, MRR, precision@k, recall@k, бенчмарк MTEB.</li>
+<li>При tool calling модель видит только API и документацию функции и предсказывает аргументы; выполнение происходит вне модели, результат возвращается ей для ответа. API задаются заранее.</li>
+<li>Учить вызову инструментов можно SFT (пары «запрос → вызов» и «история → ответ») или объяснением в промпте, которое итеративно улучшает reasoning-модель по eval-набору; руками такой промпт не пишут.</li>
+<li>Много инструментов → tool selection (router); разные форматы инструментов → MCP; многошаговые задачи → агенты с циклом observe/plan/act (ReAct); общение агентов → Agent2Agent.</li>
+<li>Агенты выполняют действия, поэтому безопасность критична: защита в данных SFT/RL, safety classifier на inference, Agent-SafetyBench; отчёт Anthropic о кибератаке — свежее напоминание.</li>
+<li>Начинайте с малого и с самой сильной модели, читайте цепочки рассуждений при отладке; генерировать код дёшево, судить о его корректности — трудно, и именно это теперь главный навык.</li>
+</ul>
+<h2 id="вопросы-из-зала">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=1079">17:59</a> Вопрос: что если retrieval отработает плохо? → Ответ: поэтому retrieval — самое важное звено RAG; дальше будет, как его оценивать.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=1299">21:39</a> Вопрос: обучать ли embedding-модель и зачем она? → Ответ: обычно берут предобученную, можно обучить свою; её задача — представлять chunks так, чтобы находились релевантные документы.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=1569">26:09</a> Вопрос: режем ли chunks наивно по числу токенов? → Ответ: есть расширения (contextual retrieval); при нарезке учитывайте структуру файла (JSON, markdown).</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=1937">32:17</a> Вопрос: какая мера сходства по умолчанию? → Ответ: cosine similarity; L2 и другие при единичных нормах сводятся к ней.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=2512">41:52</a> Вопрос: что кэшируется в prompt caching? → Ответ: активации всех слоёв для префикса; у decoder-only одинаковый вход даёт одинаковые активации.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=2579">42:59</a> Вопрос: а если модель закрытая? → Ответ: провайдеры предлагают prompt caching как опцию; кэшированные токены у OpenAI стоят 1/10.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=2787">46:27</a> Вопрос: cross-encoder считает attention между запросом и chunk'ом? → Ответ: да.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=3143">52:23</a> Вопрос: откуда релевантность в NDCG? → Ответ: сортируем найденное по score, а <span class="arithmatex">\(rel_i\)</span> берём из ground truth.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=3461">57:41</a> Вопрос: что за модель для re-ranking? → Ответ: обученная выдавать relevance score, есть предобученные; сложнее первого этапа, так как кандидатов ~100.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=3518">58:38</a> Вопрос: обучают ли с contrastive loss? → Ответ: в SBERT сравниваются несколько loss, contrastive — один из них.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=3849">1:04:09</a> Вопрос: API функций заданы заранее? → Ответ: да, не генерируются на лету.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=4117">1:08:37</a> Вопрос: как обучать tool calling? → Ответ: два типа SFT-пар — предсказание вызова и финальный ответ по истории разговора.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=4398">1:13:18</a> Вопрос: если инструментов много — tool selection или больше примеров? → Ответ: в SFT можно показывать несколько инструментов; tool selection — отдельный механизм.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=4614">1:16:54</a> Вопрос (от лектора залу): как научить без SFT? → Ответы студентов: few-shot (плохо обобщается) и инструкция с рассуждением (трудно написать руками — пусть пишет reasoning-модель по eval-набору).</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=4775">1:19:35</a> Вопрос: итерации над объяснением — это обучение или inference? → Ответ: офлайн-обучение; на inference используется фиксированный промпт.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=4991">1:23:11</a> Вопрос: не слишком ли много инструментов в контексте? → Ответ: да, та же проблема needle in a haystack и конфликтующих API.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=5294">1:28:14</a> Вопрос: tool selection — это по сути RAG? → Ответ: можно через RAG, но выбор может делать и LLM по инструкции.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=6044">1:40:44</a> Вопрос: каждый агент — LLM со своим контекстом? → Ответ: да; агенты независимы, со своими циклами рассуждений, интерфейс — вход и выход.</li>
+<li><a href="https://youtu.be/h-7S6HNq0Vg?t=6094">1:41:34</a> Вопрос: не разлетится ли расход токенов? → Ответ: вводите ограничения бюджета; агенты не тратят бюджет друг друга, но тратят ваши деньги.</li>
+</ul>
+<h2 id="чем-можно-дополнить">Чем можно дополнить<a class="headerlink" href="#чем-можно-дополнить" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Переписывание и декомпозиция запроса.</strong> Лекция берёт пользовательский запрос как есть; на практике перед retrieval его часто переформулируют (несколько вариантов запроса, более общий «step-back» вопрос) или разбивают на подвопросы для multi-hop задач, где ответ собирается из нескольких документов. Искать: query rewriting, multi-query retrieval, step-back prompting, Self-RAG.</li>
+<li><strong>Graph RAG.</strong> Вместо плоского списка chunks — граф сущностей и связей, извлечённый LLM из документов, с ответами по сообществам графа; помогает на вопросах «обо всём корпусе», где семантический поиск по chunks бессилен. Искать: GraphRAG (Microsoft).</li>
+<li><strong>Обученный разреженный и late-interaction retrieval.</strong> Между BM25 и dense embeddings есть модели, которые учат веса терминов (SPLADE) или сравнивают токены попарно (ColBERT); они закрывают часть слабостей обоих подходов из лекции. Искать: SPLADE, ColBERT, learned sparse retrieval.</li>
+<li><strong>Оценка RAG целиком и оценка агентов.</strong> В лекции метрики только для retriever; для ответов нужны faithfulness / groundedness и LLM-as-a-judge (<a href="08-llm-evaluation.html">Лекция 8</a>), а для tool calling и агентов — свои бенчмарки. Искать: RAGAS, Berkeley Function Calling Leaderboard (BFCL), τ-bench, SWE-bench, GAIA.</li>
+<li><strong>Паттерны построения агентов.</strong> Лекция даёт один цикл ReAct; в инженерной практике различают детерминированные workflow (цепочка, маршрутизация, параллелизация, orchestrator–workers, evaluator–optimizer) и «настоящих» агентов — и советуют начинать с первых. Искать: «Building effective agents» (Anthropic, 2024), planner–executor, reflection.</li>
+<li><strong>Память и управление контекстом агента.</strong> Долгие сессии упираются в окно контекста: нужны сжатие истории (compaction), вынос фактов в долговременную память и подгрузка их через тот же retrieval. Искать: context engineering, agent memory, compaction.</li>
+<li><strong>Prompt injection и безопасность инструментов глубже.</strong> Лекция даёт один пример и два класса защит; стоит знать таксономию indirect prompt injection, песочницы для выполнения кода, разграничение прав и human-in-the-loop. Искать: indirect prompt injection, lethal trifecta, AgentDojo, sandboxing для code execution.</li>
+<li><strong>Обучение моделей пользоваться инструментами.</strong> Лекция описывает SFT-пары абстрактно; классические работы показывают, как модель сама учится вставлять вызовы API в текст и как собирают такие данные. Искать: Toolformer, Gorilla, ToolBench.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="06-llm-reasoning.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 6. Reasoning-модели и GRPO">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                6. Reasoning-модели и GRPO
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="08-llm-evaluation.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 8. Оценка LLM">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                8. Оценка LLM
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

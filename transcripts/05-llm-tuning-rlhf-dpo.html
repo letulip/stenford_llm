@@ -1,0 +1,2102 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/transcripts/05-llm-tuning-rlhf-dpo.html">
+      
+      
+        <link rel="prev" href="04-llm-training.html">
+      
+      
+        <link rel="next" href="06-llm-reasoning.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>5. LLM Tuning - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-5-llm-tuning" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. LLM Tuning
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lectures/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-preference-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Preference tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-rlhf-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. RLHF overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reward-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reward model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bradley-terry-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bradley-Terry formulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reinforcement-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reinforcement learning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. PPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-advantage-value-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Advantage, value function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-ppo-variants-clip-kl-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. PPO variants: Clip, KL-penalty
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Challenges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-on-policy-vs-off-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. On-policy vs off-policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-best-of-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Best-of-N
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. DPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-preference-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Preference tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Data collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-rlhf-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. RLHF overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reward-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reward model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-bradley-terry-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Bradley-Terry formulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reinforcement-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reinforcement learning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. PPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-advantage-value-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Advantage, value function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-ppo-variants-clip-kl-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. PPO variants: Clip, KL-penalty
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Challenges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-on-policy-vs-off-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. On-policy vs off-policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-best-of-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Best-of-N
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. DPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-5-llm-tuning">Лекция 5. LLM tuning<a class="headerlink" href="#лекция-5-llm-tuning" title="Permanent link">¶</a></h1>
+<p><strong>Курс:</strong> Stanford CME295 Transformers &amp; LLMs, Autumn 2025<br />
+<strong>Видео:</strong> https://youtu.be/PmW_TMQ3l0I<br />
+<strong>Дата лекции:</strong> October 31, 2025<br />
+<strong>Длительность:</strong> 107 мин<br />
+<strong>Конспект:</strong> <a href="../lectures/05-llm-tuning-rlhf-dpo.html">../lectures/05-llm-tuning-rlhf-dpo.md</a></p>
+<p>Полный текст английских субтитров (ручные субтитры Stanford Online), разбитый по главам видео. Таймкод в начале абзаца кликабелен и открывает это место на YouTube.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-introduction">00:00 — Introduction</a></li>
+<li><a href="#2-preference-tuning">04:50 — Preference tuning</a></li>
+<li><a href="#3-data-collection">11:31 — Data collection</a></li>
+<li><a href="#4-rlhf-overview">17:43 — RLHF overview</a></li>
+<li><a href="#5-reward-model">28:24 — Reward model</a></li>
+<li><a href="#6-bradley-terry-formulation">29:46 — Bradley-Terry formulation</a></li>
+<li><a href="#7-reinforcement-learning">46:02 — Reinforcement learning</a></li>
+<li><a href="#8-ppo">53:54 — PPO</a></li>
+<li><a href="#9-advantage-value-function">57:56 — Advantage, value function</a></li>
+<li><a href="#10-ppo-variants-clip-kl-penalty">1:03:39 — PPO variants: Clip, KL-penalty</a></li>
+<li><a href="#11-challenges">1:16:20 — Challenges</a></li>
+<li><a href="#12-on-policy-vs-off-policy">1:19:58 — On-policy vs off-policy</a></li>
+<li><a href="#13-best-of-n">1:22:43 — Best-of-N</a></li>
+<li><a href="#14-dpo">1:29:47 — DPO</a></li>
+</ol>
+<h2 id="1-introduction">1. Introduction<a class="headerlink" href="#1-introduction" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=0">00:00</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5"><strong>00:05</strong></a> Cool. Hello, everyone. And welcome to Lecture 5 of CME295. So first of all, thank you all for taking the time to take the midterm last week. So I hope it was reasonable for you. So for those of you who are auditing, in case you are interested in taking the exam, just know that the exam and the solutions are both posted on the website. And so now, you know a little bit how the exam looks like. So for the final, we'll have the same format, except that the content will be on lectures 5, so this one, up until 9. So all good on that point? Cool. Great. So with that, we're going to start the lecture.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=58"><strong>00:58</strong></a> So today, we're going to talk about LLM tuning. So as usual, we're just going to recap what we saw last time. So last time was already two weeks ago. But we talked about how to train an LLM. And in particular, we've looked at two important steps. So the first one was called pre-training, where you're basically taking a model that has been initialized, and you're trying to teach the model about language, about code. So you have this step that is very time consuming, expensive, compute heavy, that is happening on a lot of data. So we've seen training optimizations on how to make that happen.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=110"><strong>01:50</strong></a> So we've seen techniques to parallelize that across GPUs. So we've seen data parallelism methods and, in particular, 0. So the variant 0, 1, 2, 3. And we've also seen very quickly what model parallelism was in this case. So at the end of this step, what you obtain is a model that knows about the structure of language, about codes-- basically, all the texts that it has been fed. But what this model can do is only predict the next token. So it's a great autocompleter, but it's not a helpful model yet, which is why we have a second step. And we saw here, it's typically called finetuning or SFT for Supervised Fine Tuning.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=162"><strong>02:42</strong></a> So here what we do is we take our pre-trained model, and we train it for specific tasks. So nowadays, you have ChatGPT and all these chat assistants. So this can be one application. So transforming your model into an assistant. And so here, the goal is to teach the model how to behave. So the model already knows what language is, what code is, et cetera. And you're just trying to make it behave like the use case that you're trying to tune it for. So typically here, what you have is a data set that is much smaller in scale, but of much higher quality. And you're basically taking your model, your pre-trained model, and teaching it exactly which tokens to predict with the next token prediction task.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=221"><strong>03:41</strong></a> And we've seen, LoRA, which is a parameter efficient method, which does not tune all the weights, but in a clever way, introduces low rank matrices that are the ones that are being tuned. And we had stopped there. So what we're going to see today is how to align the model to align with, what we call, human preferences. And so here, we're taking our model that has been finetuned for a specific task. And trying to align our model to make it more something that a human would like or that some metric that we're defining would be more aligned with that. So as an example, let's suppose if you have an assistant at the end step 2.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=275"><strong>04:35</strong></a> So it's very much possible that your assistant is behaving the way you want, but not, let's say, at the tone that you want. So it's not, let's say, friendly or it's not safe. So you want to tune those aspects in that third step.</p>
+<h2 id="2-preference-tuning">2. Preference tuning<a class="headerlink" href="#2-preference-tuning" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=290">04:50</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=296"><strong>04:56</strong></a> Cool. So this step is called preference tuning. And we're going to exactly see what that is. So here for context, let's suppose that we have an SFT model. And so by SFT model, I mean a model that has gone through the pre-trained stage and the finetuning stage. And so for instance, we may ask our model to suggest a new activity we could do with our teddy bear. And here the model, let's say, responds with, "I would suggest you to not spend much time with your teddy bear at all." So this is the response of an assistant, but it's not necessarily aligned with what we want. So the idea here is to take these, quote unquote, "bad outputs" and find an output or rewrite an output that we would want to have instead.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=353"><strong>05:53</strong></a> So this pair would be what we call a preference pair. So in other words, given this prompt, we have two responses-- one that we want to see, which is this one. And I'm going to read it in a second. And then the other one that we do not want to see. So for instance, in this example, the answer we want to see is, "Of course, teddy bears not only make awesome companions for a delightful sleep, but can also be great buddies for fun activities," and just like suggest some activities. Does the setup sound good? Yeah? So long story short, we want to align our model with human preferences. So you may ask, we have this finetuning step already.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=407"><strong>06:47</strong></a> Why would we want to have a third step? Well, during the second step, which is the finetuning stage, if you remember, what we did was construct a very high quality data set of the kinds of prompts on which we want our model to behave in a certain way. So in order to compose such a data set, it's actually something that is very time consuming and very actually difficult, because the data set must be of very high quality. And in this case, what we're doing is not really teaching the model exactly what it should generate, but rather telling the model what kind of output it should prefer. So we're less in "please generate that" kind of thing and more a "I prefer this option" kind of thing.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=468"><strong>07:48</strong></a> And so typically, if we asked you write a poem, write a great poem from scratch, it would typically be much more difficult to do rather than just showing you two poems, one bad poem and one great poem, and ask you to just say which one is better. So in order to obtain the data sets, it's already much easier. The second reason is-- so during the SFT stage, when we compose our data set of very high quality, there is one aspect that we really try to get right, which is the distribution of prompts. And what I mean by that is if we have too much of a given of prompt, our model will be more biased towards responding in that particular way.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=526"><strong>08:46</strong></a> So what people try to do is to be careful about the distribution of prompts that are in the SFT data. And so here, let's say if our model misbehaves, if we were thinking about just adding one example in the SFT data set, well, we would have to be very careful about which prompt we're adding and whether it's not going to bias the model like too much in that direction. So that's the second reason. And then, the third reason is what I mentioned, which is the SFT data is typically very high quality. So if you're looking at all the missteps that your model is doing and trying to put that in the SFT data, you'll just have a hard time. It takes a lot of time.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=577"><strong>09:37</strong></a> But one note here is if your SFT data is misbehaving a lot, it may also be due to the fact that your SFT data set has some problem. So preference tuning is not the answer to everything. Maybe it's better sometimes to just check your SFT data set for some issues. Does that sound good? Yeah. [AUDIO OUT] Yeah, so to do that in the preference tuning stage? OK, so the question is, we saw LoRA for SFT, what is the equivalent for preference tuning?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=628"><strong>10:28</strong></a> So we'll see that later in the lecture. But you can think of LoRA as being some way to, I guess, reduce the number of parameters that you need to tune. That is slightly different with the objective function that you're using to train your model. And here, preference tuning, you can think of it more as a different objective function, but it may very well be something that you also use LoRA for. So the two are not incompatible. But it will become more clear later on. But yeah, great question. One last thing I will add here is another difference with the SFT stage is that preference tuning allows us to inject some negative signal.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=678"><strong>11:18</strong></a> Because SFT is all about teaching the model about what it should predict, but it does not teach the model about what it should not predict. And we will see that preference tuning allows you</p>
+<h2 id="3-data-collection">3. Data collection<a class="headerlink" href="#3-data-collection" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=691">11:31</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=692"><strong>11:32</strong></a> to inject some negative signal. Cool. So to start, of course, we need to have our preference pairs. And so we're going to look at this data collection step first. So here's the setup. You have a prompt. Let's say write a poem. And you have a given response, which is the poem that is being generated by the model. You have a few ways to construct your preference data. So either you start with a pointwise mindset, where you score each proposed poem with some kind of pointwise score, and here pointwise score means a score just relative to one observation.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=748"><strong>12:28</strong></a> You could very well do that, but I will say it's kind of hard. It's kind of tough as a human to say, OK, this one is, I don't know, a 0.9. This one is like a 0.2. It's not super clear exactly how you would scale that. The second idea is for you to get two observations at the time and for you to say which one is better. So this one is called pairwise preference data. And it's much easier. And then, the third one is listwise, which is get a list of, let's say, n poems, and then you just rank which one is best, which one is worst, et cetera, et cetera. And I guess this one is easier than pointwise, because you don't have to specify, I guess, how much better it is, but I guess it's still a bit more complicated.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=807"><strong>13:27</strong></a> And that's the reason why people typically use pairwise. So what they do is they collect pairwise preference data. Meaning for each prompt, they have two possible answers, and then they just specify which one is better. And so that's the one we'll continue this lecture with. OK, so now you may ask, OK, great, pairwise preference data. But how do you get it? Well, here is the recipe. So in order to generate a pair of responses-- so first, you need a prompt. And we've seen-- previously, I think it's in lecture probably 3-- that what you could do was to generate different answers if you have a temperature that's positive.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=863"><strong>14:23</strong></a> So typically, what people do is they put this prompt, let's say, twice into the model with a positive temperature, and then they can get two different answers. The prompt is typically something where we wanted to follow the distribution of what the users typically ask. So the prompt x can be something that we obtain from the logs or from, let's say, a desired set of prompts. And then what we do is we have these two observations. So the first one is the prompt and the first response. The second one is the prompt and the second response. And what we do is we rate-- we compare them. So we can compare them with, of course, human ratings.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=918"><strong>15:18</strong></a> But we can also compare them with some other metrics. So I'll just list a few. So we have LLM as a judge, which you may have heard of, which we have not seen yet, which we will see in a few lectures that is also typically used to just compare, I guess, how much better one observation is compared to another. We can also use some other metrics, rule-based one like BLEU, ROUGE, et cetera, although, it is not as used these days. And the simplest way to compare these two observations is to have a binary setting, where you say, OK, is response 1 better or worse than response 2?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=969"><strong>16:09</strong></a> But you could also think of a more nuanced scale, meaning you can also say, OK, response 1 is much better, better, slightly better, slightly worse, worse, or much worse. So this is also something that you can do. But there are some challenges with that approach. Because for instance, if you, I don't know, consider human ratings, a lot of tasks are a little bit subjective. So in a lot of cases, actually, what people do is having a pairwise preference data set on the binary scale. So only is it better or worse. Does that sound good? Yeah. OK, so another way to obtain that data is to have-- to find in your logs a response that you did not like to take that response and to rewrite it, which is basically what we did here.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1036"><strong>17:16</strong></a> So here, when we have the response here, what we did is take the response and rewrite a good one. So this is also what people do. But of course, it is a bit more involved, because you need to generate. And I told you that generation was kind of costly and tough, but this is also possible. Does the data collection make sense?</p>
+<h2 id="4-rlhf-overview">4. RLHF overview<a class="headerlink" href="#4-rlhf-overview" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=1063">17:43</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1066"><strong>17:46</strong></a> Yeah? Cool. OK, so now, we have our preference data. And what we want is to align our model to prefer responses that were preferred by the rating, and, I guess, down weight the responses that were not preferred. And so in order to do that, we will see a method that's called RLHF. RLHF. And I'll see-- we'll see that in more details in a second. But as the name indicates, RLHF relies on RL. So I'm just going to start with some RL basics. So do we have any RL experts here? Yeah?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1118"><strong>18:38</strong></a> No? [CHUCKLES] So no need to be an RL expert. So don't worry. We'll go really slowly on that. So in the RL world, what people do is they have an agent-- and here, I mean the agent in RL term-- which interacts with an environment. So what does it do? It is at a given state, at, let's say, time t, it can take an action at time t. And it takes that action according to some policy. The policy is typically denoted pi, pi of theta of the action given the state. So what that policy means is simply giving you the probability of you taking an action given a state.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1175"><strong>19:35</strong></a> Easy, right? And so given that the agent takes some action, it also receives some rewards. So sometimes, it's a good reward. Sometimes, it's bad rewards. So what we're going to do is to leverage that mindset for our preference tuning exercise. So let's see together how we can transpose these quantities in the LLM world. So what is the agent? The agent is the LLM. So in terms of the state that it is in, so it's simply the input that it has so far.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1225"><strong>20:25</strong></a> So the action that it wants to do is to predict the next token. So it basically always wonders, OK, what is the next token given this input? And this action or this next token is among the set of tokens that are out there. So if you want-- the environment can be the set of tokens of your vocabulary. And in order to decide which token should come next, the LLM determines that using the probability of next token, which is obtained by when you do your forward pass, and when you look at the probability distribution as an output, which is basically our policy.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1275"><strong>21:15</strong></a> So our policy here is simply equal to the output of the LLM given the input in order to determine the next token. So far, so good? And now, we're adding one additional thing. So I told you we're composing our preference data sets. And we want to know which output is better than the other output. And so we're going to use that for our reward. We're going to somehow use that for our reward. And we'll see how we will use that. So I'm going to just recap that part. So we have our LLM take some input, and then it wants to predict the next token. It wants to take this action.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1326"><strong>22:06</strong></a> So in order to do that, it uses the probability distribution that it outputs. And then, the token that it predicts or the output that it generates then receives some reward that is going to feed back into tuning the agent. And here is the LLM. Yep. [AUDIO OUT] So the question is, wouldn't that be expensive if we do this for all pairs? Why would that be expensive? [AUDIO OUT] Mm-hmm. [AUDIO OUT] Yeah, so-- [AUDIO OUT] Yeah, the question is, what do you do in terms of how expensive that is?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1383"><strong>23:03</strong></a> So yeah, typically, people take batches, for instance. But I would not-- so it is indeed expensive. But we're going to see a little bit some order of magnitude and how that works. But you can think of this as being kind of a training procedure that could be seen as expensive as some other training procedure. There's nothing that makes this more expensive, but we're going to see exactly. So I think there are some points that you're touching correctly. There are some parts that are added compared to the regular supervised-- let's say, supervised fine tuning setting. And we're going to see that in a second. [AUDIO OUT] So the question is, does the reward that you're getting from here, I guess, powerful enough for the LLM to change?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1443"><strong>24:03</strong></a> Well, you will see some expressions on the internet just characterizing this training procedure as it's nearly not as many signals as what you would get for SFT, let's say. But because for SFT, you're literally always taking a partial input and making the LLM learn how to generate the next token. But here, you're only getting roughly one signal per completion. So yeah, definitely it's more sparse. And that's why you will see that RLHF is seen as more an approach that has sparse signals. Yeah, yep. [AUDIO OUT] Great question.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1494"><strong>24:54</strong></a> So the question is, do you apply a reward for each token or for the whole thing? We're going to see this in more detail, but it's for the whole thing. It's for the whole thing. But we'll see that in just a second. Yep. [AUDIO OUT] So the AD and-- oh, right, so the question is, what is the AT and ST. So just as a reminder, ST is the state that you're in, and AT is the action you want to take. So in the context of an LLM, the state that you're in for an LLM is the input that you have so far. And then the action is which token you want to generate given that input. Yep. Cool.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1545"><strong>25:45</strong></a> Yeah, so far so good? OK, perfect. So now that we know a little bit what a mental model could be for, I guess, LLM-based RL, I just want to highlight once more that what we're trying to achieve is learn how to align this policy with rewards. So we want to learn theta, and theta is the parameters of our LLM, such that pi of theta aligns with preferences. And that's where RLHF comes into play. So RLHF stands for Reinforcement Learning from Human Feedback.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1595"><strong>26:35</strong></a> And it is typically composed of two stages. So the first stage is you figuring out how to distinguish good output from bad output. So here, all the preference pairs that you collected are actually used for you to learn what is good, what is bad. So the input here is the concatenation of the prompt and the response. And the output is a score. So what you want to know given a prompt and the response, how good that is. And then the second step is the RL step, the Reinforcement Learning step. And this is where you use the rewards to align your model with the preferences.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1646"><strong>27:26</strong></a> So here as input, you have the prompts. And what you somehow want to do is to be able to generate y hat that is more aligned with the rewards. And by the way, I just want to call out one thing. So RLHF is Reinforcement Learning from Human Feedback. The Human Feedback part refers to the labels on which the reward model is trained. So if there are preference pairs are based on human ratings, then we're relying on human preferences, then we're in RLHF. Because you will see out there, there is also RL, let's say, AIF, a Reinforcement Learning from AI Feedback. And that one is relying on non-human preferences.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1698"><strong>28:18</strong></a> So yeah. Cool. OK, so now that we know what RLHF is and we</p>
+<h2 id="5-reward-model">5. Reward model<a class="headerlink" href="#5-reward-model" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=1704">28:24</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1705"><strong>28:25</strong></a> know that there are two steps, we'll go through the first step naturally. So here the idea is we want to construct a model that knows which output is good, which output is bad. And of course, here, what we want is to not only consider the output, but also the input, because you need to somehow contextualize that answer. So let's go with our favorite example. So let's suppose you have the following prompt. Suggest a new activity I could do with my teddy bear. So what you want is to have a reward model that-- here, we note RM, --that tells you that the answer that we rewrote into the good answer is good.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1758"><strong>29:18</strong></a> And we want to somehow have that model that tells us that the output that we constructed-- or that we did not construct, the output that we saw was bad is bad. So we want to somehow have a model that takes in the prompts and the good response and say it's good. And we want to somehow have a model that takes the prompt and the bad response to say it's bad. So now the question is, how do you construct such a model?</p>
+<h2 id="6-bradley-terry-formulation">6. Bradley-Terry formulation<a class="headerlink" href="#6-bradley-terry-formulation" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=1786">29:46</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1790"><strong>29:50</strong></a> Well, in order to do that, we are using a formulation that's called the Bradley-Terry formulation. So that one is an important formula. So we'll just stay here for a little bit. So what it says is that the probability-- bless you-- to have an output yi be better than an output yj is equal to an exponential of some score, which is a score with respect to i over the exponential of that score with respect to i plus the exponential of some score with respect to j. So that is called the Bradley-Terry formulation. And this is the formulation we will use to build our model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1846"><strong>30:46</strong></a> So here, it's also equal to sigma of ri minus rj. So who knows what sigma is? [INAUDIBLE] Yes, exactly. So it's a sigmoid. So just as a reminder sigmoid is 1 over 1 plus exponential of minus x. So this is how the graph looks like. So when it's minus infinity, it tends towards 0, and then towards plus infinity, it tends towards 1. So in other words, if i is better than j, what we want is for the input to sigma to be as high as possible, because you want the probability to be as close to 1.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1898"><strong>31:38</strong></a> So you want to somehow have ri be high if the output i is good and somehow rj to be low, if the output is bad. So far so good? So here, what we want to do is to somehow train a model that is able to output scores ri and rj using this formulation. So this formulation involves two quantities, because we have a pairwise data set. So far so good? So it will become more clear in a second.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=1948"><strong>32:28</strong></a> So here for training, the idea here is you have some model that you initialize, and you input on the one hand your prompt x and your winning output. So I'm saying winning, so it's y hat w. You put it into the model. It produces score r of x and y hat w. And then, you have a second output, so x and yl, y hat l, which is the losing output. So you put it into the model, and it has a second score. And now, you somehow want to have a loss function that takes into account these two scores.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2000"><strong>33:20</strong></a> So based on this formulation, do you have some suggestion as to which loss function to use? So here, our loss function would be pairwise. Yep. Yeah. So the proposed answer is a binary cross entropy. So can you explicit that a bit more? [AUDIO OUT] Mm-hmm. [AUDIO OUT] OK, so I guess, in that case, what would it be? [AUDIO OUT] Yep. [AUDIO OUT] Yep. [AUDIO OUT] Yeah, exactly.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2054"><strong>34:14</strong></a> So I guess, the-- yes, great answer. So I guess, your answer is having some negative log likelihoods of this quantity, which is-- so the cross-entropy can be seen as kind of a special case of this. So that we make sure that we get this part-- so in order to just get that formulation, which you mentioned again, I guess, one idea that we can have is given our data and given this formulation that we saw, the Bradley-Terry one, to find parameters theta that maximize the probability of that data happening, which basically, leads to what you mentioned.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2105"><strong>35:05</strong></a> So here, I'm just going to write what that means, so that just we can be all aligned. So here, it's-- so let's suppose you have a preference data sets of, let's say, winning example associated with losing example. So you have a bunch of pairs like this. So let's suppose that these pairs, they happened independently of one another. So what you want is to find parameters that somehow maximize the probability of you seeing those examples. So here, what that means is we want to somehow how maximize the products of, let's say, these n preference pairs, which is the probability of some output w being better than some output [? l. ?] And we saw that with the Bradley-Terry formulation, so we have this formulation, which is basically the product of [? y1 ?] to n of these sigma of this reward, which is basically a function of the input prompts and the output.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2201"><strong>36:41</strong></a> Like this. So what I'm doing here is to just reconstruct the loss from first principles. So whenever you see a product of probabilities, the first thing you need to think about is-- yes, log. Because this can become very small, so it can cause instabilities. So if you take the log, if you want to maximize the product, it's the same as maximizing the log of that. So if you take the log of that-- so let's suppose I'm taking, let's say, the log of that. Let's say I'm taking the log of that. So it's basically equal to the sum of the log of sigma of r of the winning minus the one from the losing.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2262"><strong>37:42</strong></a> So we want to maximize that. But people in ML, they like to minimize things. So we're going to take-- like, have a negative in front, so maximizing plus the sum of the log is the same as minimizing minus the sum of the log. And so this will be our loss function. Does that make sense? And this is exactly what you mentioned. And typically, we write the expectation. And this is our loss function. So our loss function is minus the expectation of log of sigma r and x and y, y hat w minus the reward of the losing.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2320"><strong>38:40</strong></a> Sounds good? So here, the loss function is pairwise. But the reward model, is it pairwise or is it pointwise? I guess, do you need a pair to make a prediction or do you need just one? Do you need a pair? Pair? Well, that's the beauty of things. You don't need a pair, so you're just training it pairwise, but it's actually pointwise. So I think that's one thing I realize. I look at this loss, and this is a [INAUDIBLE] So you're training in a pairwise way. But at the end of the day, you have a reward model that takes in one prompt and its output and just outputs one number. And we saw that it will try to output a high score for winning examples and then a low score for losing examples.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2376"><strong>39:36</strong></a> So this is our reward model. And I'm looking at the time, I'm actually not on time, so I'll just move on. So typically, here, what you would need is a set of data, which is typically in the tens of thousands or maybe even more. And here, the label would be the preference rating. The preference here should come from humans if we're talking about RLHF. And in terms of model, where you have a bunch of different choices. So as we now, models that are decoder only that predict the next token are very popular. So you could very well take such an LLM and just have some classification heads at the end of your sentence that you're taking into consideration and then use that to predict the reward.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2431"><strong>40:31</strong></a> Or if you remember, we've also seen encoder only models in the beginning of the class. So for instance, BERTs. You could typically also project the embedding of the CLS token. It could very well be an option. So typically, what people do nowadays is take the LLM route because everything is an LLM these days. So it's like decoder only. You just put a classification head. And so people have also come up with benchmarks to evaluate how good you're doing. So we just put a reference here RewardBench in case you're interested. It's a pretty popular one. But yeah. So at the end of this, you get a reward model that takes in a prompt and a given response and gives you a score.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2489"><strong>41:29</strong></a> Yep. [AUDIO OUT] Exactly. So the question is in some tasks, the human preference would be something, but another task, it may be something else. So typically, those rewards, they are with respect to a given dimension. So they can be, let's say, is the output useful or is the outputs are not friendly? Is the output safe? So all of that are different dimensions, so they can be different reward models. You can also have some holistic score as well.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2541"><strong>42:21</strong></a> But yeah. So you need to define a dimension across which you're actually quantifying how good your response is. So the ones that I mentioned are the common ones that you'd find. Another thing that we say as well, while we're at it, so human ratings are very sensitive to the guidelines that you're also exposing. So we're not going to go into details here, but one important aspect of human preference data is to make sure that the guidelines you're telling your readers are as objective as it could get. I mean, sometimes you cannot have them be super objective, but you have, I guess, the task of just making sure they're clear enough, so that your human preferences, they're not noisy, because they can be noisy, but that's also one challenge.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2600"><strong>43:20</strong></a> Yeah. [AUDIO OUT] So the question is, is the reward here a regression or a classification? So let's look at the loss function and here. So well, it's hard, I guess, I will say because the reward can be something that can be interpreted as a score, but we have a probabilistic formulation. So I'll probably frame that as a classification task because you have preference data. Is it better or worse? So it's 1 or 0. But at the end, you use the rewards. So it's not, I guess, purely a classification task because at the end, you have this.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2654"><strong>44:14</strong></a> But one thing to note is that the scale that these rewards are at is typically something that is scaled itself. So at inference time, you have some normalization procedure that normalizes that across your batch. But yeah, I would probably characterize the formulation more as a probabilistic one I would say. [AUDIO OUT] Yep. Yep. [AUDIO OUT] Yep. So the question is, do we normalize the score? So there are many different methods to, I guess, normalize things. We typically do. We typically do normalize. So I guess if you're in the regression setting, you're trying to predict some score on a given scale, which you're not doing here.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2707"><strong>45:07</strong></a> So it's free form here. So yeah. So there is some rescaling that happens. Yeah. You had a question. [AUDIO OUT] Yeah. The question is, can you tell us more about what the output of a reward model is? So we're going to see that a bit later, but you can think of goods outputs as being, let's say, 1, bad outputs as being minus 2, minus 3. So it's basically on the continuous scale if you want. We're going to see an example in a little bit. So hopefully, this can-- do you have a question? Perfect. We're going to see an example. So hopefully, that will be clear. Cool.</p>
+<h2 id="7-reinforcement-learning">7. Reinforcement learning<a class="headerlink" href="#7-reinforcement-learning" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=2762">46:02</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2763"><strong>46:03</strong></a> So what we did is train a reward model. Now, the second step is to use that reward model to align our model, and by model, I mean the LLM. The LLM that went through the pre-training stage and the SFT stage is the model that we want to align with human preferences. We're going to do that using reinforcement learning. And we're going to do that using the reward model that we just constructed. So the reward model here is the model that we obtained in step one. And it allows us to distinguish good outputs and bad outputs. So here is a general recipe of how you would align your model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2816"><strong>46:56</strong></a> So first, you would take your prompt as input. Your LLM will generate a completion. So here, a completion means a full response from the model. So by the way, completion, people use also the term roll-outs. So it generates a completion, a rollout, a full response. And that full response along with the prompt goes into the reward model. So as we saw, the reward model right now knows if it's good, if it's bad. Let's say, right now, it's bad. So in practice, it does not generate the thumbs down. It generates some kind of score. So if you want minus 2 let's suppose. So we take that reward into consideration.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2869"><strong>47:49</strong></a> And then what we do is we tune the LLM with this information. So it's more complicated than that. And we'll see how we go about doing this. But this is the general idea. So just as a reminder, the reward model is the model that we trained as step one. And it is a model that is frozen. We're not training the reward model. The reward model has been trained. The model that we're training is the LLM. So I think that's an important point to note. And our goal is to optimize for higher rewards but then without going too far from the initial model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2929"><strong>48:49</strong></a> So I think the optimizing for higher rewards, I think, everyone agrees with me. But I just said a second statement, which is but we don't want to go too far from the initial model. So why would that be? Why would we want to not deviate too much from the base model? [AUDIO OUT] So one suggested answer is it will catastrophically forget what it has learned. Why would that be a problem? [AUDIO OUT] Great. Yeah. I think it's a great way to put it. So the suggested answer here is you have all this knowledge in your initial model, which is pre-trained and then instruction tuned or tuned and you don't want to move away too much.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=2991"><strong>49:51</strong></a> This is exactly it. So that's one reason. What could be another reason? So definitely one. It's very, very good reason. What could be another reason? Yeah. [AUDIO OUT] Yep. So overfitting on that data. So can you tell me more? [AUDIO OUT] Yeah. Great point. So the second suggested answer is you can overfit on data that is not super clean. And I will go a bit more into detail on what that means. Yeah. You wanted to add? [AUDIO OUT] Yep. Yeah. Exactly. So I guess your two points are, I guess, along the same lines, which is the reward model can be noisy. So that's exactly it. So it's a phenomenon that's called reward hacking, where if you are trying to optimize too much for the rewards, you're basically assuming that the reward is exactly quantifying what you want.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3058"><strong>50:58</strong></a> But it may not be the case, because the reward model itself is imperfect. So just to make sure that everyone gets the point, I'm going to illustrate that with an example. So let's suppose that I'm giving a lecture. And my objective is for the lecture to be as informative as possible. So I can take the choice to have something that I can quantify to know if what I'm saying is informative. So let's suppose if my reward is how loud the claps are at the end of the lecture, if the clapping is a lot or not. The problem is if I optimize too much for the volume of clapping at the end, it may be the case that if I found out that you all like jokes and I start making jokes and then you clap at the end, my reward is maximized.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3125"><strong>52:05</strong></a> But my objective is not fulfilled, which is make the lecture informative. So in practice, this reward hacking phenomenon is something that leads your model to optimize too much on a metric or a score that is imperfect. So it can very well maximize the rewards but not fulfill what you want. And this is exactly what the idea behind reward hacking is. So yeah. And another reason by the way. So it's one reason is because your base model is already great. It knows a lot of things. Second one is because the reward model is imperfect. So you have this reward hacking phenomenon. The third reason is also because you can have some training instabilities. Anyways, we have a bunch of reasons why we don't want to deviate too much.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3179"><strong>52:59</strong></a> And so in this setup, you typically have more observations than in the reward model case. So you have typically at least 100K observations. And the label that you get here is from the reward model. And so you start with the model that you obtained after SFT. So that's the one that you trained. And the loss function will be something that will try for you to maximize the rewards but also to not have you deviate too much from the base model. So we're going to see exactly how we can do that. But that's the idea of how our loss function will look like. It will have these two parts. Sounds good?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3232"><strong>53:52</strong></a> And as we saw, so we don't want it</p>
+<h2 id="8-ppo">8. PPO<a class="headerlink" href="#8-ppo" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=3234">53:54</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3235"><strong>53:55</strong></a> to deviate too much because of reward hacking and instability and so on. So in order to do that, you may have heard a very popular RL algorithm that's called PPO. So PPO stands for proximal policy optimization. So the reason why it's named proximal is because we do not want our model to deviate too much from the base model. And we're going to see how we do that. So this is roughly how our loss function will look like. So we'll have a part that is a reward model that we want to maximize. And then some other part that is around measuring how far the distribution of the policy that we're training is to the reference model or the base model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3292"><strong>54:52</strong></a> So here, the reference model would be your SFT model. So you have these two parts. Does the formulation of the loss roughly make sense so far? That makes sense? Cool. OK. KL divergence. So I'm just talking about KL divergence, but I don't want to just assume you know what that is. So the KL divergence is some measure. I don't want to say distance because distance has a lot of connotations to it. It's not a distance, but it's some measure of how far two probability distributions are. So you take a probability distribution, let's say, P and another one probability distribution Q. And you compute this formula, which is the sum of p i log of p i over q i.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3355"><strong>55:55</strong></a> Just gives you a number of how distant or how far these two probability distributions are. So you want to minimize the loss. So I guess you want to minimize how far they are. Does that make sense that we're using this? Yeah. OK. So just one little question. So OK. Is the KL divergence positive or negative or what can you tell me about the KL divergence? Have you seen the-- yeah. It's positive. Why is it positive? [AUDIO OUT] Yeah.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3415"><strong>56:55</strong></a> But why? So maybe we can come later but great, great. I think the result is here, but I guess I want to why. Yes. Exactly. So yeah, if you use Jensen's inequality-- because when you look at this formula, I mean, luck can take positive and negative values, it's not super clear. But yeah, the way you prove that it's always positive or equal to 0 is with the Jensen's inequality. And so yes, this quantity is equal to 0 if and only if P and Q are equal. Cool. So with that, we're going to go a little bit more in depth into the loss function.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3466"><strong>57:46</strong></a> So I mentioned that the loss function tries to maximize for rewards but also make it so that the model does not deviate too much from the base</p>
+<h2 id="9-advantage-value-function">9. Advantage, value function<a class="headerlink" href="#9-advantage-value-function" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=3476">57:56</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3478"><strong>57:58</strong></a> model. Well, there is something that I've lied a little bit about too, which is we don't want to maximize rewards. We actually want to maximize a quantity called advantage. So what is the advantage? So you can think of the advantage as being how much better is your output compared to what you would expect. So people typically use advantage to make the whole process be, I guess, more stable, the training more stable. And we estimate that advantage with a function called a value function, which we will see in a little bit. Did you have a question?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3529"><strong>58:49</strong></a> No, no question. So we have two quantities. Right. We have the reward that we saw previously how to compute, which is given a prompt, given a completion, how good is this prompt and completion? And then the value function is another estimation, but this estimation is not at the completion level. It is actually at the token level. So what we're doing here is we're taking the prompt along with the partial generation as input. And we're trying to estimate what the reward would be if we were to continue to generate the output following the policy.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3585"><strong>59:45</strong></a> So I'm just going to repeat this one more time because it's charged in meaning. The value function is a token level estimation of the reward that takes in a partial input and predicts the reward. So that predicts the reward if you were to follow the policy in your generation. So this value function is something you will see in papers as something that people have to train when they do PPO. And it's typically because people need to have this value function when they compute the advantage that I mentioned above. And this value function is typically trained jointly with the policy.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3640"><strong>1:00:40</strong></a> So in other terms, you have your LLM, which is initialized as the SFT model, which generates the prediction. So what you typically do is also have some value head that also-- so this time, it's not a classification problem. It's a regression problem. You try to estimate the final reward if you were to continue to generate according to policy. So this is typically something that you also need to train jointly with the policy. And I am intentionally not going too much into detail as to exactly how that advantage is formulated.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3690"><strong>1:01:30</strong></a> It is just beyond the scope of this class. But in case you're interested, I would highly recommend reading this paper, which is mathematically involved about the generalized advantage estimation methods, which people typically use for this. So it's this high dimensional continuous control using generalized advantage estimation paper. So if you're interested, just feel free to take a look. But this is typically the method that people use to estimate these advantages. So now, we're going to see in a second where those advantages are used. But just as a high level, does that make sense to everyone what we're trying to achieve here? [AUDIO OUT] Yeah.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3742"><strong>1:02:22</strong></a> So in other words, what we want is to maximize the rewards but not deviate too much from the base model. But what we want is to actually find a way to make the rewards a bit more relative as to what you would actually expect. So you want to compare the rewards that you're obtaining with an average response if you want. The idea is, OK, if you are having a great reward, what would be the reward in the average case? And you want to maximize that. And the reason why people use these reward minus baseline is because it reduces the variance of these estimates, and it just makes the training just go faster typically.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3799"><strong>1:03:19</strong></a> So that's why people use that part. But in order to compute the advantage, what people use is a method called generalized advantage estimation, which you can think of it as a big formula with some hyper-parameters that is in the paper below.</p>
+<h2 id="10-ppo-variants-clip-kl-penalty">10. PPO variants: Clip, KL-penalty<a class="headerlink" href="#10-ppo-variants-clip-kl-penalty" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=3819">1:03:39</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3820"><strong>1:03:40</strong></a> That's the general idea. Cool. OK. Looking at the time, so we're going to look at two typical variants of the PPO loss. The first one is called PPO-Clip. So the idea here is to prevent the updates to our model from being too large from one iteration to the next. So what you have is this loss formulation, which is the minimum of the ratio, and we're going to see what that is, times the advantage and some clipping of that ratio between two bands, which we're going to see in a second, times that advantage.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3875"><strong>1:04:35</strong></a> So before we go into details, I just want to call out a few things that may seem like it's confusing because it was confusing to me. So first of all, that formula is expressed as L is equal to, but it's actually not something we want to minimize, something that we want to maximize. So what people typically mean by L is loss. So yeah, just know that we want to maximize that. We don't want to minimize. The second thing is we're introducing a term called R of theta. This is not the reward model. So typically, people use R to say the reward. But here, it's not the reward. It's actually the ratio in the probabilities between our policy and the policy from the previous step, which is denoted pi old, pi theta old.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3938"><strong>1:05:38</strong></a> So it quantifies how different your policy at the current stage is to your old policy. So here, when we say, old, it's not the SFT model. It's not the SFT model. It's the model at the previous iteration during the oral stage, because here what we want is for the policy to not have updates that are too wide. So far, so good? Yeah. [AUDIO OUT] What is A? A is our advantage. So you can think of it as this complicated formula that's a function of the reward and the value function that just tells you how good your piece is basically.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=3994"><strong>1:06:34</strong></a> So this complicated formula, we're just going to see why it makes sense. So if the advantage is positive, it means that we somehow want to reinforce whatever was generated. And so here, our objective function will look like this. So if A is positive, then this L of CLIP will look some linear function as a function of R because it's R times A. So it's a linear function as a function of R. And then after 1 plus epsilon, it will just be flat.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4048"><strong>1:07:28</strong></a> So why do we want such a shape for our graph? Well, we need to think again about what R means. So if A is positive, meaning it's something that we want to reinforce, we typically want the probability of whatever happened to be increased. So we want R to be higher, but we don't want it to be too high. So that's why we have this clipping mechanism. So that's why we have this clipping here. We want to, I guess, maximize L. So we go towards increasing R, but we don't want to increase R too much.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4104"><strong>1:08:24</strong></a> So that's the rationale for this. But when A is negative, it means that somehow what we've done is something that we don't want to do as much. So in order to maximize L, what we want is to actually decrease the probability of just generating what we generated. So we want R to be smaller because it also increases L, but we don't want it to be much smaller. We don't want too big of an update, which is why we have this clipping mechanism here. So in other words, this super complicated formula can be just intuitively explained with what I just mentioned, which is if you have positive advantages, you want to reinforce the fact of generating this output because this is something that the model likes.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4169"><strong>1:09:29</strong></a> I mean, by model, I mean the reward model, but you don't want it to update it too much, which is why you have this clipping. And same when the advantage is less than 0. I guess you want to down weight the probability of this output from happening. So you want to have a smaller R, which is your ratio between the policy you're training with respect to the old one, but you don't want to be too small either, again, to not make too big of an update. Does this make sense? Does this roughly make sense? OK. Roughly makes sense. Cool. I will just recommend just rereading this formula, just remembering what I mentioned.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4222"><strong>1:10:22</strong></a> And hopefully, it will make a bit more sense. But yeah, happy to answer any questions if there are any. Yeah. Oh, yeah. Yeah. [AUDIO OUT] So the question is, what happens where it's not-- it's the same as ReLU. You will basically use the same methods. So yeah, it's the same thing. Yeah. [AUDIO OUT] So great question. The question is, why are you using from the previous iteration and not the base model? Because actually, we don't want just to not be too far from the base model. We also want our updates to be not too extreme from one iteration to another.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4276"><strong>1:11:16</strong></a> And this is to improve with stability of training. So this is just like another additional constraint we want. [AUDIO OUT] Question is are we considering the base model? We will consider it. And I will tell you exactly. But in this formulation, we are not. In this formulation, we are not. But in the formulation we're using typically for LLM based RL, we are and we will see how. Yeah. [AUDIO OUT] Yeah. So the question is, how do you quantify R?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4327"><strong>1:12:07</strong></a> What is R? What does it mean? So it's typically the probability of a token happening with respect to the inputs. So you can think of the probability distribution that you get at the output of your LLM. So you would use that. Cool. So this is the first variant that the PPO paper mentions. So it's called PPO-Clip. So the second variant that we have is the one that uses KL divergence, which is called KL penalty. And this one is a function of the ratio times the advantage minus the KL divergence between the old policy, which is the previous iteration, and the current iteration.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4379"><strong>1:12:59</strong></a> So you had a great point, which is why are we using the old? In fact, old means previous RL iteration. But nowadays, people use the reference. So it's just a change-- because this paper has been published in 2017, where in 2025, LLMs, they came more into something that was popular in the 2020s. So yeah, there's just been this difference in what you put there. So yeah, it's indeed the reference that you would typically put in a KL divergence. The other thing that I will say is that nowadays, when someone wants to train a policy using PPO, they would typically use the KL divergence, and they would also maybe mix it with the clipping thing with the old iteration.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4440"><strong>1:14:00</strong></a> They will basically mix the two. There are many different formulations of what the loss can be. So what I'm saying is not always true. But this is what people sometimes do. They sometimes mix the two. Cool. So I talked to you about PPO and how it allowed you to maximize rewards, maximize advantages by not making your model deviate too much from the base model and also from the previous iteration. But the problem is that for PPO, you need a lot of models. So you need your policy, you need your LLM that you're training. You also need the value function, which what I mentioned is used for the advantage estimation.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4493"><strong>1:14:53</strong></a> You also need the reward model of course. And then you need the base model. So the base model is frozen, so just the SFT model just to be able to compare with the current policy. So it's a lot of models. So now, the question that you may ask is, do you really need to have all these models to perform well? And the answer is maybe not, maybe but maybe not. And nowadays, there is a bunch of other methods that are becoming more popular. So you may have heard in GRPO in the context of reasoning models. So we will look at GRPO in more detail next week for lecture 6. But just know that there are many variants.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4546"><strong>1:15:46</strong></a> So PPO is just one algorithm that has been very popular. And even within PPO, there's been many variants. And nowadays, there are many other RL algorithms that are being used. Yeah. And yeah, if you want to just anticipate next lecture, you can also take a look at this paper from the Deep Seek team. So Deep Seek Math limits of mathematical reasoning in open language models that introduces the GRPO algorithm.</p>
+<h2 id="11-challenges">11. Challenges<a class="headerlink" href="#11-challenges" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=4580">1:16:20</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4581"><strong>1:16:21</strong></a> But if you don't, it's fine. We're going to talk about it next week. So I also want to talk about some challenges when it comes to RL-based approaches. So the first one is you need to have this two-stage process. You need to first train your reward model, and then you need to use the reward model to train your policy. But the problem is you do step one, you do step two, and then you realize, oh, wait, step one has a problem. Then you need to redo everything. So there is a bunch of dependencies that can really make your life harder. And just the training recipe is not the simplest. So that's one downside.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4633"><strong>1:17:13</strong></a> The second downside is about the number of hyper-parameters that you need to tune. So we saw beta from the KL divergence formulation. So that's one. We have epsilon from the PPO-Clip version. That's another one. The generalized advantage estimation, we have not seen the formula. But there's, I think, at least two hyper-parameters that I can think of. Anyways, you have a bunch of them. So of course, some hyper-parameters perform better than others. And if you need to retrain, then, well, you need to do everything again. Then you have some instability challenges. So you can constrain your iterations to not be too wide to control for that but sometimes, it's not sufficient.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4688"><strong>1:18:08</strong></a> So in terms of the metric that you can use to monitor the training, well, what is the metric you would use? So we're trying to maximize rewards in some sense. So typically, the metric that you would use to monitor your training would be the average rewards. But this is not a great-- I mean, this is a way to monitor your training, but this is not the best way necessarily. So at least when it came to pre-training and SFT, you had this cross entropy loss that you were monitoring that was really telling you how your model was able to just reproduce the behavior you were trying to make it outputs. But yeah, so this is another challenge.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4740"><strong>1:19:00</strong></a> And then the other thing is in the RL world, in order for you to know which completion you should not do and which completion you should do more, you need to have some diversity whenever you generate. So if during the RL training loop, every time you have a prompt, you generate something, and then you retry, and you generate something else that's too close, well, it's not great because you're not exploring the set of possible completions. So this is another challenge you need to have in mind, which is you need to force your model to do some exploration to see, I guess, what can be good. And then the last point is, I mean, a lot of you were not familiar with RL.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4791"><strong>1:19:51</strong></a> I was not, and it's not super clear why we would necessarily need RL to do this stage.</p>
+<h2 id="12-on-policy-vs-off-policy">12. On-policy vs off-policy<a class="headerlink" href="#12-on-policy-vs-off-policy" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=4798">1:19:58</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4803"><strong>1:20:03</strong></a> Also, I will say one thing. So this RL-based training, you will hear a lot the term on policy training. I just want to tell you what that means. So what is different between this and SFT is during SFT, we had some prompts and some response that we wanted our model to generate, to mimic. But here, what we're doing is at each iteration, we're asking our model to generate an output, and then we're using how good that output is to update our model. So there is a core difference between the two, because in here, what we're doing is we're asking the model to generate something, whereas for SFT, we're just using some data that is not necessarily generated by our model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4866"><strong>1:21:06</strong></a> So on policy training refers to training that involves the model generating from its current policy and optimizing on that. And this is in contrast with off policy training, which is relying on generations that are not done by the model that you're training. Does this make sense? Yeah. So this is a term you will see a lot, which is why I'm telling you. And yeah, so PPO is an on policy algorithm. Yeah. [AUDIO OUT] So the question is, why don't we do SFT on this preference data?</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4916"><strong>1:21:56</strong></a> Well, SFT, you tell the model, you should generate this given this input, then you should generate this given this input. But you're not telling it about things you should not generate. Let's suppose you have something that you don't want to happen, unless you rewrite that into perfect sentence, there is no way for you in the traditional SFT framework to tell your model to not generate that. But that being said, it's a great prompt because later on in, let's say, 10 minutes, we will see a supervised way of doing what we did with RL. But yeah, it will be in about 10 minutes. But apart from that, does that roughly make sense?</p>
+<h2 id="13-best-of-n">13. Best-of-N<a class="headerlink" href="#13-best-of-n" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=4963">1:22:43</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=4965"><strong>1:22:45</strong></a> Yeah. Perfect. So in the next few minutes, we will see a method that is actually used more often than not. And this is for people who have a reward model but that don't want to do RL. So why do you not want to do RL? Because it's expensive. You need a lot of models. So to your point, it's indeed expensive because you need all these models. And sometimes it's just too hard to tune that training. So you have these methods called best of N or BoN. And the idea here is to leverage the reward model that you obtained in order to choose the output that you will return to the user.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5016"><strong>1:23:36</strong></a> So the idea here is you have a prompt, and you tell your models, OK, you actually want to have several generations. So you generate, let's say, 4 times, 5 times. And what you do is you give a score to each prompt completion, and you just return the best one, the top rated one, which is why it's called best of N. So you have N completions. You rate all of them, and you just return the best one. So you have your prompt. So our favorite example, suggest a new activity I could do with my teddy bear. You put it into your SFT model. So you're not training your SFT model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5066"><strong>1:24:26</strong></a> It's as is. And you're just generating, let's suppose, three completions. The first one is a great answer. The second one is no, don't spend time with the teddy bear, which is not a good answer. And then the third one, I think, is also a good one, take your teddy bear to a picnic. You put all of these into your reward model. And this is where I wanted to respond to you, what is an output of the reward model? So it would be a score like this. So for instance, the first one would be a pretty good completion, so it's 0.8. The second one is not good at all. Let's say, minus 2. And the third one is, let's say, so-so, so in between. So the best of N method would select the top rated one, which is the first one, and this is the one that you would return.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5122"><strong>1:25:22</strong></a> So what is one problem with this approach? [AUDIO OUT] So the answer is if the model is bad, then it's going to be bad. That's fair. But I guess if you make enough completions with, let's say, a high enough temperature, you will have some diversity. So it's a fair point, which can be a problem, but let's suppose it's indeed a problem. Let's suppose it's not a problem. What is another problem that you may have? Yep. [AUDIO OUT] Yes. Yes So the answer is you query the model many times, which is indeed the problem. So you're at inference. What you want is to not spend a bunch of money and compute. But here, what you're doing is complete your prompt multiple times.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5178"><strong>1:26:18</strong></a> And this is indeed the main challenge with this. So you indeed skip the RL training, but you're basically pushing all the work to your inference, to the inference stage. And this is just making everything so super costly. So when can it be bad? So if, for instance, you're in a case where you need to serve your model to, let's say, a bunch of traffic, it may not make sense for you just from a cost standpoint. So I would say, before taking that route, it may be good to just assess what will be your inference traffic, what would be your training cost, and determine that from there.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5228"><strong>1:27:08</strong></a> And yeah, I think that's pretty much it. Do we have any questions on that part? Oh, yeah. Yeah. [AUDIO OUT] That sigmoid would be softmax. Are you talking about this one? So in that algorithm, you're assuming that your reward model is trained. So the best of N approach is you do this training. So I guess the sigma here is pairwise because you trained your model in a pairwise fashion. But in the best of N case, what you do is you just use your reward model to score N times, and you just pick the highest one.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5284"><strong>1:28:04</strong></a> Yeah. [AUDIO OUT] Yeah. The question is, but what if all the responses are bad? This is definitely a fair concern. And this is indeed a concern. So your model needs to be at least a little bit good. Yeah. Exactly. Yeah. Yeah. Yeah. [AUDIO OUT] It's a great question.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5343"><strong>1:29:03</strong></a> Do you have any constraint on the scale? Well, depending on how your scaling is done, you actually don't care about the scale as long as you take the best one, the highest one on. If you think about it, let's suppose if you scale it, let's say, with a normal score, the highest one will still stay the highest one. So in this case, you actually do not care about the scale. [AUDIO OUT] Yes. You also don't care about that. But typically, the scaling matters when it is coming into play in a loss function, which is the case for RL. And so that's where people use some scaling mechanism. That's the part that matters.</p>
+<h2 id="14-dpo">14. DPO<a class="headerlink" href="#14-dpo" title="Permanent link">¶</a></h2>
+<p><em>Начало: <a href="https://youtu.be/PmW_TMQ3l0I?t=5387">1:29:47</a></em></p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5390"><strong>1:29:50</strong></a> Cool. And with that, I'm going to give it to Shervin. Thank you, Afshin. So for this last part, we're going to talk about DPO. But I'm not going to tell you what DPO means just yet. We're just going to first listen to the complaints we had in the RL world and then see what we could do about it and then how have folks remedied it. So the first thing that I'm going to repeat from what Afshin covered is that in the RL formulation of PPO, you have to carry, during your loss optimization, a bunch of model weights. So when you look at this loss function, you have, first, the policy of the current model you have to optimize for, the one of the old model or the reference model.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5447"><strong>1:30:47</strong></a> And then you have your advantage which hides the reward model, as well as the value function that we discussed. So all this four, which is a lot. And the second thing is that, let's say, you go with the approach of best of N, you don't do RL, you just generate multiple times and then pick the best completion. As Afshin mentioned, so you have this latency and cost issues. And just for the sake of thoughts, for a thought experiment, let's suppose we had infinite money, would it be still fine? So let's suppose you generate all of these in parallel. So you would still need to wait for the maximum time of the generation of an answer to give you a resulting answer.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5503"><strong>1:31:43</strong></a> And then if you look at the distribution of latency, usually it's some shape that is not centered on a single point. And when you look at the probability distribution of the max of, let's say, N answers, it will tend to be shifted to the right. So let's suppose you have infinite money, infinite compute, you still have to wait more than you would have on a single pass. Do these concerns make sense? And OK. So there comes the question that someone was asking, why don't we do supervision all this time? And this is the route that DPO folks have explored. So DPO stands for direct preference optimization.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5554"><strong>1:32:34</strong></a> So instead of doing these expensive two-step process of, first, finding some reward model and then iterating on the model's weights, it optimizes a single loss function that directly optimizes for the model's weight. And as you can see, there is no reward involved anymore, so no R. And you have a way to formulate what you care about as a function of your preference pairs. So in that loss function, all you have is a bunch of variables and then the sigmoid functions. But within the parentheses, you have the probability of a given completion to happen. And you have this subtraction operation that compares the probability of the winning completion to happen versus the losing one.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5611"><strong>1:33:31</strong></a> So as you can see, it's a direct expression with respect to these preference pairs, which is pretty nice. And if you look at it a bit closer, you will recognize what afshin just mentioned regarding Bradley-Terry formulation because you have these expected value of log of a sigmoid. And then within that sigmoid, you have a difference of terms, where you can recognize the equivalent of what you saw as a reward term. So I know it's a lot to see at once. The formula is not super pretty. Do you have any questions? And then we're going to discuss in a bit what that beta is and also how we obtain this formula in the first place.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5669"><strong>1:34:29</strong></a> And one thing I will mention before going to that is that the paper is titled your language model is secretly a reward model. And the reason for that is that the reward placeholder that you could identify from this loss function is expressed as a function of your policy. So you don't have any r's in there. But when you express the equivalent of a reward, you find the expression of your model directly. So which is pretty interesting insights. OK. So but now, let's think together about how we got there in the first place. So you recall from a few slides ago the PPO objective that we had.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5721"><strong>1:35:21</strong></a> So we wanted to maximize rewards and minimize the distance of the obtained policy with respect to the reference one, which is this trade-off between maximizing rewards and KL divergence term. And then you have this beta coefficient that appears there that controls how much you want to penalize going further from the base model. And what this paper did is that it wrote down this formula and then solves what would be the optimal solution. So it expressed the optimal policy pi star. And when you derive this expression, so you get it as a function of R.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5771"><strong>1:36:11</strong></a> So that's another term that was in the objective function. And so all these steps have no extra assumptions. It's just a bunch of derivations that was done. And what you can see here is this Z term that stands for a partition function and that just normalizes things. But it's not something that is new. It's a function of the terms that were already in there. So when you rearrange these terms, you can equivalently express r as a function of this pi star. So it's just rearranging terms between these two expressions. Nothing too fancy.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5822"><strong>1:37:02</strong></a> And then the key part of what this paper did is recognize this term as some reward and then express it as part of a Bradley-Terry formulation. So you remember you had this probability of a completion, of a winning completion being bigger than a losing completion. And you had this sigmoid of the difference between the two r's. So basically, they took this formulation again, and they plugged in the expression they had obtained for the optimal reward, which we had seen was a function of the policy. So at the end of it, you plug in things. You have no more rewards, just a function of the other parameters.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5875"><strong>1:37:55</strong></a> So you have this beta and only the policy in there. And the last step is the same one as Afshin was mentioning, once you have this probability that you want to maximize, you can turn it into a loss function. And this loss function is what this paper proposes to optimize in order to tune policy weights in order to align it with this preference data. So I simplified a lot the quite heavy steps of this paper into these few steps. Do they make sense? And the beta that we see here is the same beta as we had seen in the PPO formulation, so typically taken around 0.1 if you want some order of magnitude.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5934"><strong>1:38:54</strong></a> So beta is a hyper-parameter, and all you want to optimize for is the policy. And then the preference pairs, you have them as inputs. Makes sense? OK. Great. So now, let's compare what this method gives with respect to RLHF. So RLHF is this two-stage training process where you first fit a reward function and then use it in order to do the policy update steps. So Afshin was mentioning it, it's quite heavy. We were mentioning it just before, you need a lot of models in memory and then training stability is a concern. You don't have direct supervision. You rely on the policy of the current model to generate the next updates.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=5987"><strong>1:39:47</strong></a> So there is a lot of complexity in it. And as opposed to that, this DPO formulation gives a supervised way to think about preference tuning, where you just take this preference pairs, and you directly fit a loss function on them. And yeah. And instead of four models, you just need two because you had this pi of theta and then a pi ref, which was your base SFT model, and you don't need any other model copies. So now, you might want to ask if it's much easier, why is not everyone just simply using DPO? So it's not as easy. In practice, there are some pros and cons to each method, and the paper that is listed below gives a very interesting study of the bench-marking differences and the steps to get there.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6050"><strong>1:40:50</strong></a> So just to get the main lines, overall, PPO performs better than DPO. And one great thing about DPO, which is the supervision, the direct supervision, comes at the cost of sometimes fitting something that is not the exact distribution that the model has seen as training time. So this paper talks about it a bit. If you train via SFT on the preference related data, you could get better performance. But this shift in distribution is a challenge intrinsic to DPO, because one thing that the DPO method enables you to have is just to not worry about that reward modeling at all and just get some preference data set out there.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6106"><strong>1:41:46</strong></a> But the issue with doing so is exactly that distribution shift. So you could either train SFT on it or donate it yourself and then rate it. But that is yet another cost that you would need to pay. Great. And yep. Any questions? Yep. [AUDIO OUT] So the question is you are optimizing the parameters with respect to the base model. So yes, but it's not the base model. It's the current one. You have a base model that will stay fixed in the iterations. And it occurs in the loss function. And you're indeed updating parameters.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6157"><strong>1:42:37</strong></a> And that will be like the preference tuned one. Yeah. So you have two weights, two set of weights, one frozen, one that you update. Yeah. OK. Great. Any other questions? [AUDIO OUT] Yes. So the question is instead of the reference model, could you use another model, another large model? So I think that's an interesting point. I guess that would be a different algorithm. And you might lose a bit the meaning of what you're trying to do because this preference tuning stage is trying to align your responses to what you prefer. And you want them to align with respect to what you had learned so far.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6210"><strong>1:43:30</strong></a> So if you start from a different model, and then you preference tune a different probability distribution, you might be doing things that might not make as much sense from a loss standpoint. But I guess the direction-- I mean, I cannot tell a blanket answer there. Maybe it could give interesting behavior, but my intuition would tell you that the point of all of this is to start from the last train checkpoint that you had and then further preference tune the distribution of your completions. So the suggestion was if you change the reference model, that could be seen as another SFT version of your model. Yeah. I guess so.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6265"><strong>1:44:25</strong></a> Great. And now, my favorite part of today. So do you all remember the completions we had obtained on our favorite prompts? So can I put my teddy bear in the washer? So if you remember last episode, we had said after instruction tuning, the response was, no, it might get damaged. Try hand washing it instead. So does anyone have any complaints regarding this answer? So I can give a hint. Teddy bears, they indeed should be hand washed. So it's factually correct. But let's suppose it's factually correct. What else do you not like? I mean, could you not like about this answer? Yeah.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6322"><strong>1:45:22</strong></a> So the suggestion was it's asking to try it instead. And I guess a broader point is it's a bit too rough. It doesn't sound super friendly. And then someone who asks this question might love teddy bears, so you might want to tell them about it in a gentle way. And this is exactly what preference tuning stage is about. We don't want to learn new facts. We want to focus on existing distribution of completions and align what the model should return with respect to what the human prefers. So on this intuition, the preference tunes answer could be a gentler one. It's better not to. Your teddy bear could get hurt. A gentle hand wash is safer, so it's conveying the same points but in a tone that sounds much better to the ears of the person who asks.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6384"><strong>1:46:24</strong></a> Great. Any questions on the DPO part? Yeah. [AUDIO OUT] The question is, what are the trade offs and then which one is used in practice? So I think it all depends on your compute budget, on how much you want to worry about performance versus babysitting your training process. PPO, like the RL part, is very hard to tune right. It will give the highest results, but you might get almost at that level with much less efforts. So I guess if you want to get a quick preference tuning that is shown to show good results, but maybe not the best results, then DPO is your friend.</p>
+<p><a href="https://youtu.be/PmW_TMQ3l0I?t=6439"><strong>1:47:19</strong></a> And if you're an expert at reinforcement learning, you know what you're doing and you want the every last bit of performance, then PPO might be a better way. Amazing. And with that, thank you very much.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="04-llm-training.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 4. LLM Training">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                4. LLM Training
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="06-llm-reasoning.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 6. LLM Reasoning">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                6. LLM Reasoning
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

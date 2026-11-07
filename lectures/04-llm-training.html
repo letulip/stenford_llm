@@ -1,0 +1,2804 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/lectures/04-llm-training.html">
+      
+      
+        <link rel="prev" href="03-llms-moe-decoding-prompting.html">
+      
+      
+        <link rel="next" href="05-llm-tuning-rlhf-dpo.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>4. Обучение LLM - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. Обучение LLM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="04-llm-training.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-предобучение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Предобучение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-flops-и-flops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. FLOPs и FLOPS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scaling-laws-и-закон-chinchilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scaling laws и закон Chinchilla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scaling laws и закон Chinchilla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#проблемы-предобучения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проблемы предобучения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-обзор-оптимизаций-обучения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Обзор оптимизаций обучения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-data-parallelism-и-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Data parallelism и ZeRO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-model-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Model parallelism
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-flash-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Flash Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Flash Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#почему-обычная-реализация-медленная" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему обычная реализация медленная
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recomputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recomputation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-квантизация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Квантизация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mixed-precision-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mixed precision training
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-supervised-fine-tuning-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Supervised fine-tuning (SFT)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-instruction-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Instruction tuning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Instruction tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#данные" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Данные
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#порядки-величин" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Порядки величин
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-в-sft-трудно" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что в SFT трудно
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignment-и-mid-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alignment и mid-training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-parameter-efficient-fine-tuning-и-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Parameter-efficient fine-tuning и LoRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-qlora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. QLoRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-предобучение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Предобучение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-flops-и-flops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. FLOPs и FLOPS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-scaling-laws-и-закон-chinchilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Scaling laws и закон Chinchilla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Scaling laws и закон Chinchilla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#проблемы-предобучения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проблемы предобучения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-обзор-оптимизаций-обучения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Обзор оптимизаций обучения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-data-parallelism-и-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Data parallelism и ZeRO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-model-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Model parallelism
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-flash-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Flash Attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Flash Attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#почему-обычная-реализация-медленная" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему обычная реализация медленная
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recomputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recomputation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-квантизация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Квантизация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mixed-precision-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mixed precision training
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-supervised-fine-tuning-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Supervised fine-tuning (SFT)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-instruction-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Instruction tuning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Instruction tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#данные" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Данные
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#порядки-величин" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Порядки величин
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-в-sft-трудно" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что в SFT трудно
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignment-и-mid-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alignment и mid-training
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-parameter-efficient-fine-tuning-и-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Parameter-efficient fine-tuning и LoRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-qlora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. QLoRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora">Лекция 4. Обучение LLM: предобучение, оптимизации, SFT и LoRA<a class="headerlink" href="#лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora" title="Permanent link">¶</a></h1>
+<p><em>LLM Training</em> · Stanford CME295 Transformers &amp; LLMs, Autumn 2025</p>
+<p><strong>Видео:</strong> https://youtu.be/VlA_jt_3Qc4 · <strong>Дата лекции:</strong> 17 октября 2025 · <strong>Длительность:</strong> 107 мин<br />
+<strong>Лекторы:</strong> Afshine Amidi и Shervine Amidi (братья-близнецы; Netflix, до этого Google и Uber; adjunct lecturers в Stanford)<br />
+<strong>Полный транскрипт:</strong> <a href="../transcripts/04-llm-training.html">../transcripts/04-llm-training.md</a></p>
+<p>← <a href="03-llms-moe-decoding-prompting.html">Лекция 3. Большие языковые модели: MoE, декодирование, промптинг</a> · <a href="../index.html">Оглавление курса</a> · <a href="05-llm-tuning-rlhf-dpo.html">Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO</a> →</p>
+<div class="admonition info">
+<p class="admonition-title">Актуализация к ноябрю 2026</p>
+<p>Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: <a href="../updates/04-llm-training.html">читать актуализацию</a>.</p>
+</div>
+<h2 id="коротко-о-лекции">Коротко о лекции<a class="headerlink" href="#коротко-о-лекции" title="Permanent link">¶</a></h2>
+<p>Четвёртая лекция закрывает первую половину курса (именно ею заканчивается материал midterm) и отвечает на вопрос, который три лекции откладывали: как LLM вообще обучают. Первую половину, до <a href="https://youtu.be/VlA_jt_3Qc4?t=3751">1:02:31</a>, читает Afshine, вторую — Shervine.</p>
+<p>Afshine идёт по этапу pretraining (предобучения): идея transfer learning, предсказание следующего токена на «всём интернете», масштабы данных (GPT-3 — 300 млрд токенов, Llama 3 — 15 трлн), единицы compute (FLOPs против FLOPS; обучение LLM стоит порядка <span class="arithmatex">\(10^{25}\)</span> FLOPs), scaling laws и закон Chinchilla (оптимально ≈ 20 токенов на параметр), затем проблемы предобучения — цена, knowledge cutoff, плагиат. Дальше инженерная часть: что именно занимает память GPU при обучении (активации, градиенты, моменты Adam) и как с этим борются — data parallelism с шардированием ZeRO, model parallelism (expert, tensor, pipeline), Flash Attention (tiling и recomputation: точное внимание с почти 10× меньшим трафиком в HBM), квантизация и mixed precision training.</p>
+<p>Shervine объясняет, как из «продолжателя текста» получается ассистент: supervised fine-tuning и instruction tuning (пары «инструкция — ответ», loss только на ответе, данных на порядки меньше, чем при предобучении), почему эти данные дороги, как оценивать модели (MMLU, GSM8K, Chatbot Arena и их слабости, эффект «training on the test task») и, наконец, LoRA и QLoRA — дообучение через низкоранговые добавки к замороженным весам.</p>
+<p>Пять идей, ради которых стоит прочитать конспект: (1) pretraining — самая дорогая стадия, и compute нужно тратить по scaling laws; (2) узкое место обучения — память GPU и обмен данными, а не арифметика; (3) Flash Attention выигрывает и по времени, и по памяти, потому что учитывает иерархию памяти GPU; (4) SFT — та же задача next-token prediction, но на фиксированном входе и на маленьких качественных данных; (5) LoRA сокращает число обучаемых параметров на порядки, а QLoRA дополнительно сжимает замороженные веса в NF4.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-введение">Введение</a> — 00:00</li>
+<li><a href="#2-предобучение">Предобучение</a> — 07:19</li>
+<li><a href="#3-flops-и-flops">FLOPs и FLOPS</a> — 13:26</li>
+<li><a href="#4-scaling-laws-и-закон-chinchilla">Scaling laws и закон Chinchilla</a> — 16:34</li>
+<li><a href="#5-обзор-оптимизаций-обучения">Обзор оптимизаций обучения</a> — 24:49</li>
+<li><a href="#6-data-parallelism-и-zero">Data parallelism и ZeRO</a> — 31:09</li>
+<li><a href="#7-model-parallelism">Model parallelism</a> — 35:51</li>
+<li><a href="#8-flash-attention">Flash Attention</a> — 38:26</li>
+<li><a href="#9-квантизация">Квантизация</a> — 52:37</li>
+<li><a href="#10-mixed-precision-training">Mixed precision training</a> — 56:00</li>
+<li><a href="#11-supervised-fine-tuning-sft">Supervised fine-tuning (SFT)</a> — 1:02:31</li>
+<li><a href="#12-instruction-tuning">Instruction tuning</a> — 1:09:21</li>
+<li><a href="#13-parameter-efficient-fine-tuning-и-lora">Parameter-efficient fine-tuning и LoRA</a> — 1:37:53</li>
+<li>
+<p><a href="#14-qlora">QLoRA</a> — 1:45:16</p>
+</li>
+<li>
+<p><a href="#ключевые-термины">Ключевые термины</a></p>
+</li>
+<li><a href="#главные-выводы">Главные выводы</a></li>
+<li><a href="#вопросы-из-зала">Вопросы из зала</a></li>
+<li><a href="#чем-можно-дополнить">Чем можно дополнить</a></li>
+</ol>
+<h2 id="1-введение">1. Введение<a class="headerlink" href="#1-введение" title="Permanent link">¶</a></h2>
+<p>⏱ 00:00–07:19 · <a href="https://youtu.be/VlA_jt_3Qc4?t=0">▶ смотреть на YouTube</a></p>
+<p>Лекцию открывает Afshine с оргвопросов. Midterm — через неделю, в то же время и в той же аудитории, но полтора часа вместо 1:15 (15:30–17:00); покрывает лекции 1–4, включая сегодняшнюю. Формат — multiple-choice (вопрос и 3–4 варианта ответа) плюс вопросы со свободным ответом, всё по материалу занятий и слайдов: «знайте важные формулы». Экзамен closed book: ничего, кроме ручки; калькулятор не понадобится. Cheat sheet с сайта курса на экзамен брать нельзя, но для подготовки он полезен. После лекции — office hours, вопросы можно задавать на Ed. Вольнослушатели тоже могут писать midterm — нужно сообщить до выходных, чтобы напечатали нужное число копий. Финальный экзамен — среда 10 декабря, 19:00–20:30, в другой аудитории, только по второй половине курса (лекции 5–9).</p>
+<p>Затем короткий recap третьей лекции (<a href="https://youtu.be/VlA_jt_3Qc4?t=265">04:25</a>): mixture of experts — sparse MoE (в forward pass активируется лишь часть экспертов) и dense MoE (выходы экспертов взвешиваются выходом гейта); это способ масштабировать LLM, не раздувая стоимость инференса. Три способа выбора следующего токена: greedy decoding (всегда самый вероятный), beam search (держим K наиболее вероятных последовательностей) и sampling (сэмплируем из распределения, «остроту» которого регулирует temperature). Из оптимизаций инференса Afshine отдельно просит помнить KV cache. Итог первых трёх лекций: self-attention и трансформер → трюки и вариации архитектуры → что такое LLM. Сегодня, наконец, — как эти модели обучают.</p>
+<h2 id="2-предобучение">2. Предобучение<a class="headerlink" href="#2-предобучение" title="Permanent link">¶</a></h2>
+<p>⏱ 07:19–13:26 · <a href="https://youtu.be/VlA_jt_3Qc4?t=439">▶ смотреть на YouTube</a></p>
+<p>Afshine начинает с исторической перспективы. Классический ML лет десять назад — отдельная модель под каждую задачу: для детекции спама своя (train / validation / test), для извлечения тональности своя, и так далее. Но эти задачи не независимы: каждая требует понимать текст. Отсюда идея transfer learning (переноса знаний): не начинать с нуля, а брать уже обученную (pre-trained) модель и подстраивать её под задачу. Именно на этой парадигме построены LLM: сначала этап pretraining — модель учится на огромных объёмах данных понимать язык и код, затем этап «tuning» (кавычки лектора), на котором веса предобученной модели адаптируют под конкретное применение — спам, тональность, что угодно.</p>
+<p>Pretraining — безусловно самая дорогая часть обучения по compute, деньгам и всему остальному. Суть: взять гигантский корпус и учить модель предсказывать следующий токен. «Данные» здесь — всё, что написано: текст на английском и других языках, код на разных языках, фактически весь интернет. LLM — модель text-to-text, в более чем 90 % случаев decoder-only: получает текст и итеративно предсказывает следующий токен.</p>
+<p>Источники данных (<a href="https://youtu.be/VlA_jt_3Qc4?t=709">11:49</a>): в статьях постоянно встречается Common Crawl — архив всего, что найдено в интернете, порядка трёх миллиардов страниц в месяц; статьи Wikipedia; социальные сети, прежде всего Reddit (в датасетах много реддит-обсуждений); код — GitHub, Stack Overflow и другие форумы о программировании. Размер корпуса измеряют в токенах, и порядок величины стоит запомнить (<a href="https://youtu.be/VlA_jt_3Qc4?t=762">12:42</a>): сотни миллиардов, триллионы, уже десятки триллионов токенов. GPT-3 обучали на 300 млрд токенов, Llama 3 (вышла в прошлом году) — на 15 трлн.</p>
+<h2 id="3-flops-и-flops">3. FLOPs и FLOPS<a class="headerlink" href="#3-flops-и-flops" title="Permanent link">¶</a></h2>
+<p>⏱ 13:26–16:34 · <a href="https://youtu.be/VlA_jt_3Qc4?t=806">▶ смотреть на YouTube</a></p>
+<p>Два обозначения, которые встречаются везде, где говорят о стоимости обучения.</p>
+<p><strong>FLOPs</strong> (floating point operations) — единица объёма вычислений: число операций над числами с плавающей точкой. Обучение LLM — порядка <span class="arithmatex">\(10^{25}\)</span> FLOPs (<a href="https://youtu.be/VlA_jt_3Qc4?t=859">14:19</a>). Точная формула сложна и зависит от архитектуры (MoE-модели требуют меньше compute, чем dense, потому что активируется лишь часть параметров), но в голове достаточно держать, что это функция размера данных и размера модели:</p>
+<div class="arithmatex">\[\text{FLOPs} \approx O(N \cdot D),\]</div>
+<p>где <span class="arithmatex">\(N\)</span> — число параметров модели, <span class="arithmatex">\(D\)</span> — число токенов в обучающем корпусе.</p>
+<p><em>Примечание:</em> распространённая инженерная оценка — <span class="arithmatex">\(\text{FLOPs} \approx 6 \cdot N \cdot D\)</span> (forward и backward pass вместе); на лекции константа не называлась, только порядок «произведение двух величин».</p>
+<p><strong>FLOPS</strong> (заглавными; floating point operations per second) — скорость вычислений: сколько таких операций в секунду выполняет железо. Именно FLOPS указывают в описаниях GPU. Afshine предупреждает: в статьях эти два понятия иногда путают и пишут одно вместо другого, так что смысл стоит восстанавливать из контекста.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>прикинем по формуле <span class="arithmatex">\(6ND\)</span> самую большую модель из упомянутых на лекции — Llama 3 405B на 15 трлн токенов: <span class="arithmatex">\(6 \cdot 4{,}05 \cdot 10^{11} \cdot 1{,}5 \cdot 10^{13} \approx 3{,}6 \cdot 10^{25}\)</span> FLOPs, ровно тот порядок <span class="arithmatex">\(10^{25}\)</span>, который назвал Afshine. Один H100 в bf16 выдаёт около <span class="arithmatex">\(10^{15}\)</span> FLOPS, то есть при идеальной загрузке это <span class="arithmatex">\(3{,}6 \cdot 10^{10}\)</span> GPU-секунд — больше тысячи GPU-лет; на кластере из 16 тыс. GPU выходит около месяца, а с реальной утилизацией 30–40 % — несколько месяцев. Для сравнения, дообучение 7B-модели на миллионе токенов стоит <span class="arithmatex">\(6 \cdot 7 \cdot 10^9 \cdot 10^6 \approx 4 \cdot 10^{16}\)</span> FLOPs — порядка минуты на одном GPU при идеальной загрузке; это и объясняет, почему fine-tuning доступен всем, а pretraining — единицам.</p>
+</div>
+<h2 id="4-scaling-laws-и-закон-chinchilla">4. Scaling laws и закон Chinchilla<a class="headerlink" href="#4-scaling-laws-и-закон-chinchilla" title="Permanent link">¶</a></h2>
+<p>⏱ 16:34–24:49 · <a href="https://youtu.be/VlA_jt_3Qc4?t=994">▶ смотреть на YouTube</a></p>
+<p>Итак, предобучение требует много compute, много данных и большой модели. Как качество зависит от этих трёх величин? Статья <em>Scaling Laws for Neural Language Models</em> (2020) провела серию экспериментов, варьируя их, и показала: чем больше compute, тем лучше модель предсказывает следующий токен; то же для размера обучающего набора и для размера модели. Поэтому примерно с 2019 по 2024 год модели просто росли — по этим кривым рост всегда окупался. Ещё одно наблюдение из той же работы: большие модели более sample efficient (эффективны по данным) — при одинаковом числе обработанных токенов большая модель достигает лучшего качества, чем маленькая.</p>
+<p>Но compute не бесконечен. Следующий вопрос: при фиксированном бюджете вычислений как распределить его между размером модели и объёмом данных? Эксперимент (<a href="https://youtu.be/VlA_jt_3Qc4?t=1105">18:25</a>): фиксируем бюджет compute (на графике — цвет кривой), обучаем модели разных размеров на разных объёмах данных и видим, что у каждой кривой есть sweet spot. Сведённая таблица «оптимальное число параметров — оптимальный объём данных» и называется законом Chinchilla (<a href="https://youtu.be/VlA_jt_3Qc4?t=1173">19:33</a>):</p>
+<div class="arithmatex">\[D_{\text{opt}} \approx 20 \cdot N,\]</div>
+<p>то есть обучающий набор в токенах (<span class="arithmatex">\(D\)</span>) должен быть примерно в 20 раз больше числа параметров (<span class="arithmatex">\(N\)</span>) — тогда compute расходуется «оптимально». По этой мерке GPT-3 со 175 млрд параметров и 300 млрд токенов — модель «сильно недообученная» (undertrained).</p>
+<p><em>Примечание:</em> сам закон Chinchilla — из статьи DeepMind 2022 года (<em>Training Compute-Optimal Large Language Models</em>); на лекции название этой статьи не звучало.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>закон Chinchilla оптимизирует только стоимость обучения, а не стоимость жизни модели. Если модель потом будут запускать миллиарды раз, выгоднее взять её поменьше и «перекормить» данными: инференс маленькой модели дешевле, а потеря качества от отклонения от оптимума невелика. Именно так устроена Llama 3: 8B-версия обучена на тех же 15 трлн токенов, то есть почти на 1900 токенов на параметр вместо 20. Поэтому современные открытые модели почти всегда «переобучены» по Chinchilla, и это сознательное решение, а не ошибка.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=1227">20:27</a>):</strong> фиксируют ли в этих экспериментах архитектуру? — <strong>Ответ:</strong> сегодня все согласны, что LLM — это decoder-only трансформер, и под «LLM» на лекции всегда имеется в виду именно он. Авторы статьи прямо пишут, что изменения архитектуры играют небольшую роль: главное — число токенов и размер модели.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=1284">21:24</a>):</strong> бывает ли transfer learning между версиями одной модели? — <strong>Ответ:</strong> большинство моделей закрыты, и такие вещи не раскрываются, так что общего ответа нет. Но в любой статье указана стоимость обучения, и это всегда миллионы.</p>
+<h3 id="проблемы-предобучения">Проблемы предобучения<a class="headerlink" href="#проблемы-предобучения" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Цена.</strong> Миллионы долларов — это минимум; бывает десятки и сотни миллионов. Плюс время и, о чём всё чаще пишут, экологическая стоимость.</li>
+<li><strong>Knowledge cutoff date</strong> (дата среза знаний). Модель знает только то, что было в данных до даты, на которой корпус «отрезали»; базовая модель сама по себе не может знать о событиях после неё. В карточках моделей OpenAI и Google эта дата указана всегда; у GPT-5, вышедшей за несколько недель до лекции, в карточке стоит 30 сентября (<a href="https://youtu.be/VlA_jt_3Qc4?t=1464">24:24</a>) — значит, предобучение делали примерно тогда.</li>
+<li><strong>Редактирование знаний.</strong> Многие статьи пытаются «вставить» или исправить знания в обученной модели, но чистого способа поменять веса, не ухудшив что-то другое, нет — это очень трудная задача (<a href="https://youtu.be/VlA_jt_3Qc4?t=1397">23:17</a>).</li>
+<li><strong>Плагиат.</strong> Модель предсказывает следующий токен и может воспроизвести фрагмент, который видела при обучении, — такой риск есть всегда.</li>
+</ul>
+<h2 id="5-обзор-оптимизаций-обучения">5. Обзор оптимизаций обучения<a class="headerlink" href="#5-обзор-оптимизаций-обучения" title="Permanent link">¶</a></h2>
+<p>⏱ 24:49–31:09 · <a href="https://youtu.be/VlA_jt_3Qc4?t=1489">▶ смотреть на YouTube</a></p>
+<p>Как физически обучить модель такого размера на таком объёме данных? Afshine выстраивает картину с нуля. LLM — decoder-only трансформер, а значит, почти все его операции — умножения матриц. Железо, которое любит умножать матрицы, — GPU, причём не один. (Google делает собственные TPU, но практически всё, что не из Google, обучено на GPU.)</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=1544">25:44</a>):</strong> а GPU для инференса? — <strong>Ответ:</strong> требования к GPU при обучении и инференсе различаются; в этой части речь только об обучении.</p>
+<p>Шаги обучения и то, что при этом должно лежать в памяти (<a href="https://youtu.be/VlA_jt_3Qc4?t=1594">26:34</a>):</p>
+<ol>
+<li><strong>Инициализация.</strong> Модель — от миллиардов до сотен миллиардов параметров.</li>
+<li><strong>Forward pass.</strong> Батч данных проходит через сеть; на каждом слое возникают <strong>активации</strong> — значения, нужные для подсчёта loss (насколько модель ошиблась относительно метки). Объём активаций зависит от размера модели, от размера батча и от длины контекста: self-attention имеет сложность <span class="arithmatex">\(O(N^2)\)</span> по длине последовательности <span class="arithmatex">\(N\)</span> (<a href="https://youtu.be/VlA_jt_3Qc4?t=1653">27:33</a>).</li>
+<li><strong>Backward pass.</strong> Для каждого параметра считается <strong>градиент</strong> loss — направление, в котором loss убывает. Градиенты тоже хранятся в памяти.</li>
+<li><strong>Обновление весов</strong> оптимизатором. У Adam, помимо градиента, есть <strong>первый и второй моменты</strong> — скользящие средние градиента и его квадрата (<a href="https://youtu.be/VlA_jt_3Qc4?t=1759">29:19</a>); их тоже нужно хранить.</li>
+</ol>
+<p>«Breaking news: memory is not unlimited». В описании H100 — очень хорошего GPU — есть строка GPU memory: 80 ГБ (<a href="https://youtu.be/VlA_jt_3Qc4?t=1809">30:09</a>). То есть память одного устройства — десятки гигабайт, и всё перечисленное должно туда поместиться. Выход — взять не один GPU, а много, и распределить нагрузку между ними. Способов несколько — о них дальше.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>перечисленное легко перевести в байты. При mixed precision training с Adam на каждый параметр приходится: 2 байта на вес в fp16, 2 — на градиент, 4 — на master-копию веса в fp32 и по 4 на каждый из двух моментов Adam, итого 16 байт. Для 7B-модели это около 112 ГБ ещё до активаций — больше, чем 80 ГБ одного H100, и это уже «маленькая» модель; у 70B выходит порядка 1,1 ТБ. Отсюда понятно, почему без шардирования состояния оптимизатора (следующий раздел) обучение даже средней модели не помещается на одно устройство, а активации при длинном контексте добавляют сверху ещё десятки гигабайт.</p>
+</div>
+<h2 id="6-data-parallelism-и-zero">6. Data parallelism и ZeRO<a class="headerlink" href="#6-data-parallelism-и-zero" title="Permanent link">¶</a></h2>
+<p>⏱ 31:09–35:51 · <a href="https://youtu.be/VlA_jt_3Qc4?t=1869">▶ смотреть на YouTube</a></p>
+<p><strong>Data parallelism (DP)</strong> — первое семейство методов: данные распределяются по GPU так, чтобы forward и backward pass на каждом устройстве шли независимо. Батч делится между устройствами, на каждом лежит полная копия модели (без неё не посчитать активации), и тем самым уменьшается та часть памяти, которая связана с размером батча.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=1921">32:01</a>):</strong> а как тогда обновляются веса? — <strong>Ответ:</strong> градиент — это просто среднее градиентов с разных GPU; между устройствами идёт обмен, который агрегирует градиенты для обновления.</p>
+<p>Это ответ на всё? Afshine спрашивает зал о минусах, и студент называет первый: модель целиком должна помещаться на одно устройство. Второй — <strong>communication cost</strong>: обмен между GPU замедляет обучение. Память масштабируется, но «it's not all great».</p>
+<p><strong>ZeRO</strong> (Zero Redundancy Optimizer; <a href="https://youtu.be/VlA_jt_3Qc4?t=2025">33:45</a>) атакует дублирование: при DP на каждом GPU лежат одни и те же параметры, одни и те же градиенты и одни и те же состояния оптимизатора. Идея — шардировать (partition, разрезать на части) эти величины между устройствами:</p>
+<table>
+<thead>
+<tr>
+<th>Вариант</th>
+<th>Что шардируется между GPU</th>
+<th>Эффект</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZeRO-1</td>
+<td>состояния оптимизатора</td>
+<td>уже сильно снижает память</td>
+</tr>
+<tr>
+<td>ZeRO-2</td>
+<td>+ градиенты</td>
+<td>ещё меньше памяти на GPU</td>
+</tr>
+<tr>
+<td>ZeRO-3</td>
+<td>+ параметры</td>
+<td>избыточной информации нет вовсе, но больше всего обмена</td>
+</tr>
+</tbody>
+</table>
+<p>Чем больше шардируем, тем выше communication cost; выбор варианта зависит от того, насколько критично время обучения, насколько велика модель и является ли память проблемой вообще.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>ZeRO живёт в библиотеке DeepSpeed (Microsoft), а в самом PyTorch его аналог — FSDP (Fully Sharded Data Parallel), который по сути соответствует ZeRO-3. В обоих случаях стадия выбирается конфигом, код модели почти не меняется. Платой за ZeRO-3 служат дополнительные all-gather параметров перед каждым слоем, поэтому на медленном интерконнекте между узлами ZeRO-2 с полной копией весов нередко оказывается быстрее.</p>
+</div>
+<h2 id="7-model-parallelism">7. Model parallelism<a class="headerlink" href="#7-model-parallelism" title="Permanent link">¶</a></h2>
+<p>⏱ 35:51–38:26 · <a href="https://youtu.be/VlA_jt_3Qc4?t=2151">▶ смотреть на YouTube</a></p>
+<p>Второе семейство — <strong>model parallelism</strong>: распараллелить вычисления даже внутри одного батча. Afshine не хочет «звучать как каталог» и называет только три метода (<a href="https://youtu.be/VlA_jt_3Qc4?t=2202">36:42</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Что делится между GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Expert parallelism</td>
+<td>эксперты MoE-модели: один эксперт на одном устройстве, другой — на другом</td>
+</tr>
+<tr>
+<td>Tensor parallelism</td>
+<td>большие умножения матриц режутся на части, чтобы снизить память под каждое</td>
+</tr>
+<tr>
+<td>Pipeline parallelism</td>
+<td>слои: один GPU отвечает за слои 1–3, следующий — за 4–6 и так далее</td>
+</tr>
+</tbody>
+</table>
+<p>Детали знать не нужно — важно помнить, что такие методы есть, и понимать их грубую идею. Промежуточный итог (<a href="https://youtu.be/VlA_jt_3Qc4?t=2258">37:38</a>): обучение требует хранить много всего; data parallelism (с ZeRO) и model parallelism распределяют это бремя по устройствам.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 3</p>
+<p>expert parallelism — прямое следствие архитектуры MoE из <a href="03-llms-moe-decoding-prompting.html">Лекции 3</a>: раз в forward pass у каждого токена активируется лишь пара экспертов, их естественно разнести по устройствам, а между ними пересылать только токены, которым гейт назначил «чужого» эксперта. В реальных запусках семейства методов не выбирают, а комбинируют: tensor parallelism внутри узла (где GPU связаны быстрым NVLink), pipeline parallelism между узлами и data parallelism поверх всего — это называют 3D parallelism (Megatron-LM, DeepSpeed).</p>
+</div>
+<h2 id="8-flash-attention">8. Flash Attention<a class="headerlink" href="#8-flash-attention" title="Permanent link">¶</a></h2>
+<p>⏱ 38:26–52:37 · <a href="https://youtu.be/VlA_jt_3Qc4?t=2306">▶ смотреть на YouTube</a></p>
+<p>Следующая техника опирается на устройство самого GPU. Flash Attention разработан в Stanford в 2022 году. Чтобы его понять, нужно знать, что в GPU два вида памяти (<a href="https://youtu.be/VlA_jt_3Qc4?t=2357">39:17</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Память</th>
+<th>Размер</th>
+<th>Скорость</th>
+<th>Где</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HBM</td>
+<td>десятки гигабайт (та самая «GPU memory» из спецификации)</td>
+<td>несколько ТБ/с</td>
+<td>отдельно от вычислителя</td>
+</tr>
+<tr>
+<td>SRAM</td>
+<td>десятки мегабайт</td>
+<td>десятки ТБ/с, примерно в 10 раз быстрее</td>
+<td>на чипе, рядом с compute</td>
+</tr>
+</tbody>
+</table>
+<p>Цель — ускорить вычисление attention <strong>точно</strong>: без аппроксимаций, только за счёт умного распределения вычислений между этими видами памяти.</p>
+<h3 id="почему-обычная-реализация-медленная">Почему обычная реализация медленная<a class="headerlink" href="#почему-обычная-реализация-медленная" title="Permanent link">¶</a></h3>
+<p>Формула self-attention:</p>
+<div class="arithmatex">\[\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V,\]</div>
+<p>где <span class="arithmatex">\(Q\)</span>, <span class="arithmatex">\(K\)</span>, <span class="arithmatex">\(V\)</span> — матрицы запросов, ключей и значений (строк — по длине последовательности, столбцов — по размерности), <span class="arithmatex">\(\sqrt{d_k}\)</span> — масштабирующий множитель. Наивная реализация (<a href="https://youtu.be/VlA_jt_3Qc4?t=2510">41:50</a>): прочитать <span class="arithmatex">\(Q\)</span> и <span class="arithmatex">\(K\)</span> из HBM, перемножить, записать результат в HBM; снова прочитать, посчитать softmax, записать; снова прочитать вместе с <span class="arithmatex">\(V\)</span>, перемножить, записать. Каждый шаг — чтение и запись в медленную память, и именно этот трафик становится узким местом: GPU считает очень быстро, но простаивает, пока матрицы грузятся.</p>
+<p>Почему так делают? Из-за softmax: он нормирует каждую строку так, чтобы она суммировалась в единицу, то есть зависит от всей строки целиком. Кажется, что строку надо сначала посчитать полностью. Оказывается — не обязательно, и это ключевая идея Flash Attention (<a href="https://youtu.be/VlA_jt_3Qc4?t=2565">42:45</a>).</p>
+<h3 id="tiling">Tiling<a class="headerlink" href="#tiling" title="Permanent link">¶</a></h3>
+<p>Flash Attention минимизирует чтения и записи в HBM: матрицы режутся на маленькие блоки (<strong>tiling</strong>), блок отправляется в SRAM, там проходит весь конвейер от начала до конца, и только результат возвращается в HBM. Трюк, который это разрешает (<a href="https://youtu.be/VlA_jt_3Qc4?t=2686">44:46</a>): если матрицу разбить на подматрицы <span class="arithmatex">\(S_1, \dots, S_N\)</span>, то</p>
+<div class="arithmatex">\[\text{softmax}\big([S_1 \;\dots\; S_N]\big) = \big[\alpha_1\,\text{softmax}(S_1) \;\dots\; \alpha_N\,\text{softmax}(S_N)\big],\]</div>
+<p>то есть softmax всей матрицы равен softmax'ам по блокам с точностью до масштабирующих коэффициентов <span class="arithmatex">\(\alpha_i\)</span>. Чтобы убедиться, достаточно вспомнить формулу softmax: экспонента в числителе, а знаменатель общий для всей строки — он и прячется в <span class="arithmatex">\(\alpha_i\)</span>. Дальше берём первый срез <span class="arithmatex">\(Q\)</span> и первый срез <span class="arithmatex">\(K\)</span>, <span class="arithmatex">\(V\)</span>, прогоняем вычисление целиком, заполняем соответствующий элемент выходной матрицы; повторяем для следующих срезов <span class="arithmatex">\(K\)</span>, <span class="arithmatex">\(V\)</span>, затем для следующих срезов <span class="arithmatex">\(Q\)</span>. Формулу для коэффициентов Afshine на слайд не выносил — запоминать её не надо, она есть в статье. В итоге из HBM читаем один раз, промежуточные величины живут в SRAM, и только накопленный результат уходит обратно в HBM (на слайде зелёное — SRAM, синее — HBM).</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=2845">47:25</a>):</strong> берётся вся строка или её часть? — <strong>Ответ:</strong> можно часть; на слайде деление упрощено для наглядности, матрицу можно считать сеткой и перемножать блоки соответственно.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=2845">47:25</a>):</strong> коэффициенты <span class="arithmatex">\(\alpha\)</span> считаются на лету или оцениваются? — <strong>Ответ:</strong> всё точно и считается итеративно: при заполнении выхода поддерживается дополнительная величина, которая корректирует результат. Afshine советует посмотреть статью <em>FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness</em> (<a href="https://youtu.be/VlA_jt_3Qc4?t=2898">48:18</a>), где это расписано.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — интуиция</p>
+<p>это та же история, что кэш процессора против оперативной памяти: attention на GPU ограничен не арифметикой, а пропускной способностью памяти (memory-bound), и выигрыш даёт не «считать меньше», а «меньше ездить в HBM». Масштаб проблемы легко прикинуть: наивная реализация материализует матрицу <span class="arithmatex">\(N \times N\)</span>; при контексте 32 тыс. токенов это <span class="arithmatex">\(32768^2 \approx 10^9\)</span> чисел, то есть около 2 ГБ в fp16 на одну голову одной последовательности. Flash Attention эту матрицу не строит вовсе, поэтому память под attention растёт линейно по <span class="arithmatex">\(N\)</span>, а не квадратично. Пробовать руками не нужно: в PyTorch <code>scaled_dot_product_attention</code> сам выбирает Flash-ядро, когда это возможно.</p>
+</div>
+<h3 id="recomputation">Recomputation<a class="headerlink" href="#recomputation" title="Permanent link">¶</a></h3>
+<p>Вторая идея той же статьи (<a href="https://youtu.be/VlA_jt_3Qc4?t=2955">49:15</a>): раз attention считается быстро, можно иначе устроить backward pass. По цепному правилу градиенту нужны активации из forward pass, которые обычно хранят. Вместо этого их (или часть) не хранят, а <strong>пересчитывают</strong> во время backward pass. Результат по таблице из статьи (<a href="https://youtu.be/VlA_jt_3Qc4?t=3015">50:15</a>): GFLOPs (объём операций) вырос — пересчёт есть пересчёт; трафик чтения-записи HBM упал с 40,3 до примерно 4, почти десятикратно; и при этом <strong>время выполнения тоже меньше</strong>. Обычно recomputation — размен памяти на время; здесь выигрыш и там, и там, «best of all worlds». Flash Attention 2 и 3 — адаптации того же подхода к новым поколениям GPU, у каждого из которых свои сильные и слабые стороны.</p>
+<h2 id="9-квантизация">9. Квантизация<a class="headerlink" href="#9-квантизация" title="Permanent link">¶</a></h2>
+<p>⏱ 52:37–56:00 · <a href="https://youtu.be/VlA_jt_3Qc4?t=3157">▶ смотреть на YouTube</a></p>
+<p>Веса модели — числа с плавающей точкой, с длинным хвостом знаков после запятой. Нужна ли такая точность? Можно ли её урезать, сэкономив память и сохранив качество? Это и есть <strong>квантизация</strong> — перевод числа из одной точности представления в другую.</p>
+<p>Чтобы её понять, нужно знать, как кодируется float (<a href="https://youtu.be/VlA_jt_3Qc4?t=3220">53:40</a>): это набор битов, часть которых отвечает за экспоненту, часть — за мантиссу (гранулярность, «насколько мелко» число), и один — за знак. Распространённые форматы — в таблице на слайде: single precision (FP32), half precision (FP16), FP64 и brain float 16 (bf16); они по-разному делят биты между тремя частями. Два самых ходовых — FP32 и FP16: второй занимает 16 бит вместо 32, то есть вдвое меньше памяти, но менее точен.</p>
+<table>
+<thead>
+<tr>
+<th>Формат</th>
+<th>Бит всего</th>
+<th>Что говорилось на лекции</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FP64</td>
+<td>64</td>
+<td>«супер-гранулярный»; на H100 — 34 TFLOPS</td>
+</tr>
+<tr>
+<td>FP32</td>
+<td>32</td>
+<td>single precision; вдвое быстрее FP64</td>
+</tr>
+<tr>
+<td>FP16</td>
+<td>16</td>
+<td>half precision; половина памяти FP32, менее гранулярный</td>
+</tr>
+<tr>
+<td>bf16</td>
+<td>16</td>
+<td>brain float 16; иначе делит биты (в QLoRA в нём обучают матрицы адаптера)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Примечание:</em> разбивка по битам (знак / экспонента / мантисса) была в таблице на слайде и вслух не зачитывалась: FP32 — 1/8/23, FP16 — 1/5/10, bf16 — 1/8/7.</p>
+<p>Второй аргумент — скорость (<a href="https://youtu.be/VlA_jt_3Qc4?t=3278">54:38</a>): в описании того же GPU compute speed указана отдельно для каждого формата. В FP64 — всего 34 TFLOPS, в FP32 — вдвое больше, и так далее. Итого квантизация даёт и экономию памяти, и ускорение.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>для разработчика квантизация — это прежде всего способ запустить открытую модель на своём железе. Веса 7B-модели в fp16 занимают около 14 ГБ (2 байта на параметр), в 8-битном формате — около 7 ГБ, в 4-битном — около 3,5–4 ГБ, и последний вариант помещается даже на потребительскую видеокарту или в память ноутбука. Искать по словам GPTQ, AWQ и GGUF (формат llama.cpp): это post-training quantization, то есть сжатие уже обученных весов без дообучения; на 8 битах качество почти не теряется, на 4 битах потери заметны, но обычно приемлемы.</p>
+</div>
+<h2 id="10-mixed-precision-training">10. Mixed precision training<a class="headerlink" href="#10-mixed-precision-training" title="Permanent link">¶</a></h2>
+<p>⏱ 56:00–1:02:31 · <a href="https://youtu.be/VlA_jt_3Qc4?t=3360">▶ смотреть на YouTube</a></p>
+<p>Последняя техника от Afshine — <strong>mixed precision training</strong> (обучение в смешанной точности): использовать разные точности для разных величин так, чтобы качество почти не пострадало, а память и скорость выиграли.</p>
+<table>
+<thead>
+<tr>
+<th>Что</th>
+<th>Точность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Веса модели (master copy)</td>
+<td>FP32</td>
+</tr>
+<tr>
+<td>Операции forward и backward pass</td>
+<td>FP16</td>
+</tr>
+<tr>
+<td>Обновление весов</td>
+<td>FP32</td>
+</tr>
+</tbody>
+</table>
+<p>Авторы метода обнаружили, что качество при этом почти не деградирует, зато памяти уходит заметно меньше и обучение идёт быстрее. Почему именно веса держат в высокой точности, а активации и градиенты — нет? Интуиция Afshine (<a href="https://youtu.be/VlA_jt_3Qc4?t=3463">57:43</a>): forward pass считается на батче данных, которые сами по себе зашумлены, так что младшие разряды там мало что значат; обновление — это по сути «в какую сторону двигать веса», и оно не требует сверхточности. А вот сами веса важно хранить точно, чтобы ошибки квантизации не накапливались от шага к шагу. Общий вывод: снизив точность части чисел, получаешь много выгод и почти не теряешь качество.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>у рецепта с FP16 есть деталь, которой лектор не касался: диапазон FP16 узок (всего 5 бит экспоненты), и маленькие градиенты в нём обнуляются, поэтому оригинальный метод включает loss scaling — loss умножают на большую константу перед backward pass и делят градиенты обратно перед обновлением. У bf16 экспонента такая же, как у FP32 (8 бит), переполнений и обнулений почти нет, и loss scaling не нужен — именно поэтому bf16 стал стандартом обучения (а к 2026 году крупные модели уходят ещё ниже: FP8 и даже NVFP4 в предобучении — см. <a href="../updates/04-llm-training.html">актуализацию</a>), а FP16 остался в основном в старых рецептах и на железе без поддержки bf16. Схема «master-веса в FP32, вычисления в 16 битах» при этом не меняется.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=3518">58:38</a>):</strong> применяют ли это ко всем весам всех слоёв? — <strong>Ответ:</strong> не обязательно; статей много, вариаций много, некоторые части модели чувствительнее других. Описанная схема — общая идея, детали отличаются от сетапа к сетапу; ссылками Afshine готов поделиться.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=3575">59:35</a>):</strong> есть ли «оптимальная точность» и применима ли пропорция Chinchilla к чужому сетапу? — <strong>Ответ:</strong> единого стандарта нет. Что касается scaling laws, авторы часто воспроизводят их для своего сетапа: прогоняют эксперименты на маленьких моделях и небольших данных, находят зависимость и экстраполируют. В статье о Llama 3 есть целый раздел, который так обосновывает выбор 405 млрд параметров (<a href="https://youtu.be/VlA_jt_3Qc4?t=3646">1:00:46</a>).</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=3711">1:01:51</a>):</strong> можно ли что-то сделать с диапазоном значений? — <strong>Ответ:</strong> есть разные типы квантизации, которые работают с диапазонами, — например zero-point quantization и absmax quantization; ещё одну покажет Shervine в конце лекции (QLoRA).</p>
+<p>На этом Afshine передаёт слово Shervine.</p>
+<h2 id="11-supervised-fine-tuning-sft">11. Supervised fine-tuning (SFT)<a class="headerlink" href="#11-supervised-fine-tuning-sft" title="Permanent link">¶</a></h2>
+<p>⏱ 1:02:31–1:09:21 · <a href="https://youtu.be/VlA_jt_3Qc4?t=3751">▶ смотреть на YouTube</a></p>
+<p>Shervine начинает с того, чем закончил Afshine: предобучение дало модели интуицию о том, как устроен язык и что содержится в огромном сыром корпусе размером «с интернет». Как сделать это знание полезным?</p>
+<p>Любимый пример курса — плюшевый мишка (<a href="https://youtu.be/VlA_jt_3Qc4?t=3816">1:03:36</a>). Он испачкался, и мы спрашиваем модель: можно ли положить его в стиральную машину? Что ответит предобученная модель? Студент предполагает: ещё один вопрос. Верно по духу — на слайде другое продолжение (фраза о том, из чего мишка сделан), но суть та же: модель обучена предсказывать следующий токен, а не быть ассистентом, поэтому она продолжает паттерн чем-то правдоподобным из той же области. Нас это не устраивает, и здесь появляется <strong>fine-tuning</strong> (дообучение): в общем случае он превращает LLM в полезного ассистента, а для конкретного применения — подстраивает общее представление языка под вашу задачу.</p>
+<p>Термины (<a href="https://youtu.be/VlA_jt_3Qc4?t=3969">1:06:09</a>): <strong>SFT</strong> — supervised fine-tuning. <em>Supervised</em> означает, что нужны метки — пары «вход — выход», на которых модель обучается. <em>Fine-tuning</em> — уточнение уже обученных весов: стартуем с предобученных и дообучаем на дополнительных данных.</p>
+<p>Важный нюанс про функцию потерь (<a href="https://youtu.be/VlA_jt_3Qc4?t=4029">1:07:09</a>): цель та же — предсказание следующего токена, но применяется иначе. При предобучении начинаем с токена BOS (beginning of sentence) и предсказываем каждый следующий токен по всему корпусу. При SFT вход («можно ли стирать мишку») фиксирован — это условие, а не то, что надо предсказывать; мы не хотим, чтобы модель повторяла за нами, а хотим полезный ответ на заданный контекст. Поэтому на входе teacher forcing не применяется и loss не считается: предсказание и loss начинаются сразу после входа, и модель учит распределение следующих токенов при условии этого входа.</p>
+<p><em>Примечание:</em> формулой (на лекции это объяснялось словами):</p>
+<div class="arithmatex">\[\mathcal{L}_{\text{SFT}} = -\sum_{t=1}^{T} \log p_\theta\big(y_t \mid x, y_{&lt;t}\big),\]</div>
+<p>где <span class="arithmatex">\(x\)</span> — входная инструкция, <span class="arithmatex">\(y_1 \dots y_T\)</span> — токены эталонного ответа, <span class="arithmatex">\(\theta\)</span> — веса модели; суммирование идёт только по токенам ответа.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=4084">1:08:04</a>):</strong> то есть на входе loss не ставится? — <strong>Ответ:</strong> именно так: стартуем с входа, предсказываем следующий токен, и подсчёт loss начинается с этого места.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>в коде эта «маска на вход» — просто метка <code>-100</code> (игнорировать) у токенов промпта в тензоре labels; в библиотеке TRL (SFTTrainer) это включается опцией вроде assistant-only loss. На том же этапе модели прививают chat template: специальные токены, отделяющие system, user и assistant, из-за чего базовую и instruct-версию одной модели нельзя промптить одинаково — instruct-модель ждёт свой шаблон, а базовая просто продолжает текст. Если дообучаете открытую модель под свою задачу, формат данных должен совпадать с её шаблоном, иначе качество падает без видимых ошибок.</p>
+</div>
+<p>SFT используют и для своей задачи, и как один из главных этапов обучения тех LLM, которыми все пользуются каждый день. Переход от «хорошей модели языка» к полезному ассистенту — подкатегория SFT под названием <strong>instruction tuning</strong>: мы хотим, чтобы модель отвечала на инструкции.</p>
+<h2 id="12-instruction-tuning">12. Instruction tuning<a class="headerlink" href="#12-instruction-tuning" title="Permanent link">¶</a></h2>
+<p>⏱ 1:09:21–1:37:53 · <a href="https://youtu.be/VlA_jt_3Qc4?t=4161">▶ смотреть на YouTube</a></p>
+<h3 id="данные">Данные<a class="headerlink" href="#данные" title="Permanent link">¶</a></h3>
+<p>Если данные предобучения — весь интернет (Wikipedia как источник знаний, массивы текста на разных языках, код), то данные для instruction tuning показывают модели, как наиболее полезно отвечать на инструкции. Категории (<a href="https://youtu.be/VlA_jt_3Qc4?t=4216">1:10:16</a>): написание историй, стихов, составление списков, объяснения и многое другое — Shervine объединяет их под названием «assistant dialogues». Каждый пример — инструкция («сделай X») плюс эталонный ответ; на слайде ответ выделен жёлтым, и именно на нём считается loss.</p>
+<p>Откуда берутся такие данные (<a href="https://youtu.be/VlA_jt_3Qc4?t=4318">1:11:58</a>). Изначально всё писали люди: собирали инструкции, а эксперты-лингвисты по подробным гайдлайнам писали ответы — беглые, полезные, максимизирующие «счастье пользователя». Сегодня, когда сильные модели уже существуют, им можно скормить инструкции, насэмплировать ответы и отдать на проверку людям или другой LLM — это заметно ускоряет сбор датасета. Кроме бытовых категорий в смесь входят математика (как пишется доказательство, как шаги следуют друг за другом) и качественный код. Отдельный блок — <strong>safety</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=4379">1:12:59</a>): модель должна быть helpful, но и harmless, поэтому в данные добавляют подмножество, отучающее повторять вредный контент из предобучения. Отказы («извините, не могу ответить») в принципе можно делать регулярками, но так почти никто не делает — не масштабируется; это свойство встраивают в саму модель. Сюда же относится <strong>hedging</strong> — осторожные формулировки вместо безапелляционных утверждений.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>классический случай «данные от другой модели» — Stanford Alpaca (2023): авторы взяли открытую LLaMA 7B и дообучили её на 52 тыс. пар «инструкция — ответ», которые сгенерировала модель OpenAI по рецепту Self-Instruct из 175 написанных вручную затравочных задач. Весь датасет обошёлся в сотни долларов API-вызовов, а получившаяся модель вела себя как ассистент — ровно тот переход, который Shervine показывает на примере с мишкой. Оборотная сторона: ученик наследует ошибки и стиль учителя, поэтому в описанную на лекции схему обязательно входит проверка сгенерированных ответов людьми или другой моделью.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=4552">1:15:52</a>):</strong> пример со сторителлингом не уточняет, про какую поэзию история, — как модель обобщает? — <strong>Ответ:</strong> за счёт знаний из предобучения: модель уже знает все виды поэзии, и после SFT-примера можно дать более детальный промпт — она обобщит. Ключевое, чему учит пример, — сама концепция «написать историю»; это и есть «магическая» способность LLM адаптироваться к естественному языку.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=4608">1:16:48</a>):</strong> это post-training и есть то, что называют alignment? — <strong>Ответ:</strong> об этом через несколько слайдов (см. конец раздела).</p>
+<h3 id="порядки-величин">Порядки величин<a class="headerlink" href="#порядки-величин" title="Permanent link">¶</a></h3>
+<p>Статьи о GPT-3 и Llama 3 приводят объём SFT-данных не в токенах, а в примерах (<a href="https://youtu.be/VlA_jt_3Qc4?t=4658">1:17:38</a>): около 13 тыс. у GPT-3 и 10 млн у Llama 3. Если принять, что пример — примерно 1000 токенов, получаем объём на несколько порядков меньше предобучающего. Ментальная модель: pretraining — много данных, чтобы выучить общие свойства языка; SFT — небольшой, но очень качественный набор, который выравнивает цель модели под нужные задачи. Повторяем эксперимент с мишкой на instruction-tuned модели (<a href="https://youtu.be/VlA_jt_3Qc4?t=4769">1:19:29</a>): теперь она отвечает по делу — в машинку нельзя, стирайте руками.</p>
+<h3 id="что-в-sft-трудно">Что в SFT трудно<a class="headerlink" href="#что-в-sft-трудно" title="Permanent link">¶</a></h3>
+<p><strong>1. Качество данных</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=4827">1:20:27</a>). «Высокое качество» почти всегда означает человека в цикле и соблюдение всех правил, которые важны пользователю; это дорого по времени и ресурсам. Первые модели обучались почти полностью на человеческих данных, теперь — на смеси человеческих и сгенерированных. Утешение: датасеты переиспользуются, работа делается один раз и потом дополняется.</p>
+<p><strong>2. Распределение промптов</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=4887">1:21:27</a>). Распределение SFT-данных должно совпадать с тем, что придёт на инференсе. Уточнение вида поэзии — достаточно близко, чтобы обобщить; а история в стиле сюжета фильма вместо «учебниковых» историй уже может оказаться out of distribution. Поэтому согласование распределения промптов с целевой задачей — отдельная забота.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=4943">1:22:23</a>):</strong> если после SFT подать обучающий промпт, модель выдаст ту же историю? — <strong>Ответ:</strong> скорее всего нет, слово в слово — точно нет: сэмплирование идёт с ненулевой temperature. «Привкус» может совпасть, но истории — жанр творческий, и при обходе другой области пространства выйдет другая история.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=4999">1:23:19</a>):</strong> зависит ли это «блуждание» от temperature? — <strong>Ответ:</strong> да; высокую temperature и называют «более творческой» именно потому, что модель генерирует менее вероятные для неё варианты.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=5057">1:24:17</a>):</strong> можно ли получить вариативность ответов иначе, не через temperature? — <strong>Ответ:</strong> решение простое, но трудное: больше данных в этой категории, чтобы модель увидела, какое распределение мы хотим. Вообще для обобщения важна смесь данных: лучше достаточно разреженно покрыть пространство, чем повторять одну и ту же историю.</p>
+<p><strong>3. Оценка</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=5163">1:26:03</a>). Ощущение «полезности» субъективно; как выразить его числом? Люди разложили качество по измерениям и завели бенчмарки: общее понимание языка — <strong>MMLU</strong> (massive multitask language understanding, около 50 задач, один сводный score); reasoning; математика; генерация кода — за каждым направлением стоит набор аббревиатур, и бенчмарков становится всё больше, потому что существующие начинают «оптимизировать». <strong>GSM8K</strong> Shervine расшифровывает как школьную математику, 8K — число примеров.</p>
+<p><em>Примечание:</em> GSM8K — Grade School Math 8K; в субтитрах расшифровка звучит как «grad school», но лектор сам уточняет, что это школьный уровень.</p>
+<p>Любопытный феномен (<a href="https://youtu.be/VlA_jt_3Qc4?t=5279">1:27:59</a>): у моделей одного типа вдруг резко подскакивают числа на отдельных бенчмарках без ясной причины. Shervine рекомендует статью о «training on the test task, not the test set»: у многих бенчмарков есть auxiliary training sets из той же области, и модель, обученная на них, несравнима с моделью, которая их не видела. Хотите сравнивать модели — сравнивайте и их обучающие смеси и обеспечивайте паритет; иначе число ничего не говорит о «внутренней» ценности модели.</p>
+<p>Дальше — почему бенчмарков мало (<a href="https://youtu.be/VlA_jt_3Qc4?t=5440">1:30:40</a>): как только бенчмарк появляется, под него делают обучающие данные, и модели набирают отличные баллы везде, а пользователь не видит разницы. Это не вина моделей и не вина бенчмарков — просто ценность модели для вас очень трудно выразить одним числом. Отсюда <strong>Chatbot Arena</strong>: пользователи задают вопрос, видят ответы двух моделей и голосуют, а из попарных сравнений строится рейтинг «по предпочтениям пользователей» — число, поставленное на vibes. Но и он не идеален:</p>
+<ul>
+<li><strong>Шум на старте.</strong> Новой модели сначала достаются случайные соперники, и первые сравнения заметно влияют на итоговый рейтинг — свойство хрупкое.</li>
+<li><strong>Рейтинг можно накрутить</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=5554">1:32:34</a>). Есть статья, показывающая это: достаточно спросить «кто ты?» — ChatGPT ответит, что он ChatGPT, — и злонамеренный участник, зная, какая модель перед ним, голосует нужным образом. Доказательств, что это делали, нет, но и защиты нет.</li>
+<li><strong>Фактичность</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=5618">1:33:38</a>). Экспертные бенчмарки размечены по гайдлайнам «это факт, это не факт». Пользователь так не умеет: подробный совет «стирайте мишку в машине на холодной воде» выглядит actionable и понравится, хотя он неверен.</li>
+<li><strong>Предпочтения не репрезентативны</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=5674">1:34:34</a>). Пример с эмодзи: широкой публике они, похоже, нравятся, экспертам — не очень; те, кто голосует на арене, и те, кто потом пользуется моделью, — разные выборки.</li>
+<li><strong>Safety</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=5725">1:35:25</a>). Пользователи не любят отказы, поэтому голосование смещено в пользу ответов, которые отвечают на вопрос, даже если отказ был сознательным продуктовым решением.</li>
+</ul>
+<p>Вывод: оценка — трудная задача, и ни одно число её не закрывает; нужно смотреть на комбинацию метрик под свой use case и понимать сильные и слабые стороны модели.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 8</p>
+<p>оценке посвящена отдельная <a href="08-llm-evaluation.html">Лекция 8</a> — туда стоит идти за устройством бенчмарков и подходом «LLM как судья». Здесь полезно держать в голове два практических следствия: во-первых, чужой score на MMLU или GSM8K почти ничего не говорит о качестве на вашей задаче, так что без собственного маленького eval-набора из реальных запросов дообучение превращается в гадание; во-вторых, Chatbot Arena (проект несколько раз менял имя: LMArena, а с января 2026 — просто Arena) остаётся самым цитируемым «человеческим» рейтингом, и описанные на лекции смещения — в сторону длинных, уверенных и отформатированных ответов — никуда не делись.</p>
+</div>
+<h3 id="alignment-и-mid-training">Alignment и mid-training<a class="headerlink" href="#alignment-и-mid-training" title="Permanent link">¶</a></h3>
+<p>Возвращаясь к вопросу об alignment (<a href="https://youtu.be/VlA_jt_3Qc4?t=5784">1:36:24</a>): на следующей лекции будет ещё один шаг — preference tuning (обучение на предпочтениях). Fine-tuning плюс preference tuning после предобучения вместе и называют alignment модели. Ещё один этап, который не упоминался, но появился совсем недавно, — <strong>mid-training</strong>: между pretraining и fine-tuning, с той же целью предобучения (next token), но на данных, подобранных под задачи, которые действительно важны.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 5</p>
+<p>SFT учит модель «как выглядит хороший ответ» на единственном эталоне, но не говорит, чем ответ A лучше ответа B. Этот пробел закрывает preference tuning из <a href="05-llm-tuning-rlhf-dpo.html">Лекции 5</a>: RLHF с reward model и PPO либо DPO, где модель напрямую обучают на парах «предпочтительный — отвергнутый ответ». В типичном конвейере открытой модели стадии идут именно в таком порядке — pretraining → (mid-training) → SFT → preference tuning → RL на проверяемых наградах (RLVR, <a href="06-llm-reasoning.html">Лекция 6</a>), а рядом с SFT в 2026 году встала on-policy distillation, — и SFT из этой лекции служит стартовой точкой для всего, что дальше.</p>
+</div>
+<p><strong>4. Вычислительная стоимость</strong> — четвёртая трудность, и ей посвящён остаток лекции.</p>
+<h2 id="13-parameter-efficient-fine-tuning-и-lora">13. Parameter-efficient fine-tuning и LoRA<a class="headerlink" href="#13-parameter-efficient-fine-tuning-и-lora" title="Permanent link">¶</a></h2>
+<p>⏱ 1:37:53–1:45:16 · <a href="https://youtu.be/VlA_jt_3Qc4?t=5873">▶ смотреть на YouTube</a></p>
+<p><strong>LoRA</strong> — широко используемая техника эффективного дообучения, экономящая много compute. Вместо того чтобы дообучать всю матрицу весов, LoRA раскладывает дообучение на замороженные предобученные веса и добавку в виде произведения двух матриц малого ранга (<a href="https://youtu.be/VlA_jt_3Qc4?t=5925">1:38:45</a>):</p>
+<div class="arithmatex">\[W = W_0 + \Delta W = W_0 + BA,\]</div>
+<p>где <span class="arithmatex">\(W_0 \in \mathbb{R}^{d \times k}\)</span> — предобученная матрица, она <strong>заморожена</strong>; <span class="arithmatex">\(B \in \mathbb{R}^{d \times r}\)</span> и <span class="arithmatex">\(A \in \mathbb{R}^{r \times k}\)</span> — обучаемые матрицы: число строк <span class="arithmatex">\(B\)</span> совпадает с числом строк <span class="arithmatex">\(W_0\)</span>, число столбцов <span class="arithmatex">\(A\)</span> — с числом столбцов <span class="arithmatex">\(W_0\)</span>; <span class="arithmatex">\(r\)</span> — <strong>rank</strong> (ранг), внутренняя размерность, и она очень мала. Размерности <span class="arithmatex">\(W\)</span> — сотни и тысячи, <span class="arithmatex">\(r\)</span> — порядка 10 или меньше, поэтому обучаемых весов становится на порядки меньше. В forward pass считаются оба слагаемых и складываются:</p>
+<div class="arithmatex">\[h = W_0 x + B A x.\]</div>
+<p>Другие методы parameter-efficient fine-tuning — prefix tuning и adapters — описаны в учебнике курса, но используются реже, и на лекции их не разбирают.</p>
+<p>Красивое свойство (<a href="https://youtu.be/VlA_jt_3Qc4?t=6043">1:40:43</a>): <span class="arithmatex">\(A\)</span> и <span class="arithmatex">\(B\)</span> характеризуют задачу. Берём базовую модель, инстанцируем <span class="arithmatex">\(B\)</span> и <span class="arithmatex">\(A\)</span> в её весах, дообучаем на детекции спама — получаем пару матриц под спам; для тональности — другую пару; базовая модель общая.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>посчитаем для одной квадратной матрицы 4096 × 4096 (типичный размер проекции в 7B-модели): полных весов <span class="arithmatex">\(4096^2 \approx 16{,}8\)</span> млн, а LoRA с рангом <span class="arithmatex">\(r = 8\)</span> добавляет <span class="arithmatex">\(2 \cdot 4096 \cdot 8 = 65\,536\)</span> обучаемых чисел — в 256 раз меньше. Если навесить адаптеры ранга 8 на все линейные слои Llama-2-7B (attention и feed-forward, 32 слоя), получится около 20 млн обучаемых параметров из 6,7 млрд, то есть примерно 0,3 %; состояния Adam хранятся только для них, и память под оптимизатор сжимается с десятков гигабайт до сотен мегабайт. После обучения <span class="arithmatex">\(BA\)</span> можно прибавить к <span class="arithmatex">\(W_0\)</span> и сохранить обычную матрицу — инференс не замедляется, а адаптеры под разные задачи можно держать отдельно и подменять на лету. В реализациях перед <span class="arithmatex">\(BA\)</span> стоит ещё множитель <span class="arithmatex">\(\alpha / r\)</span> (параметр lora_alpha); лектор его не упоминал, но при подборе learning rate он важен.</p>
+</div>
+<p><strong>Куда ставить LoRA</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=6097">1:41:37</a>). Оригинальная статья обучала адаптеры только на матрицах attention. Позже выяснилось, что это не самое выгодное место: блог, вышедший за несколько недель до лекции, подробно изучает вопрос и показывает, что наибольший эффект даёт feed-forward блок. Сегодня LoRA-матрицы обычно ставят и туда, и туда, но основной прирост качества — в feed-forward.</p>
+<p><strong>Два эмпирических свойства</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=6158">1:42:38</a>), строгой теории под которыми нет:</p>
+<ul>
+<li>С LoRA нужен более высокий learning rate — ориентир в 10 раз выше. Гипотеза: ранг мал, и чтобы исследовать нужные области пространства, шаг должен быть больше.</li>
+<li>LoRA хуже переносит большой batch size. Гипотеза: динамика обучения произведения матриц отличается от динамики полной матрицы, и с ростом батча это проявляется.</li>
+</ul>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/VlA_jt_3Qc4?t=6264">1:44:24</a>):</strong> делают ли grid search по рангу? — <strong>Ответ:</strong> можно, но ранг — design choice: обычно кто-то уже подобрал его до вас для похожего сетапа, можно взять популярное значение — например, 4. Сокращение числа параметров и так огромно, так что дальнейшая экономия мало что меняет; это просто ещё один гиперпараметр.</p>
+<h2 id="14-qlora">14. QLoRA<a class="headerlink" href="#14-qlora" title="Permanent link">¶</a></h2>
+<p>⏱ 1:45:16–≈1:47:15 · <a href="https://youtu.be/VlA_jt_3Qc4?t=6316">▶ смотреть на YouTube</a></p>
+<p>За оставшиеся две минуты — <strong>QLoRA</strong> (quantized LoRA), где встречаются квантизация от Afshine и LoRA. Авторы квантизуют замороженные веса <span class="arithmatex">\(W_0\)</span> в очень умный формат, а обучаемые <span class="arithmatex">\(A\)</span> и <span class="arithmatex">\(B\)</span> считают и обновляют в полной точности — в данном случае bf16.</p>
+<p>Формат для <span class="arithmatex">\(W_0\)</span> — <strong>NF4</strong> (<a href="https://youtu.be/VlA_jt_3Qc4?t=6369">1:46:09</a>): он предполагает, что веса распределены нормально, и делит пространство значений не на корзины фиксированного размера, а по квантилям, так что в каждую корзину попадает примерно одинаковое число значений — биты кодирования расходуются оптимально. Вторая идея — <strong>double quantization</strong>: сначала квантизуются веса, а затем и константы квантизации — те, что возникают при переводе весов в квантизованный вид и обратно (подробно их на лекции не разбирали).</p>
+<p>Результат (<a href="https://youtu.be/VlA_jt_3Qc4?t=6419">1:46:59</a>): примерно 16-кратная экономия VRAM за счёт квантизации; double quantization добавляет ещё немного — не так много, но знать стоит.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Full fine-tuning</th>
+<th>LoRA</th>
+<th>QLoRA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Что обучается</td>
+<td>вся матрица <span class="arithmatex">\(W\)</span></td>
+<td><span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(B\)</span> малого ранга</td>
+<td><span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(B\)</span> малого ранга</td>
+</tr>
+<tr>
+<td>Что заморожено</td>
+<td>—</td>
+<td><span class="arithmatex">\(W_0\)</span> в исходной точности</td>
+<td><span class="arithmatex">\(W_0\)</span>, квантизованная в NF4</td>
+</tr>
+<tr>
+<td>Точность обучаемых весов</td>
+<td>полная</td>
+<td>полная</td>
+<td>bf16</td>
+</tr>
+<tr>
+<td>Память</td>
+<td>максимальная</td>
+<td>обучаемых параметров на порядки меньше</td>
+<td>дополнительно ~16× меньше VRAM на замороженных весах</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>QLoRA — это и есть ответ на вопрос «как дообучить открытую модель на одной видеокарте». Замороженные веса 7B-модели в NF4 занимают около 3,5–4 ГБ, адаптеры и их состояния оптимизатора — сотни мегабайт, и при умеренной длине контекста всё помещается в 16–24 ГБ потребительской карты; авторы статьи показывали дообучение модели 65B на одном GPU с 48 ГБ. В экосистеме Hugging Face это связка bitsandbytes (загрузка в 4 бита, NF4, double quantization) плюс библиотека PEFT; на каждом forward pass блоки NF4 деквантизуются в bf16, поэтому шаг обучения медленнее, чем у обычной LoRA, — платим временем за память. Полученные адаптеры после обучения обычно сливают с весами в bf16, а не оставляют модель в 4 битах.</p>
+</div>
+<p>На этом лекция заканчивается точно по времени.</p>
+<h2 id="ключевые-термины">Ключевые термины<a class="headerlink" href="#ключевые-термины" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Термин</th>
+<th>Что это (как объясняли на лекции)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transfer learning</td>
+<td>Не начинать с нуля под каждую задачу, а брать предобученную модель и подстраивать её; парадигма, на которой построены LLM</td>
+</tr>
+<tr>
+<td>Pretraining</td>
+<td>Самый дорогой этап: обучение предсказанию следующего токена на «всём интернете» (текст, код); сотни миллиардов — десятки триллионов токенов</td>
+</tr>
+<tr>
+<td>Common Crawl</td>
+<td>Архив всего найденного в интернете, около 3 млрд страниц в месяц; стандартный источник данных предобучения</td>
+</tr>
+<tr>
+<td>FLOPs / FLOPS</td>
+<td>Число операций с плавающей точкой (объём compute, ~<span class="arithmatex">\(10^{25}\)</span> на обучение LLM) / операций в секунду (скорость железа); в статьях их путают</td>
+</tr>
+<tr>
+<td>Scaling laws</td>
+<td>Эмпирические зависимости (статья 2020 года): больше compute, данных и параметров — лучше next-token prediction; большие модели более sample efficient</td>
+</tr>
+<tr>
+<td>Закон Chinchilla</td>
+<td>При фиксированном compute оптимально ≈ 20 токенов на параметр; GPT-3 (175B, 300B токенов) по нему недообучена</td>
+</tr>
+<tr>
+<td>Knowledge cutoff date</td>
+<td>Дата, до которой собраны данные предобучения; базовая модель не знает ничего позже неё</td>
+</tr>
+<tr>
+<td>Активации, градиенты, моменты Adam</td>
+<td>Три вещи помимо весов, которые нужно держать в памяти GPU при обучении; память зависит от размера модели, батча и длины контекста</td>
+</tr>
+<tr>
+<td>Data parallelism</td>
+<td>Батч делится между GPU, на каждом полная копия модели; градиенты усредняются; цена — communication cost и требование вместить модель на одно устройство</td>
+</tr>
+<tr>
+<td>ZeRO</td>
+<td>Шардирование состояний оптимизатора (ZeRO-1), градиентов (ZeRO-2) и параметров (ZeRO-3) между GPU вместо дублирования</td>
+</tr>
+<tr>
+<td>Model parallelism</td>
+<td>Параллелизм внутри батча: expert (эксперты MoE по устройствам), tensor (режем матричные умножения), pipeline (слои по устройствам)</td>
+</tr>
+<tr>
+<td>HBM / SRAM</td>
+<td>Два вида памяти GPU: большая и медленная (десятки ГБ, ТБ/с) и маленькая на чипе, в ~10 раз быстрее (десятки МБ, десятки ТБ/с)</td>
+</tr>
+<tr>
+<td>Flash Attention</td>
+<td>Точное вычисление attention блоками в SRAM (tiling) с минимумом обращений к HBM плюс recomputation активаций в backward pass; меньше и памяти, и времени</td>
+</tr>
+<tr>
+<td>Quantization</td>
+<td>Перевод чисел из одного формата точности в другой (FP32 → FP16 и т. п.) ради памяти и скорости</td>
+</tr>
+<tr>
+<td>Mixed precision training</td>
+<td>Веса и их обновления в FP32, операции forward/backward в FP16; качество почти не страдает</td>
+</tr>
+<tr>
+<td>SFT</td>
+<td>Supervised fine-tuning: дообучение на парах «вход — выход», loss только на выходе, вход — условие</td>
+</tr>
+<tr>
+<td>Instruction tuning</td>
+<td>Подвид SFT, превращающий модель языка в ассистента, отвечающего на инструкции; данных на порядки меньше, чем при предобучении, но качественных</td>
+</tr>
+<tr>
+<td>Alignment</td>
+<td>Fine-tuning плюс preference tuning (следующая лекция) после предобучения</td>
+</tr>
+<tr>
+<td>Mid-training</td>
+<td>Недавно появившийся этап между pretraining и fine-tuning: та же цель, но данные подобраны под целевые задачи</td>
+</tr>
+<tr>
+<td>MMLU, GSM8K</td>
+<td>Бенчмарки: общее понимание языка (~50 задач) и школьная математика (8K примеров)</td>
+</tr>
+<tr>
+<td>Training on the test task</td>
+<td>Эффект, когда модель обучали на данных того же типа, что бенчмарк; сравнивать модели можно только при паритете обучающих смесей</td>
+</tr>
+<tr>
+<td>Chatbot Arena</td>
+<td>Рейтинг моделей по попарным голосам пользователей; хрупок на старте, уязвим к накрутке, смещён по фактичности, вкусам и safety</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>Дообучение через <span class="arithmatex">\(W_0 + BA\)</span> с замороженной <span class="arithmatex">\(W_0\)</span> и малым рангом <span class="arithmatex">\(r\)</span> (порядка 10, часто 4); нужен learning rate ~10× выше, хуже с большим батчем</td>
+</tr>
+<tr>
+<td>QLoRA</td>
+<td>LoRA поверх <span class="arithmatex">\(W_0\)</span>, квантизованной в NF4 (квантили нормального распределения), с double quantization констант; ~16× меньше VRAM</td>
+</tr>
+</tbody>
+</table>
+<h2 id="главные-выводы">Главные выводы<a class="headerlink" href="#главные-выводы" title="Permanent link">¶</a></h2>
+<ul>
+<li>LLM обучаются по схеме transfer learning: дорогой универсальный pretraining на next-token prediction, затем сравнительно дешёвая адаптация под задачи.</li>
+<li>Масштабы предобучения — триллионы токенов и ~<span class="arithmatex">\(10^{25}\)</span> FLOPs; при фиксированном compute данных должно быть примерно в 20 раз больше, чем параметров (Chinchilla), и лаборатории воспроизводят такие зависимости под свой сетап.</li>
+<li>У предобученной модели есть knowledge cutoff, её знания трудно редактировать, а стоимость обучения всегда измеряется миллионами.</li>
+<li>Главное ограничение при обучении — память GPU (80 ГБ у H100): активации, градиенты и состояния оптимизатора приходится распределять по устройствам (data parallelism + ZeRO, model parallelism), платя за это обменом между GPU.</li>
+<li>Flash Attention показывает, что узкое место — не арифметика, а трафик между HBM и SRAM: точное внимание блоками плюс пересчёт активаций дают выигрыш и по памяти, и по времени.</li>
+<li>Снижение точности чисел (квантизация, mixed precision) экономит память и ускоряет счёт почти без потери качества; веса при этом держат в FP32.</li>
+<li>SFT и instruction tuning — та же задача next-token prediction, но на фиксированном входе и на малых качественных данных; именно они делают из модели ассистента, включая отказы и hedging.</li>
+<li>Оценивать модели трудно: бенчмарки «обучаются», арена шумная и накручиваемая; нужна комбинация метрик под конкретный use case.</li>
+<li>LoRA сокращает обучаемые параметры на порядки (лучше всего работает в feed-forward блоках), QLoRA дополнительно квантизует замороженные веса в NF4 и экономит ~16× VRAM.</li>
+</ul>
+<h2 id="вопросы-из-зала">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=1227">20:27</a> Вопрос: фиксируют ли архитектуру в экспериментах со scaling laws? → Ответ: да, везде decoder-only трансформер; по статье, архитектура меняет мало, решают токены и размер модели.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=1284">21:24</a> Вопрос: есть ли перенос знаний между версиями моделей? → Ответ: модели закрыты, общего ответа нет; обучение в любом случае стоит миллионы.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=1544">25:44</a> Вопрос: а GPU для инференса? → Ответ: требования отличаются; здесь только обучение.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=1921">32:01</a> Вопрос: как при data parallelism обновляются веса? → Ответ: градиенты усредняются по GPU через обмен между ними.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=1921">32:01</a> Вопрос (от лектора залу): в чём минусы data parallelism? → Ответ студента: модель должна помещаться на одно устройство; лектор добавляет communication cost.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=2845">47:25</a> Вопрос: в Flash Attention берётся вся строка или часть? → Ответ: можно часть; на слайде упрощение.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=2845">47:25</a> Вопрос: масштабирующие коэффициенты считаются на лету или оцениваются? → Ответ: точно и итеративно; детали в статье FlashAttention.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=3518">58:38</a> Вопрос: mixed precision — ко всем слоям? → Ответ: не обязательно, есть вариации; некоторые части чувствительнее.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=3575">59:35</a> Вопрос: есть ли оптимальная точность и работает ли Chinchilla для чужого сетапа? → Ответ: стандарта нет; scaling laws воспроизводят на малых моделях и экстраполируют (пример — обоснование 405B в статье Llama 3).</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=3711">1:01:51</a> Вопрос: можно ли управлять диапазоном при квантизации? → Ответ: zero-point и absmax quantization; ещё один способ — в QLoRA.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=4084">1:08:04</a> Вопрос: при SFT loss на входе не считается? → Ответ: верно, loss начинается после входа.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=4552">1:15:52</a> Вопрос: пример с историей неоднозначен — как модель обобщает? → Ответ: за счёт знаний из предобучения; пример учит самой концепции задачи.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=4608">1:16:48</a> Вопрос: это и есть alignment? → Ответ: alignment = fine-tuning + preference tuning; подробно на следующей лекции.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=4943">1:22:23</a> Вопрос: выдаст ли дообученная модель ту же историю на обучающий промпт? → Ответ: не дословно — temperature ненулевая; возможно, похожий «привкус».</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=4999">1:23:19</a> Вопрос: зависит ли это от temperature? → Ответ: да, выше temperature — «креативнее», менее вероятные варианты.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=5057">1:24:17</a> Вопрос: как ещё добиться вариативности ответов? → Ответ: больше данных этой категории; важна разнообразная смесь, а не повторы.</li>
+<li><a href="https://youtu.be/VlA_jt_3Qc4?t=6264">1:44:24</a> Вопрос: делать ли grid search по рангу LoRA? → Ответ: можно, но обычно берут популярное значение (например, 4); экономия и так огромна.</li>
+</ul>
+<h2 id="чем-можно-дополнить">Чем можно дополнить<a class="headerlink" href="#чем-можно-дополнить" title="Permanent link">¶</a></h2>
+<p>Темы, которых лекция не касается или касается вскользь, но которые полезно знать рядом с ней.</p>
+<ul>
+<li><strong>Подготовка данных предобучения.</strong> Лекция называет только источники (Common Crawl, Wikipedia, GitHub), но основная работа — дедупликация, фильтры качества и классификаторы «полезности» текста, от которых качество модели зависит не меньше, чем от числа токенов. Искать: FineWeb и FineWeb-Edu, RefinedWeb, Dolma, DataComp-LM.</li>
+<li><strong>Гиперпараметры и стабильность предобучения.</strong> Как выбирают learning rate, warmup и форму расписания (cosine, warmup-stable-decay), откуда берутся loss spikes и как с ними борются (gradient clipping, QK-norm). Искать: разделы о тренировке в отчётах Llama 3, OLMo, DeepSeek; «warmup-stable-decay schedule».</li>
+<li><strong>Обобщение recomputation и цена коммуникации.</strong> Пересчёт активаций из Flash Attention — частный случай activation (gradient) checkpointing, который применяют ко всем слоям; а communication cost из разделов о параллелизме измеряется через коллективные операции all-reduce, reduce-scatter и all-gather (NCCL) и скорость интерконнекта (NVLink, InfiniBand). Для длинного контекста есть ещё sequence/context parallelism и ring attention.</li>
+<li><strong>Низкие точности за пределами bf16.</strong> По состоянию на ноябрь 2026 крупные модели предобучают в FP8, а некоторые уже в NVFP4; в инференсе наряду с int8/int4 стандартом стали FP8 и 4-битные float-форматы (MXFP4, NVFP4). Искать: FP8 mixed precision (отчёт DeepSeek-V3), NVFP4 pretraining (NVIDIA), FP4 QAT, SmoothQuant, GPTQ, AWQ.</li>
+<li><strong>Что делать с knowledge cutoff.</strong> Лектор называет редактирование знаний «очень трудной задачей» — рядом стоит continual (continued) pretraining на новых или доменных данных, проблема catastrophic forgetting и приём replay (подмешивание старых данных); точечное редактирование фактов искать по методам ROME и MEMIT. Альтернатива без дообучения — RAG из <a href="07-agentic-llms-rag-tools.html">Лекции 7</a>.</li>
+<li><strong>Сколько и каких данных нужно для SFT.</strong> Лекция даёт порядки (13 тыс. и 10 млн примеров), но спор «качество против количества» шире: статья LIMA показывает, что около тысячи очень качественных примеров дают приличного ассистента; рецепты синтетических данных — Self-Instruct, Evol-Instruct (WizardLM), UltraChat. Искать также «data mixture» и «curriculum» для SFT.</li>
+<li><strong>Другие PEFT-методы и ограничения LoRA.</strong> Prefix tuning и adapters упомянуты на лекции одной фразой; к ним добавились DoRA, rsLoRA и (IA)³. Отдельно стоит статья «LoRA Learns Less and Forgets Less» (2024): LoRA меньше портит исходные способности модели, но и хуже полного дообучения усваивает новые сложные навыки вроде кода и математики — важно при выборе между LoRA и full fine-tuning.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="03-llms-moe-decoding-prompting.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 3. LLM: MoE, декодирование, промптинг">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                3. LLM: MoE, декодирование, промптинг
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="05-llm-tuning-rlhf-dpo.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 5. Дообучение: RLHF, PPO, DPO">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                5. Дообучение: RLHF, PPO, DPO
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

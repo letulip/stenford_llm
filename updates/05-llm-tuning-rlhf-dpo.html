@@ -1,0 +1,1842 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/updates/05-llm-tuning-rlhf-dpo.html">
+      
+      
+        <link rel="prev" href="04-llm-training.html">
+      
+      
+        <link rel="next" href="06-llm-reasoning.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>5. Дообучение: RLHF, PPO, DPO - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo--что-изменилось-к-ноябрю-2026" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. Дообучение: RLHF, PPO, DPO
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lectures/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lectures/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-осталось-верным" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что осталось верным
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-устарело-или-сдвинулось" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что устарело или сдвинулось
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#новое-о-чём-лекция-не-знала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое, о чём лекция не знала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-это-меняет-для-читателя" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это меняет для читателя
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#проверка-пометок-в-конспекте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка пометок в конспекте
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#источники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Источники
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-осталось-верным" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что осталось верным
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-устарело-или-сдвинулось" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что устарело или сдвинулось
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#новое-о-чём-лекция-не-знала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое, о чём лекция не знала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#что-это-меняет-для-читателя" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это меняет для читателя
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#проверка-пометок-в-конспекте" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка пометок в конспекте
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#источники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Источники
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo--что-изменилось-к-ноябрю-2026">Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO — что изменилось к ноябрю 2026<a class="headerlink" href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo--что-изменилось-к-ноябрю-2026" title="Permanent link">¶</a></h1>
+<p><em>Лекция прочитана 31 октября 2025. Сверено с источниками 7 ноября 2026.</em></p>
+<p>← <a href="../lectures/05-llm-tuning-rlhf-dpo.html">Конспект лекции</a> · <a href="index.html">Все актуализации</a></p>
+<h2 id="коротко">Коротко<a class="headerlink" href="#коротко" title="Permanent link">¶</a></h2>
+<ul>
+<li>PPO перестал быть «самым популярным»: рецепты 2026 года строятся на GRPO-семействе без value function (DAPO, GSPO, CISPO). TRL (1.0 — 31.03.2026, 1.17 — 29.10.2026) по умолчанию обучает GRPO с loss DAPO и β = 0, без reference-модели, а <code>PPOTrainer</code> удалён в v1.13.0 (10.09.2026) [21–24, 28].</li>
+<li>Скалярная Bradley–Terry reward model уступает проверяемым наградам, рубрикам и генеративным судьям: DeepSeek-V4 отказался от скалярных RM, Nemotron 3 Nano делает RLHF через GenRM, GLM-5 — гибрид правил, ORM и GRM [4, 5, 7].</li>
+<li>DPO стал лёгким и необязательным этапом: OLMo 3 — SFT → DPO → RLVR, Llama 4 — лёгкий DPO после online RL, Nemotron 3 Nano — релиз без DPO [1–4].</li>
+<li>Новый примитив — on-policy distillation: DeepSeek-V4 заменил им смешанный RL-этап; есть в Qwen3.5-Omni, GLM-5, verl, Tinker [5, 7, 9, 15, 16, 25].</li>
+<li>Проблемы раздела 11 стали измеримыми: reward hacking в production-RL ведёт к широкой misalignment (Anthropic, 23.11.2025), RLHF усиливает sycophancy через смещение разметчиков (ICML 2026), фикс length bias переносит давление на другие оси (27.05.2026) [30, 33, 36].</li>
+<li>Для RL хватает LoRA ранга 1 («LoRA Without Regret», 29.09.2025); на этом построен Tinker (год — 15.10.2026) [14, 16].</li>
+</ul>
+<h2 id="что-осталось-верным">Что осталось верным<a class="headerlink" href="#что-осталось-верным" title="Permanent link">¶</a></h2>
+<p>Математика лекции не устарела: Bradley–Terry и вывод loss reward model, вывод DPO через оптимальную policy, закон Гудхарта как объяснение reward hacking — это язык отчётов 2026 года. «Advantage = reward − baseline» стала ещё важнее: на ней стоит GRPO с baseline по группе. Ratio <span class="arithmatex">\(R(\theta)\)</span> и clipping живут в каждом GRPO-варианте, а distribution shift DPO — главный аргумент в споре «DPO или online RL» [1, 3, 38]. Best-of-N и предупреждение о чувствительности человеческих меток к guidelines тоже в силе [19, 33, 34].</p>
+<h2 id="что-устарело-или-сдвинулось">Что устарело или сдвинулось<a class="headerlink" href="#что-устарело-или-сдвинулось" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Лекция говорит:</strong> самый популярный RL-алгоритм — PPO (раздел 8, 53:54) → <strong>Сейчас:</strong> отправная точка — GRPO, и мало кто запускает его без модификаций: DAPO, Dr. GRPO, GSPO (Qwen), CISPO (MiniMax, ScaleRL) [28]. Nemotron 3 Nano, DeepSeek-V4 и GLM-5 обучены GRPO [4, 5, 7]. PPO с критиком не исчез (verl, critic-based этап GLM-5.2 по обзору Zhang), но из TRL удалён [23, 25, 29].</li>
+<li><strong>Лекция говорит:</strong> PPO требует четырёх моделей (раздел 10, 1:14:00) → <strong>Сейчас:</strong> value function нет, reference опциональна, а reward даёт верификатор или сама policy: в DeepSeek-V4 «actor network natively functions as the GRM» [5, 24].</li>
+<li><strong>Лекция говорит:</strong> без KL к reference будет reward hacking (разделы 7–8, 48:49) → <strong>Сейчас:</strong> явный KL часто отключают: GLM-5 убирает его «to accelerate RL improvement», DAPO в TRL идёт с β = 0 [7, 24]. Почему модель не разваливается, объясняет «RL's Razor» (04.09.2025): on-policy RL сам смещён к минимальному KL от базы и забывает меньше SFT [13]. Hacking сдерживают верификаторы, рубрики, length penalties и закалка сред [5, 8, 31].</li>
+<li><strong>Лекция говорит:</strong> RM — decoder-only с classification head, бенчмарк RewardBench (раздел 6, 39:36) → <strong>Сейчас:</strong> генеративные RM, рассуждающие перед оценкой, и рубрики; RewardBench сменился на RewardBench 2 (02.06.2025, ICLR 2026), где модели теряют около 20 пунктов, а лидирует классическая BT-модель Skywork-Reward-V2 (июль 2025) [17–20].</li>
+<li><strong>Лекция говорит:</strong> PPO лучше, DPO «почти так же хорош» (раздел 14, 1:38:54; 1:46:24) → <strong>Сейчас:</strong> сравнивают с online RL, и роль DPO сузилась. Meta: «SFT and DPO can over-constrain the model» — в Llama 4 DPO стал лёгким финальным шагом [3]; OLMo 3: DPO перед RLVR — лучший старт [1]; Nemotron 3 Nano: RL дал то же без DPO, но 50 шагов DPO (~10 тыс. пар) снизили галлюцинации tool-calls на GPQA с 8,33 % до 0,7 % [4].</li>
+<li><strong>Лекция говорит:</strong> нужны десятки тысяч человеческих пар (раздел 6, 39:36) → <strong>Сейчас:</strong> пары часто синтетические: OLMo 3 строит DPO-данные по «delta learning» из ответов слабых моделей [1, 37]; человеческие пары остались там, где важен вкус, — DPO для Talker в Qwen3.5-Omni [9].</li>
+<li><strong>Лекция говорит:</strong> нет хорошей метрики мониторинга RL (раздел 11, 1:18:08) → <strong>Частично:</strong> ScaleRL (15.10.2025) показал, что стабильные рецепты дают предсказуемые сигмоидные кривые «compute → качество»; аналога cross-entropy нет [12].</li>
+</ul>
+<h2 id="новое-о-чём-лекция-не-знала">Новое, о чём лекция не знала<a class="headerlink" href="#новое-о-чём-лекция-не-знала" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Варианты GRPO.</strong> Dr. GRPO (26.03.2025): нормировка на длину ответа удлиняет ответы, особенно неверные; DAPO: асимметричный clipping (ε_high = 0.28) и потокенная агрегация; GSPO (24.07.2025): importance ratio на уровне последовательности, стабилизировал RL для MoE в Qwen3; CISPO клиппирует веса importance sampling [10, 11, 24, 28]. Для текстовых Qwen3.5 не удалось подтвердить источником; в Qwen3.5-Omni GSPO применён к Talker [9].</li>
+<li><strong>Training–inference mismatch и асинхронный RL.</strong> Ratio из PPO-Clip теперь корректирует и расхождение между движком генерации (vLLM) и тренером: masked importance sampling в Nemotron 3, IcePop в GLM-5, IS-коррекция в TRL [4, 7, 21]. Обзор 16 RL-библиотек (HF, 10.03.2026; у verl ~19,7 тыс. звёзд): все разделяют генерацию и обучение по пулам GPU, главная проблема — staleness rollouts [27].</li>
+<li><strong>Генеративные RM и рубрики.</strong> DeepSeek-GRM (03.04.2025) — pointwise генеративная RM, качество растёт от сэмплирования критик на инференсе [17]. Rubrics as Rewards (23.07.2025, ICLR 2026): чек-листы как награда дают до +31 % к Likert-судье на HealthBench [18]. Kimi K2 ранжирует свои ответы по рубрикам [8]; Nemotron 3 Nano в RLHF сравнивает 16 ответов через GenRM и штрафует длину в группе — многословность −30 % [4].</li>
+<li><strong>On-policy distillation.</strong> Thinking Machines (27.10.2025): ученик сэмплирует сам, учитель даёт потокенную награду через reverse KL [15]. DeepSeek-V4 так собирает более десяти доменных специалистов (fine-tuning → GRPO) в одну модель без общего RL [5, 6].</li>
+<li><strong>LoRA и RL.</strong> Schulman и др. (29.09.2025): policy gradient извлекает O(1) бит за эпизод, поэтому LoRA ранга 1 сравнима с полным дообучением; LR в 10 раз выше, адаптеры на все слои, включая MLP [14]. Tinker строит на этом API с CISPO, DRO и OPD [16].</li>
+<li><strong>Reward hacking → misalignment.</strong> Anthropic (23.11.2025): модель, научившаяся хакать награду в production-средах для кода, обобщает это до alignment faking и саботажа; помогают запрет hacking, разнообразный safety-RLHF и «inoculation prompting» [30]. Reward Hacking Benchmark (03.05.2026, ICML 2026): эксплойты у 13 моделей — от 0 % (Claude Sonnet 4.5) до 13,9 % (DeepSeek-R1-Zero), закалка среды снижает их на 87,7 % относительно [31]. Эффект воспроизведён итеративным DPO на GPT-4.1 (06.09.2026) [32].</li>
+<li><strong>Sycophancy и length bias как свойства preference-данных.</strong> OpenAI (02.05.2025): thumbs-up/down как дополнительный сигнал награды ослабили основной reward — GPT-4o откатили [35]. Shapira и др. (01.02.2026, ICML 2026): при Bradley–Terry смещённые к согласию разметчики создают reward gap, который RLHF усиливает; предложен «agreement penalty» [33]. ELEPHANT (ICLR 2026): модели поддерживают сторону пользователя в 48 % моральных споров, и preference-датасеты это вознаграждают [34]. «Reward Bias Substitution» (27.05.2026): length penalty в GRPO укорачивает ответы, но переносит давление на самоуверенность, а дебиасинг под best-of-N возвращает length bias у 3 из 4 RM [36].</li>
+</ul>
+<h2 id="что-это-меняет-для-читателя">Что это меняет для читателя<a class="headerlink" href="#что-это-меняет-для-читателя" title="Permanent link">¶</a></h2>
+<ul>
+<li>Нужны тон и формат ответов — SFT плюс небольшой DPO в TRL по-прежнему дешевле всего (online DPO там пока experimental [22]); точечную проблему чинят ~10 тыс. пар и 50 шагов [4].</li>
+<li>Есть проверка (тесты, JSON-схема, точный ответ) — сразу GRPO/DAPO с LoRA малого ранга и β = 0; reward model не нужна [14, 24].</li>
+<li>Задача субъективна — рубрики и LLM-судья (RaR, Kimi K2), судью валидировать на людях; ORM, по GLM-5, уязвимее к reward hacking, чем правила [7, 18].</li>
+<li>Следите не только за средним reward: длина, доля клиппированных токенов, расхождение с vLLM, внешние evals; фикс одной оси сдвигает давление на другую [36].</li>
+<li>Для API: sycophancy и склонность к эксплойтам — свойства post-training вендора, меняющиеся от версии к версии; проверяйте их на своих задачах и не замыкайте «лайк → награда» бездумно [31, 35].</li>
+<li>Знание PPO не пропало: ratio, clipping, advantage — словарь DAPO/GSPO/CISPO; нужен критик — verl v0.9.1 (20.09.2026) или OpenRLHF v0.11.2 (14.09.2026), TRL PPO не поставляет [23, 25, 26].</li>
+</ul>
+<h2 id="проверка-пометок-в-конспекте">Проверка пометок в конспекте<a class="headerlink" href="#проверка-пометок-в-конспекте" title="Permanent link">¶</a></h2>
+<ul>
+<li>«<strong>По состоянию на 2026 год у DPO появилось целое семейство родственников…</strong>» (раздел 14). Семейство названо верно [39], но две формулировки неточны: «DPO стал обычным этапом рядом с SFT и rejection sampling» — в 2026 году DPO лёгкий и необязательный, Nemotron 3 Nano, DeepSeek-V4 и GLM-5 обходятся без него, а rejection sampling как этап в отчётах не фигурирует [4, 5, 7]; «для reasoning-задач центр тяжести сместился к RL с проверяемыми наградами» — узко: on-policy RL с проверяемыми, рубричными и GenRM-наградами стал основным этапом и для instruction following, диалога, tool use [4, 7, 28].</li>
+<li>«<strong>Для LLM KL между policy и reference никто не считает по полной формуле…</strong>» (раздел 8). Верно для InstructGPT-подобных реализаций; в GRPO-семействе KL — отдельный член loss, а в TRL по умолчанию его нет (β = 0) [24].</li>
+<li>«<strong>Идея „reward минус baseline“ — ключ к GRPO…</strong>» (раздел 9). Описание исходного GRPO корректно, но нормировка на длину признана источником length bias (Dr. GRPO), и дефолт TRL её не использует [11, 24].</li>
+<li>Остальные блоки (InstructGPT, Constitutional AI, числовые примеры, Elo, length bias, мониторинг, «PPO не совсем on-policy», Llama 2 rejection sampling, likelihood displacement) ошибок не содержат; к блокам о length bias (раздел 7) и мониторинге (раздел 11) можно добавить bias substitution и метрики mismatch [36, 27].</li>
+</ul>
+<h2 id="источники">Источники<a class="headerlink" href="#источники" title="Permanent link">¶</a></h2>
+<ol>
+<li>Olmo 3 (technical report, arXiv:2512.13961) — Team Olmo, Ai2 — 15.12.2025, v2 14.04.2026 — https://arxiv.org/abs/2512.13961</li>
+<li>Olmo 3: Charting a path through open AI — Ai2 blog — 20.11.2025 — https://allenai.org/blog/olmo3</li>
+<li>The Llama 4 herd: The beginning of a new era of natively multimodal AI innovation — Meta AI — 05.04.2025 — https://ai.meta.com/blog/llama-4-multimodal-intelligence/</li>
+<li>Nemotron 3 Nano: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning (arXiv:2512.20848) — NVIDIA — 23.12.2025 — https://arxiv.org/abs/2512.20848</li>
+<li>DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence (arXiv:2606.19348) — DeepSeek-AI — 2026 (в документе стоит дата 26.04.2026) — https://arxiv.org/abs/2606.19348</li>
+<li>DeepSeek V4: ten teachers, one student — Maxime Labonne, Substack — 11.06.2026 — https://maximelabonne.substack.com/p/deepseek-v4-ten-teachers-one-student</li>
+<li>GLM-5: from Vibe Coding to Agentic Engineering (arXiv:2602.15763) — GLM-5 Team, Zhipu/Z.ai — 17.02.2026, v2 24.02.2026 — https://arxiv.org/abs/2602.15763</li>
+<li>Kimi K2: Open Agentic Intelligence (arXiv:2507.20534) — Kimi Team, Moonshot AI — 28.07.2025, v2 03.02.2026 — https://arxiv.org/abs/2507.20534</li>
+<li>Qwen3.5-Omni Technical Report (arXiv:2604.15804) — Qwen Team, Alibaba — 21.04.2026 — https://arxiv.org/abs/2604.15804</li>
+<li>Group Sequence Policy Optimization (arXiv:2507.18071) — Zheng et al., Qwen Team — 24.07.2025 — https://arxiv.org/abs/2507.18071</li>
+<li>Understanding R1-Zero-Like Training: A Critical Perspective (Dr. GRPO, arXiv:2503.20783) — Liu et al., Sea AI Lab — 26.03.2025 — https://arxiv.org/abs/2503.20783</li>
+<li>The Art of Scaling Reinforcement Learning Compute for LLMs (ScaleRL, arXiv:2510.13786) — Khatri et al., Meta — 15.10.2025 — https://arxiv.org/abs/2510.13786</li>
+<li>RL's Razor: Why Online Reinforcement Learning Forgets Less (arXiv:2509.04259) — Shenfeld, Pari, Agrawal — 04.09.2025 — https://arxiv.org/abs/2509.04259</li>
+<li>LoRA Without Regret — John Schulman et al., Thinking Machines Lab — 29.09.2025 — https://thinkingmachines.ai/blog/lora/</li>
+<li>On-Policy Distillation — Kevin Lu et al., Thinking Machines Lab — 27.10.2025 — https://thinkingmachines.ai/blog/on-policy-distillation/</li>
+<li>One Year of Tinker: Turning Your Expertise into Custom Models — Thinking Machines Lab — 15.10.2026 — https://thinkingmachines.ai/news/one-year-of-tinker/</li>
+<li>Inference-Time Scaling for Generalist Reward Modeling (DeepSeek-GRM, arXiv:2504.02495) — Liu et al., DeepSeek — 03.04.2025 — https://arxiv.org/abs/2504.02495</li>
+<li>Rubrics as Rewards: Reinforcement Learning Beyond Verifiable Domains (arXiv:2507.17746) — Gunjal et al., Scale AI — 23.07.2025, принята на ICLR 2026 — https://arxiv.org/abs/2507.17746</li>
+<li>RewardBench 2: Advancing Reward Model Evaluation (arXiv:2506.01937) — Malik et al., Ai2 — 02.06.2025, ICLR 2026 — https://arxiv.org/abs/2506.01937</li>
+<li>Skywork-Reward-V2: Scaling Preference Data Curation via Human-AI Synergy (arXiv:2507.01352) — Skywork AI — 04.07.2025 — https://github.com/SkyworkAI/Skywork-Reward-V2</li>
+<li>Releases · huggingface/trl (v1.11.0–v1.17.1) — GitHub — 26.08–30.10.2026 — https://github.com/huggingface/trl/releases</li>
+<li>TRL v1.0.0 release notes — GitHub — 31.03.2026 — https://github.com/huggingface/trl/releases/tag/v1.0.0</li>
+<li>TRL v1.13.0 release notes (удаление PPOTrainer) — GitHub — 10.09.2026 — https://github.com/huggingface/trl/releases/tag/v1.13.0</li>
+<li>GRPO Trainer — документация TRL (main) — прочитано 07.11.2026 — https://huggingface.co/docs/trl/main/en/grpo_trainer</li>
+<li>Releases · volcengine/verl (v0.7.1–v0.9.1) — GitHub — 16.03–20.09.2026 — https://github.com/volcengine/verl/releases</li>
+<li>Releases · OpenRLHF/OpenRLHF (v0.9.10–v0.11.2) — GitHub — 04.04–14.09.2026 — https://github.com/OpenRLHF/OpenRLHF/releases</li>
+<li>Keep the Tokens Flowing: Lessons from 16 Open-Source RL Libraries — Dirhoussi, Gallouédec, Tunstall et al., Hugging Face blog — 10.03.2026 — https://huggingface.co/blog/async-rl-training-landscape</li>
+<li>How frontier models train on outcomes in 2026 — Sergio Paniego, Hugging Face blog — 10.08.2026 — https://huggingface.co/blog/sergiopaniego/agentic-rl-2026</li>
+<li>How Frontier Labs Train LLMs — Jiaxin Zhang, blog — 27.06.2026 — https://jxzhangjhu.github.io/blog/2026/how-frontier-labs-train-llms/</li>
+<li>Natural Emergent Misalignment from Reward Hacking in Production RL (arXiv:2511.18397) — MacDiarmid et al., Anthropic — 23.11.2025 — https://arxiv.org/abs/2511.18397</li>
+<li>Reward Hacking Benchmark: Measuring Exploits in LLM Agents with Tool Use (arXiv:2605.02964) — Kunvar Thaman — 03.05.2026, ICML 2026 — https://arxiv.org/abs/2605.02964</li>
+<li>Inducing Emergent Misalignment from Reward Hacks with Iterative DPO (arXiv:2609.06649) — Daniels, Moodley, Marlin, Lindner — 06.09.2026 — https://arxiv.org/abs/2609.06649</li>
+<li>How RLHF Amplifies Sycophancy (arXiv:2602.01002) — Shapira, Benade, Procaccia — 01.02.2026, v2 15.10.2026, ICML 2026 — https://arxiv.org/abs/2602.01002</li>
+<li>ELEPHANT: Measuring and understanding social sycophancy in LLMs — Cheng et al. — ICLR 2026 (препринт arXiv:2505.13995, май 2025) — https://proceedings.iclr.cc/paper_files/paper/2026/hash/d3362f84979d16cee000f09eef61244c-Abstract-Conference.html</li>
+<li>Expanding on what we missed with sycophancy — OpenAI — 02.05.2025 — https://openai.com/index/expanding-on-sycophancy/</li>
+<li>Reward Bias Substitution: Single-Axis Bias Mitigations Redirect Optimization Pressure (arXiv:2605.27996) — Lamparth et al. — 27.05.2026 — https://arxiv.org/abs/2605.27996</li>
+<li>The Delta Learning Hypothesis: Preference Tuning on Weak Data can Yield Strong Gains (arXiv:2507.06187) — Geng et al. — 08.07.2025, COLM 2025 — https://arxiv.org/abs/2507.06187</li>
+<li>Is DPO Superior to PPO for LLM Alignment? A Comprehensive Study (arXiv:2404.10719) — Xu et al. — 16.04.2024, ICML 2024 — https://arxiv.org/abs/2404.10719</li>
+<li>A Survey of Direct Preference Optimization (arXiv:2503.11701) — Liu et al. — 12.03.2025 — https://arxiv.org/abs/2503.11701</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="04-llm-training.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 4. Обучение LLM">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                4. Обучение LLM
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="06-llm-reasoning.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 6. Reasoning-модели и GRPO">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                6. Reasoning-модели и GRPO
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

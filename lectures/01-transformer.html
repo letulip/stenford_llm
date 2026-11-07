@@ -1,0 +1,2930 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/lectures/01-transformer.html">
+      
+      
+        <link rel="prev" href="../index.html">
+      
+      
+        <link rel="next" href="02-transformer-models-tricks.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>1. Трансформер - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-1-трансформер" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1. Трансформер
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="01-transformer.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-организация-курса" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Организация курса
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-обзор-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Обзор NLP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Обзор NLP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#три-класса-задач-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три класса задач NLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-оценивают-каждый-класс" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как оценивают каждый класс
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#короткая-история" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Короткая история
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-токенизация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Токенизация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-представление-слов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Представление слов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Представление слов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-hot-и-cosine-similarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-hot и cosine similarity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#word2vec-и-proxy-задача" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Word2vec и proxy-задача
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-учим-embeddings-предсказывая-следующее-слово" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: учим embeddings, предсказывая следующее слово
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-рекуррентные-нейросети" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Рекуррентные нейросети
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Рекуррентные нейросети">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#зачем-rnn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем RNN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-rnn-применяли-к-трём-классам-задач" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как RNN применяли к трём классам задач
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-про-rnn-сейчас-не-слышно" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему про RNN сейчас не слышно
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#промежуточный-итог-и-идея-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Промежуточный итог и идея attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-механизм-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Механизм self-attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Механизм self-attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-key-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query, key, value
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-архитектура-трансформера" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Архитектура трансформера
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Архитектура трансформера">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encoder-и-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoder и decoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#весь-пайплайн-перевода" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Весь пайплайн перевода
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-head" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-head
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Label smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-подробный-пример" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Подробный пример
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Подробный пример">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#вход" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вход
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-attention-в-encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-attention в encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ffn-и-стек-слоёв" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FFN и стек слоёв
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decoder-и-генерация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decoder и генерация
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-организация-курса" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Организация курса
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-обзор-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Обзор NLP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Обзор NLP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#три-класса-задач-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три класса задач NLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-оценивают-каждый-класс" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как оценивают каждый класс
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#короткая-история" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Короткая история
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-токенизация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Токенизация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-представление-слов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Представление слов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Представление слов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-hot-и-cosine-similarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-hot и cosine similarity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#word2vec-и-proxy-задача" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Word2vec и proxy-задача
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#пример-учим-embeddings-предсказывая-следующее-слово" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример: учим embeddings, предсказывая следующее слово
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-рекуррентные-нейросети" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Рекуррентные нейросети
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Рекуррентные нейросети">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#зачем-rnn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем RNN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-rnn-применяли-к-трём-классам-задач" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как RNN применяли к трём классам задач
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-про-rnn-сейчас-не-слышно" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему про RNN сейчас не слышно
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#промежуточный-итог-и-идея-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Промежуточный итог и идея attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-механизм-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Механизм self-attention
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Механизм self-attention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-key-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query, key, value
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-архитектура-трансформера" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Архитектура трансформера
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Архитектура трансформера">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#encoder-и-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoder и decoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#весь-пайплайн-перевода" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Весь пайплайн перевода
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-head" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-head
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#label-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Label smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-подробный-пример" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Подробный пример
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Подробный пример">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#вход" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вход
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-attention-в-encoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-attention в encoder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ffn-и-стек-слоёв" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FFN и стек слоёв
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decoder-и-генерация" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decoder и генерация
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-1-трансформер">Лекция 1. Трансформер<a class="headerlink" href="#лекция-1-трансформер" title="Permanent link">¶</a></h1>
+<p><em>Transformer</em> · Stanford CME295 Transformers &amp; LLMs, Autumn 2025</p>
+<p><strong>Видео:</strong> https://youtu.be/Ub3GoFaUcds · <strong>Дата лекции:</strong> 26 сентября 2025 · <strong>Длительность:</strong> 101 мин<br />
+<strong>Лекторы:</strong> Afshine Amidi и Shervine Amidi (братья-близнецы; Netflix, до этого Google и Uber; adjunct lecturers в Stanford)<br />
+<strong>Полный транскрипт:</strong> <a href="../transcripts/01-transformer.html">../transcripts/01-transformer.md</a></p>
+<p><a href="../index.html">Оглавление курса</a> · <a href="02-transformer-models-tricks.html">Лекция 2. Модели на базе трансформера и инженерные приёмы</a> →</p>
+<div class="admonition info">
+<p class="admonition-title">Актуализация к ноябрю 2026</p>
+<p>Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: <a href="../updates/01-transformer.html">читать актуализацию</a>.</p>
+</div>
+<h2 id="коротко-о-лекции">Коротко о лекции<a class="headerlink" href="#коротко-о-лекции" title="Permanent link">¶</a></h2>
+<p>Первая лекция курса — путь «с нуля» от сырого текста до архитектуры трансформера из статьи «Attention is All You Need» (2017). Основную часть ведёт Afshine Amidi; в последние двадцать минут Shervine Amidi разбирает работу трансформера на одном примере, шаг за шагом. Сквозной пример всей лекции — предложение «a cute teddy bear is reading» и его перевод на французский «un ours en peluche mignon lit».</p>
+<p>Логика изложения такая. Сначала — что вообще делает NLP: три класса задач (классификация, «мульти-классификация» вроде NER, генерация) и чем их оценивают (accuracy/precision/recall/F1, BLEU/ROUGE, perplexity). Затем — как превратить текст в числа: токенизация (слова, подслова, символы и компромиссы между ними) и представление токенов (one-hot → обучаемые embeddings через proxy-задачу, как в Word2vec). Потом — как представить не отдельное слово, а последовательность: RNN и LSTM, их проблема с «памятью» (vanishing gradient, long-range dependencies) и медленная последовательная обработка. Отсюда — идея attention как прямой связи между тем, что предсказываем, и тем, что уже видели, и self-attention, где каждый токен выражается через все остальные.</p>
+<p>Последняя треть — сама архитектура: encoder и decoder, три разных attention-слоя (self-attention в encoder, masked self-attention и cross-attention в decoder), query/key/value, multi-head, positional encoding, label smoothing. В подробном примере выписана формула <span class="arithmatex">\(\mathrm{softmax}(QK^\top/\sqrt{d_k})\,V\)</span> и объяснено, что означает каждый её шаг.</p>
+<p>Пять идей, которые стоит унести: (1) модели работают с числами, поэтому весь пайплайн начинается с токенизации и embeddings; (2) хорошие представления можно выучить через вспомогательную задачу «предскажи соседнее слово»; (3) рекуррентные модели упираются в забывание и в последовательность вычислений; (4) attention даёт прямые связи и записывается матрично, а «GPU обожают матрицы»; (5) трансформер — это encoder и decoder из attention-слоёв и feedforward-слоёв, где query/key/value и проекции для них — обучаемые.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-введение">Введение</a> — 00:00</li>
+<li><a href="#2-организация-курса">Организация курса</a> — 03:54</li>
+<li><a href="#3-обзор-nlp">Обзор NLP</a> — 09:40</li>
+<li><a href="#4-токенизация">Токенизация</a> — 22:57</li>
+<li><a href="#5-представление-слов">Представление слов</a> — 30:28</li>
+<li><a href="#6-рекуррентные-нейросети">Рекуррентные нейросети</a> — 53:23</li>
+<li><a href="#7-механизм-self-attention">Механизм self-attention</a> — 1:06:47</li>
+<li><a href="#8-архитектура-трансформера">Архитектура трансформера</a> — 1:13:53</li>
+<li>
+<p><a href="#9-подробный-пример">Подробный пример</a> — 1:29:53</p>
+</li>
+<li>
+<p><a href="#ключевые-термины">Ключевые термины</a></p>
+</li>
+<li><a href="#главные-выводы">Главные выводы</a></li>
+<li><a href="#вопросы-из-зала">Вопросы из зала</a></li>
+<li><a href="#чем-можно-дополнить">Чем можно дополнить</a></li>
+</ol>
+<h2 id="1-введение">1. Введение<a class="headerlink" href="#1-введение" title="Permanent link">¶</a></h2>
+<p>⏱ 00:00–03:54 · <a href="https://youtu.be/Ub3GoFaUcds?t=0">▶ смотреть на YouTube</a></p>
+<p>Лекцию открывает Afshine: представляется сам и представляет Shervine, который сидит в конце аудитории. Братья-близнецы с почти одинаковой биографией: оба окончили Centrale Paris во Франции, потом Afshine уехал в MIT, а Shervine — в Stanford на магистерскую программу ICME. В индустрии шли след в след: сначала Uber, затем Google, а совсем недавно оба перешли в Netflix, где занимаются LLM. <em>Примечание:</em> ICME — Institute for Computational and Mathematical Engineering, отсюда и код курса CME.</p>
+<p>Почему этот курс (<a href="https://youtu.be/Ub3GoFaUcds?t=58">00:58</a>): с 2020 года братья специализируются на NLP и с 2021 по 2024 ежегодно вели этот материал в формате воркшопа. После выхода ChatGPT в 2022 интерес к LLM резко вырос, и прошлой весной курс впервые прошёл как полноценный стэнфордский курс CME 295; сейчас идёт его второй запуск.</p>
+<p>Две цели курса (<a href="https://youtu.be/Ub3GoFaUcds?t=115">01:55</a>): понять механизм, на котором всё держится, — трансформер как базовую архитектуру; и узнать, как LLM обучают и где применяют. Кому подойдёт: тем, кто хочет строить карьеру research/ML scientist; тем, кто делает личный проект на LLM и хочет знать подводные камни («что работает, а что нет»); и тем, кто пришёл из другой области и хочет понять, как устроено всё это «AI/GenAI/LLM» и как применить его у себя.</p>
+<p>Пререквизиты (<a href="https://youtu.be/Ub3GoFaUcds?t=194">03:14</a>): минимум — основы ML (как обучается модель, что такое нейросеть) и основы линейной алгебры (как перемножаются матрицы). Если знания пока неполные — ничего страшного, лекторы помогут.</p>
+<h2 id="2-организация-курса">2. Организация курса<a class="headerlink" href="#2-организация-курса" title="Permanent link">¶</a></h2>
+<p>⏱ 03:54–09:40 · <a href="https://youtu.be/Ub3GoFaUcds?t=234">▶ смотреть на YouTube</a></p>
+<p>Практические факты, которые озвучил Afshine:</p>
+<ul>
+<li><strong>Расписание:</strong> каждую пятницу с 15:30 до 17:20, в той же аудитории. Курс на 2 units; можно брать с буквенной оценкой или как credit/no-credit.</li>
+<li><strong>Записи:</strong> лекции записываются; видео выкладывают в пятницу вечером или в субботу, так что пропуск занятия — не проблема.</li>
+<li><strong>Оценка:</strong> домашних заданий нет. Два экзамена — midterm на пятом занятии, 24 октября, и final на неделе 8 декабря (точная дата TBD). Вес: 50 % midterm, 50 % final (<a href="https://youtu.be/Ub3GoFaUcds?t=505">08:25</a>). Экзамены без кода — только концепции из лекций, и они «не для того, чтобы поймать» (<a href="https://youtu.be/Ub3GoFaUcds?t=452">07:32</a>): если следить за слайдами, всё будет нормально. Final, скорее всего, будет по второй половине тем, но экзамен ещё не написан.</li>
+<li><strong>Материалы:</strong> слайды и записи — на сайте курса после каждой лекции, там же syllabus; ссылки дублируют в Canvas. Учебник курса — книга лекторов «Super Study Guide: Transformers &amp; LLMs» (большинство концепций курса есть в ней). Есть и сжатая версия всего курса — «VIP cheat sheet» на GitHub, переведённая на много языков; если вашего языка нет — предлагают сделать перевод вместе (<a href="https://youtu.be/Ub3GoFaUcds?t=339">05:39</a>).</li>
+<li><strong>Коммуникация:</strong> объявления в Canvas; вопросы — во вкладке Ed в Canvas или через mailing list («нас всего двое, просто пингуйте»).</li>
+<li><strong>Waitlist:</strong> на момент лекции в листе ожидания 6 человек; по опыту часть студентов отвалится, так что, скорее всего, попадут все. Если нет — подойти к лекторам.</li>
+</ul>
+<p>Afshine предупреждает, что будет повторять вопросы из зала для записи: это будет звучать странно, но иначе зрителям непонятно, о чём спросили.</p>
+<h2 id="3-обзор-nlp">3. Обзор NLP<a class="headerlink" href="#3-обзор-nlp" title="Permanent link">¶</a></h2>
+<p>⏱ 09:40–22:57 · <a href="https://youtu.be/Ub3GoFaUcds?t=580">▶ смотреть на YouTube</a></p>
+<p>Два предупреждения перед началом (<a href="https://youtu.be/Ub3GoFaUcds?t=580">09:40</a>): внизу каждого слайда будет источник — и чтобы сослаться на авторов, и чтобы можно было копнуть глубже (в 9–10 недель по два часа всё не уместить); и область полна аббревиатур — Afshine «сам поначалу их боялся», а к концу курса должна сложиться «ментальная карта», что они значат.</p>
+<h3 id="три-класса-задач-nlp">Три класса задач NLP<a class="headerlink" href="#три-класса-задач-nlp" title="Permanent link">¶</a></h3>
+<p>NLP (Natural Language Processing) — область про вычисления над текстом. Задачи делятся на три «корзины» (<a href="https://youtu.be/Ub3GoFaUcds?t=636">10:36</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Класс</th>
+<th>Вход → выход</th>
+<th>Примеры задач</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Классификация</td>
+<td>текст → одно предсказание</td>
+<td>тональность отзыва на фильм (положительный / отрицательный / нейтральный); intent detection — «I want to create an alarm for tomorrow» → намерение «создать будильник»; определение языка; topic modeling</td>
+</tr>
+<tr>
+<td>Мульти-классификация</td>
+<td>текст → несколько предсказаний</td>
+<td>NER (Named Entity Recognition) — пометить слова как локацию, время и т. п.; part-of-speech tagging (существительное / глагол); dependency и constituency parsing — «лингвистические» задачи, популярные лет 10 назад, сейчас менее модные</td>
+</tr>
+<tr>
+<td>Генерация</td>
+<td>текст → текст переменной длины</td>
+<td>машинный перевод (английский → немецкий); question answering — ассистенты вроде ChatGPT и Gemini; суммаризация статьи; генерация кода, стихов и чего угодно</td>
+</tr>
+</tbody>
+</table>
+<p>Ключевое отличие генерации — длина выхода заранее неизвестна.</p>
+<h3 id="как-оценивают-каждый-класс">Как оценивают каждый класс<a class="headerlink" href="#как-оценивают-каждый-класс" title="Permanent link">¶</a></h3>
+<p><strong>Классификация</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=851">14:11</a>) — на примере извлечения тональности: «this teddy bear is so cute» → positive. Датасеты: отзывы IMDb, отзывы Amazon, твиты («теперь это X posts»). Метрики — классические:</p>
+<ul>
+<li>accuracy — доля правильно предсказанных наблюдений;</li>
+<li>precision — из всех предсказанных «положительных» какая доля верна;</li>
+<li>recall — из всех истинно положительных какую долю модель нашла;</li>
+<li>F1 — гармоническое среднее precision и recall, чтобы получить одно число.</li>
+</ul>
+<p>Зачем столько метрик (<a href="https://youtu.be/Ub3GoFaUcds?t=957">15:57</a>): классы бывают сильно несбалансированы — скажем, 99 % положительных и 1 % отрицательных. Модель, которая всегда отвечает мажоритарным классом, получит отличную accuracy, но классификатором не является. Поэтому и нужны precision и recall.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Разработчик, который работает с LLM через API, сегодня закрывает все три «корзины» одной генеративной моделью: тональность отзыва — промптом «ответь одним словом: positive, negative или neutral», NER — просьбой вернуть JSON со списком сущностей и их типов, перевод и суммаризация — напрямую. Метрики из этого раздела при этом никуда не деваются: чтобы понять, можно ли доверять «классификатору на промпте», всё равно нужен размеченный набор и precision/recall/F1 по каждому классу, а перекос классов ломает accuracy точно так же. Reference-free оценка генерации, которую лектор обещает показать позже, разбирается в курсе отдельно — см. <a href="08-llm-evaluation.html">Лекция 8</a>.</p>
+</div>
+<p><strong>Мульти-классификация</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1011">16:51</a>) — на примере NER: нужно распознать «teddy bear» как сущность. Метрики те же классификационные, но считаются не на уровне предложения, а на уровне токена или типа сущности: например, насколько хорошо модель находит слова категории «локация», — и агрегируются по категориям.</p>
+<p><strong>Генерация</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1064">17:44</a>) — на примере машинного перевода: «a cute teddy bear is reading» → «un ours en peluche mignon lit». Данные добыть труднее — нужны пары текстов. Популярный датасет — WMT (Workshop on Machine Translation): пары предложений на разных языках, например англо-французские и англо-немецкие из материалов Европарламента.</p>
+<p>Оценивать перевод гораздо сложнее: один и тот же текст можно перевести по-разному (в зале наверняка много двуязычных и трёхъязычных). Исторически использовали rule-based метрики с эталонным переводом (reference):</p>
+<ul>
+<li><strong>BLEU</strong> (Bilingual Evaluation Understudy) — насколько перевод соответствует эталонному тексту;</li>
+<li><strong>ROUGE</strong> — целый набор метрик, схватывает то же самое по-другому. Шутка сообщества: bleu по-французски «синий», rouge — «красный».</li>
+</ul>
+<p>Проблема обоих — нужен эталон, то есть разметка, а разметка дорога по времени и деньгам (<a href="https://youtu.be/Ub3GoFaUcds?t=1176">19:36</a>). Позже в курсе покажут, что благодаря прогрессу LLM можно уйти от reference-based метрик к reference-free.</p>
+<p>Ещё одна метрика — <strong>perplexity</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1240">20:40</a>): смотрит только на вероятности, которые выдаёт модель, и измеряет, насколько модель «удивлена» собственным выходом. BLEU и ROUGE — чем выше, тем лучше; perplexity — чем ниже, тем лучше.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — интуиция</p>
+<p>Perplexity удобно читать как «между сколькими равновероятными вариантами модель как будто колеблется на каждом шаге». Формально это экспонента от средней cross-entropy на токен: perplexity 1 — модель всегда уверена и права, perplexity 10 — в среднем так же неуверена, как при выборе наугад из 10 токенов. Отсюда два следствия: perplexity измеряет «гладкость» предсказаний на эталонном тексте, а не полезность ответа для пользователя, и сравнивать по ней модели с разными токенизаторами напрямую нельзя — токены у них разные.</p>
+</div>
+<h3 id="короткая-история">Короткая история<a class="headerlink" href="#короткая-история" title="Permanent link">¶</a></h3>
+<p>LLM — горячая тема с 2022 года, но область намного старше (<a href="https://youtu.be/Ub3GoFaUcds?t=1295">21:35</a>): класс рекуррентных моделей придумали ещё в 80-е, LSTM — в 90-е. Тогда не было ни интернета, ни достаточных вычислительных мощностей, и это мешало обучить модели сегодняшнего масштаба. Дальше: Word2vec — пионерская работа по вычислению осмысленных embeddings; трансформер из статьи 2017 года — фундамент всех нынешних моделей; затем эти модели масштабировали и по compute, и по данным — так в 2020-е появились LLM.</p>
+<h2 id="4-токенизация">4. Токенизация<a class="headerlink" href="#4-токенизация" title="Permanent link">¶</a></h2>
+<p>⏱ 22:57–30:28 · <a href="https://youtu.be/Ub3GoFaUcds?t=1377">▶ смотреть на YouTube</a></p>
+<p>Исходная проблема: модели понимают числа, а не текст. Первый вопрос — как порезать предложение «a cute teddy bear is reading», чтобы передать его модели. Эта операция — <strong>токенизация</strong>: разбиение текста на некие произвольные единицы; единица называется <strong>token</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1376">22:56</a>).</p>
+<p>Три подхода (<a href="https://youtu.be/Ub3GoFaUcds?t=1432">23:52</a>):</p>
+<ol>
+<li><strong>Уровень слов</strong> (или вовсе произвольные единицы: «a», «cute», «teddy bear»…). Самый наивный и простой. Минус: похожие слова становятся разными токенами — «bear» и «bears», «run» и «runs» — и для них придётся отдельно вычислять embeddings и как-то делать их похожими. Корни слов никак не используются.</li>
+<li><strong>Уровень подслов (subword)</strong>. Использует корни: у «bear» и «bears» общая часть «bear». Плюс — общие корни. Минус — последовательности становятся длиннее, а сложность моделей зависит от длины последовательности: чем больше токенов, тем дольше модель работает (лектор даёт это как «превью» того, что будет дальше в курсе).</li>
+<li><strong>Уровень символов</strong>. Устойчив к опечаткам и ошибкам регистра — тому, с чем subword-токенизатор может не справиться (искажённое слово не распознается). Минусы: последовательности ещё намного длиннее, вычисления медленнее; и непонятно, что вообще означает представление отдельной буквы — «что значит представление буквы U?».</li>
+</ol>
+<p>Отдельный термин — <strong>OOV, Out Of Vocabulary</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1742">29:02</a>): на инференсе токен должен был встретиться в обучающей выборке; если режем по словам и встречаем невиданное слово, его придётся пометить как unknown. Subword-токенизация снижает риск OOV (но не до нуля), символьная от него свободна.</p>
+<p>Итоговое сравнение (<a href="https://youtu.be/Ub3GoFaUcds?t=1674">27:54</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Уровень</th>
+<th>Плюсы</th>
+<th>Минусы</th>
+<th>Риск OOV</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Слово</td>
+<td>просто</td>
+<td>не использует корни; большой словарь из-за вариаций слов</td>
+<td>высокий</td>
+</tr>
+<tr>
+<td>Подслово</td>
+<td>использует корни; разумный компромисс</td>
+<td>последовательности длиннее</td>
+<td>ниже, но есть</td>
+</tr>
+<tr>
+<td>Символ</td>
+<td>устойчив к опечаткам и регистру</td>
+<td>очень длинные последовательности, медленные вычисления; представление буквы трудно интерпретировать</td>
+<td>нет</td>
+</tr>
+</tbody>
+</table>
+<p>Это и есть фундамент работы с текстом: текст порезали на токены, дальше нужно, чтобы модель их «поняла».</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Все современные LLM используют subword-токенизаторы (на ноябрь 2026 это по-прежнему так, словари флагманов выросли до ~250 тысяч токенов, а byte-level подходы без токенизатора остаются исследованием); алгоритмы ищите по названиям BPE (byte-pair encoding), WordPiece и SentencePiece/Unigram. Для разработчика, работающего с моделью через API, токен — это единица тарификации и единица лимита контекста, поэтому стоит один раз посмотреть, как токенизатор режет именно ваши данные: русский текст обычно разбивается на заметно больше токенов, чем английский той же длины, а в коде и JSON заметную долю токенов съедают скобки, кавычки и отступы. Токенизация же объясняет известные провалы вроде неверного подсчёта букв в слове: модель видит не буквы, а куски слов. А у byte-level BPE проблемы OOV нет вовсе — любой байт кодируется, пусть и длинно.</p>
+</div>
+<h2 id="5-представление-слов">5. Представление слов<a class="headerlink" href="#5-представление-слов" title="Permanent link">¶</a></h2>
+<p>⏱ 30:28–53:23 · <a href="https://youtu.be/Ub3GoFaUcds?t=1828">▶ смотреть на YouTube</a></p>
+<h3 id="one-hot-и-cosine-similarity">One-hot и cosine similarity<a class="headerlink" href="#one-hot-и-cosine-similarity" title="Permanent link">¶</a></h3>
+<p>Точнее говорить «представление токенов», но исторически это word representation. Наивный способ (<a href="https://youtu.be/Ub3GoFaUcds?t=1830">30:30</a>): каждому токену — <strong>one-hot</strong> вектор (OHE, One-Hot Encoding). Для словаря из трёх токенов — book, soft, teddy bear — это, например, soft = (1, 0, 0), teddy bear = (0, 1, 0), book = (0, 0, 1).</p>
+<p>Токены хочется сравнивать между собой. Стандартная мера — <strong>cosine similarity</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=1880">31:20</a>): угол между векторами в n-мерном пространстве. Смотрят в одну сторону — похожи; ортогональны — независимы; направлены противоположно — противоположны по смыслу. Такой «ментальный образ» и нужен.</p>
+<p>Проблема one-hot: все векторы попарно ортогональны, то есть ни о какой похожести речи нет. А хочется, чтобы «teddy bear» и «soft» имели высокую близость (плюшевые мишки мягкие), а «teddy bear» и «book» — близость около нуля.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=1989">33:09</a>):</strong> почему не учитывается норма вектора? — <strong>Ответ:</strong> cosine similarity — это скалярное произведение, нормированное на нормы векторов; это просто одна из мер, и не идеальная, люди используют и чистое скалярное произведение. Будет ли норма что-то значить — зависит от того, как обучены векторы; обычно важен именно угол. Лектор честно признаёт, что отличного ответа у него нет.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Формула, которую лектор описал словами: <span class="arithmatex">\(\cos\theta = \dfrac{u \cdot v}{\|u\|\,\|v\|}\)</span> — скалярное произведение, делённое на произведение длин векторов; значения от −1 до 1, а для любых двух разных one-hot векторов ровно 0. Практическое продолжение вопроса про норму: многие embedding-модели, доступные через API, возвращают векторы, уже нормированные на единичную длину, и тогда dot product и cosine similarity совпадают — поэтому в векторных базах выбор между этими метриками часто ни на что не влияет. Если же векторы не нормированы, dot product дополнительно поощряет «длинные» векторы, и это уже другая мера.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=2093">34:53</a>):</strong> как размер словаря влияет на выбор между словами и подсловами и как это меняется от языка к языку? — <strong>Ответ:</strong> зависит от задачи. Для одного языка обычно берут subword — хороший компромисс между использованием корней и меньшим риском OOV. Порядок величины для английского — десятки тысяч токенов; современные модели мультиязычные и работают с кодом, поэтому их словари — сотни тысяч. Для китайского идея та же, только в символах целевого языка вместо латиницы.</p>
+<h3 id="word2vec-и-proxy-задача">Word2vec и proxy-задача<a class="headerlink" href="#word2vec-и-proxy-задача" title="Permanent link">¶</a></h3>
+<p>Раз one-hot не годится, embeddings надо <strong>выучить из данных</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=2261">37:41</a>). Знаковая работа — Word2vec (2013). Она стала популярной, потому что показала интуитивный, интерпретируемый взгляд на embeddings: «king относится к queen как…», «Paris относится к France как Berlin к Germany».</p>
+<p>Два способа в Word2vec (<a href="https://youtu.be/Ub3GoFaUcds?t=2313">38:33</a>): <strong>continuous bag of words</strong> (CBOW) — по словам вокруг целевого предсказать само целевое слово; <strong>skip-gram</strong> — наоборот, по целевому слову предсказать соседей. Общая идея одна: взять имеющийся текст и предсказывать его часть по контексту.</p>
+<p>Такая задача называется <strong>proxy task</strong> (вспомогательная задача): предсказывать следующее слово само по себе пока не нужно; цель — получить осмысленные представления. Логика: если модель умеет предсказать следующее слово, значит, она что-то понимает в устройстве языка, а именно это и хочется «зашить» в embedding (king/queen; Paris/France — столица).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 4</p>
+<p>Игрушечная proxy-задача «предскажи следующее слово» — это в точности цель предобучения современных LLM: next-token prediction на огромном корпусе, только вместо однослойной сети стоит трансформер. Разница в акцентах: для Word2vec предсказание было побочным продуктом, а нужны были «зелёные» веса, тогда как у LLM само умение предсказывать следующий токен и есть продукт. Как такое обучение устроено в масштабе (данные, вычисления, этапы), см. <a href="04-llm-training.html">Лекция 4</a>.</p>
+</div>
+<h3 id="пример-учим-embeddings-предсказывая-следующее-слово">Пример: учим embeddings, предсказывая следующее слово<a class="headerlink" href="#пример-учим-embeddings-предсказывая-следующее-слово" title="Permanent link">¶</a></h3>
+<p>Proxy-задача — предсказать следующее слово (<a href="https://youtu.be/Ub3GoFaUcds?t=2416">40:16</a>). Модель — самая простая нейросеть: на вход вектор размера <span class="arithmatex">\(v\)</span> (размер словаря), умножение на матрицу плюс bias даёт скрытое состояние размера <span class="arithmatex">\(d\)</span>, ещё одно умножение — выходной вектор, затем softmax:</p>
+<div class="arithmatex">\[h = W_1 x + b, \qquad \hat{y} = \mathrm{softmax}(W_2 h),\]</div>
+<p>где <span class="arithmatex">\(x\)</span> — one-hot вектор входного токена длины <span class="arithmatex">\(v\)</span>, <span class="arithmatex">\(h\)</span> — скрытое представление длины <span class="arithmatex">\(d\)</span>, <span class="arithmatex">\(\hat{y}\)</span> — вероятности следующего токена по всему словарю (обозначения <span class="arithmatex">\(W_1\)</span>, <span class="arithmatex">\(W_2\)</span> — мои, лектор матрицы не называет). Ключевое: <span class="arithmatex">\(d \ll v\)</span> — словарь это десятки-сотни тысяч, а <span class="arithmatex">\(d\)</span> — сотни (например, 768). Слова «token» и «word» лектор использует как синонимы.</p>
+<p>Проход по примеру (<a href="https://youtu.be/Ub3GoFaUcds?t=2536">42:16</a>), словарь из 6 слов:</p>
+<ol>
+<li>Берём «a», его one-hot, прогоняем через сеть. Скрытое состояние — скажем, (0.2, 0.9), то есть <span class="arithmatex">\(d = 2\)</span>. После softmax получаем вероятности следующего слова: 0.2, 0.4, затем по 0.1. Хотим, чтобы максимум был на втором слове словаря — «cute» (сейчас 0.4). Сравниваем предсказание с one-hot (0, 1, 0, 0, 0, 0), считаем loss — обычно cross-entropy, — она показывает, как далеко мы от правды, и обратным распространением обновляем веса, чтобы предсказание приблизилось к правде.</li>
+<li>Берём «cute» = (0, 1, 0, 0, 0, 0), скрытое состояние (0.8, 0.4), предсказываем «teddy bear». Сейчас модель выдаёт равномерное распределение, а надо поднять вероятность «teddy bear».</li>
+<li>Повторяем для всех слов.</li>
+</ol>
+<p>В итоге модель умеет предсказывать следующее слово (proxy-задача решена), а нам нужны <strong>«зелёные» единицы</strong> — скрытый слой (<a href="https://youtu.be/Ub3GoFaUcds?t=2700">45:00</a>). Дальше для любого слова: one-hot × обученные веса первого слоя = его embedding.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Умножение one-hot вектора на матрицу — это просто выбор одной её строки, поэтому на практике embedding хранят как lookup-таблицу размера <span class="arithmatex">\(v \times d\)</span> и ничего не умножают; input embedding трансформера из раздела 9 — ровно такая же таблица. Настоящий Word2vec (Mikolov и соавторы, 2013) отличается от разобранной игрушки деталями: контекстом служит окно из нескольких слов по обе стороны, а полный softmax по словарю заменён приёмами negative sampling или hierarchical softmax, иначе обучение было бы слишком дорогим; знаменитая арифметика из той работы — <span class="arithmatex">\(\text{king} - \text{man} + \text{woman} \approx \text{queen}\)</span>. Главное ограничение, на которое указал студент, остаётся: такой embedding статичен — один вектор на токен независимо от контекста. Трансформер даёт контекстные векторы, и именно на нём построены embedding-модели из API, которыми пользуются для семантического поиска и RAG — см. <a href="07-agentic-llms-rag-tools.html">Лекция 7</a>.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=2754">45:54</a>):</strong> что такое <span class="arithmatex">\(v\)</span> и почему всего 6? — <strong>Ответ:</strong> это игрушечный пример, <span class="arithmatex">\(v\)</span> — размер словаря, на практике он гораздо больше. Это одна из сложностей языка: у слов много вариаций, и при word-level токенизации словарь разрастается. А что, если на инференсе придёт слово, которого не было среди 6 обученных? Для этого резервируют слот под <strong>unknown / OOV token</strong> — «корзину» для всего, что не удалось распознать; все такие токены получают это одно представление. У word-level токенизатора шанс попасть в OOV выше всего, у subword ниже, у символьного этой проблемы нет.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=2934">48:54</a>):</strong> когда останавливать обучение, если настоящая цель — не proxy-задача? — <strong>Ответ:</strong> отслеживать loss proxy-задачи, помня, что это не конечная цель. Разумный способ — ждать сходимости: строить loss как функцию от <strong>epoch</strong> (сколько раз модель увидела обучающую выборку), сравнивать кривые и останавливаться, когда сходится; дальше — смотреть по downstream-задаче.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=2985">49:45</a>):</strong> как генерация узнаёт, что пора остановиться — иначе она не остановится никогда? — <strong>Ответ:</strong> есть специальные токены, в частности <strong>end of sequence</strong>; когда модель его сгенерировала, генерация останавливается.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=3040">50:40</a>):</strong> чем определяется размер скрытого слоя? — <strong>Ответ:</strong> компромисс. Embedding должен быть достаточно богат для downstream-задачи: специализированная задача с множеством исходов — вектор побольше, простая — поменьше. Но длиннее вектор — больше вычислений и дороже инференс. Два фактора: сложность задачи и чувствительность к latency и стоимости. На практике — сотни или тысячи измерений, чисто эмпирически; 768 — типичное число, можно опираться на то, что нашли другие.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=3147">52:27</a>):</strong> как различать слова, которые пишутся одинаково, но в разных контекстах значат разное? — <strong>Ответ:</strong> «вы забегаете вперёд»: пока это базис, методы контекстуализации слова в предложении — дальше в лекции.</p>
+<h2 id="6-рекуррентные-нейросети">6. Рекуррентные нейросети<a class="headerlink" href="#6-рекуррентные-нейросети" title="Permanent link">¶</a></h2>
+<p>⏱ 53:23–1:06:47 · <a href="https://youtu.be/Ub3GoFaUcds?t=3203">▶ смотреть на YouTube</a></p>
+<h3 id="зачем-rnn">Зачем RNN<a class="headerlink" href="#зачем-rnn" title="Permanent link">¶</a></h3>
+<p>Мы научились представлять токены, но нужны представления предложений и фрагментов текста (<a href="https://youtu.be/Ub3GoFaUcds?t=3205">53:25</a>). Наивно — усреднить векторы слов, но так теряется смысл и порядок; к тому же выученные представления привязаны к токену и не зависят от того, где он стоит (ровно то, о чём спрашивали из зала). Отсюда класс моделей, схватывающих последовательную природу текста.</p>
+<p><strong>RNN (Recurrent Neural Network)</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=3260">54:20</a>) — модель, придуманная ещё в 80-е: хранит скрытое представление «предложения на данный момент» и обрабатывает токены по одному, с учётом порядка их появления.</p>
+<p>Как устроено (<a href="https://youtu.be/Ub3GoFaUcds?t=3313">55:13</a>): в начале стоит фиктивное скрытое состояние, обозначаемое <span class="arithmatex">\(a\)</span> или <span class="arithmatex">\(h\)</span>; его называют hidden state, activation или context vector. Модуль (на слайде — синий блок с матричными умножениями) принимает скрытое состояние и слово на шаге <span class="arithmatex">\(t\)</span> — «смысл предложения до сих пор» плюс «текущее слово» — и выдаёт выходной вектор, по которому предсказывают следующее слово, и новое скрытое состояние. Так повторяют по всей последовательности; скрытое состояние интерпретируют как представление всего обработанного фрагмента. Плюсы: порядок слов имеет значение, предложение кодируется естественнее.</p>
+<p>На любимом примере (<a href="https://youtu.be/Ub3GoFaUcds?t=3424">57:04</a>): токен «a» → one-hot → сеть → скрытое состояние → предсказываем «cute»; скрытое состояние передаём в следующий модуль вместе со следующим словом → предсказываем следующее, и так далее.</p>
+<h3 id="как-rnn-применяли-к-трём-классам-задач">Как RNN применяли к трём классам задач<a class="headerlink" href="#как-rnn-применяли-к-трём-классам-задач" title="Permanent link">¶</a></h3>
+<p>Привязка к «корзинам» из обзора (<a href="https://youtu.be/Ub3GoFaUcds?t=3484">58:04</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Задача</th>
+<th>Что берём из RNN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Классификация</td>
+<td>скрытое состояние после последнего слова, проецируем на пространство меток (positive/negative)</td>
+</tr>
+<tr>
+<td>Мульти-классификация</td>
+<td>представление интересующего токена, проецируем на метки</td>
+</tr>
+<tr>
+<td>Генерация</td>
+<td>прогоняем весь исходный текст, получаем в конце context vector (он же activation vector, он же hidden state) и из него декодируем выход</td>
+</tr>
+</tbody>
+</table>
+<h3 id="почему-про-rnn-сейчас-не-слышно">Почему про RNN сейчас не слышно<a class="headerlink" href="#почему-про-rnn-сейчас-не-слышно" title="Permanent link">¶</a></h3>
+<p>Главный минус: весь смысл предложения зажат в одном скрытом состоянии. Отсюда проблема <strong>long-range dependencies</strong> (дальних зависимостей) — модели трудно «помнить», что она видела давно (<a href="https://youtu.be/Ub3GoFaUcds?t=3536">58:56</a>).</p>
+<p><strong>LSTM (Long Short-Term Memory)</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=3599">59:59</a>) — расширение RNN, которое поверх скрытого состояния <span class="arithmatex">\(a_t\)</span> (activation, закодированная последовательность) ведёт ещё одну величину — <strong>cell state</strong> <span class="arithmatex">\(c\)</span> — чтобы отслеживать то, что «важно» помнить. Это улучшает ситуацию, но тоже не идеально.</p>
+<p>В литературе это явление называют <strong>vanishing gradient</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=3661">1:01:01</a>). Интуиция: чтобы предсказать последнее слово, мы зависим от всех предыдущих скрытых состояний. При обратном распространении надо учесть, что значение в конце — результат цепочки последовательных вычислений; это называют back-propagation through time. Если формулу выписать (она «очень некрасивая»), получится произведение многих множителей: если они больше 1 — градиент взрывается (exploding), если меньше 1 — затухает (vanishing), потому что произведение множества чисел меньше 1 уходит в ноль, и обновлять веса становится невозможно. Это не фокус курса, поэтому дальше интуиции лектор не идёт.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — интуиция</p>
+<p>Почему «произведение многих множителей» так губительно, видно на числах: <span class="arithmatex">\(0.9^{50} \approx 0.005\)</span>, а <span class="arithmatex">\(1.1^{50} \approx 117\)</span>. Градиент, идущий назад через 50 шагов во времени, либо почти обнуляется, либо раздувается на два порядка, и «среднего» режима, при котором далёкие слова влияли бы на обновления наравне с близкими, у модели практически нет. Бытовая аналогия — испорченный телефон: каждое звено чуть искажает сообщение, и через десятки пересказов от исходного смысла мало что остаётся. Attention убирает саму цепочку: до любого токена ровно один шаг.</p>
+</div>
+<h3 id="промежуточный-итог-и-идея-attention">Промежуточный итог и идея attention<a class="headerlink" href="#промежуточный-итог-и-идея-attention" title="Permanent link">¶</a></h3>
+<p>Рекап (<a href="https://youtu.be/Ub3GoFaUcds?t=3774">1:02:54</a>): цель — представлять текст. Word2vec через proxy-задачу учит представления слов, но без контекста и без порядка. RNN учитывают порядок, но на длинных последовательностях страдают от vanishing gradients / long-range dependencies (это названия одной и той же проблемы). И ещё одно, ранее не упомянутое: они <strong>медленные</strong> — чтобы предсказать слово, нужно сначала последовательно вычислить все предыдущие скрытые состояния, и на длинных текстах это занимает много времени.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — что изменилось с тех пор</p>
+<p>Рекуррентная идея не умерла. Уже после трансформера появились модели с линейной по длине последовательности сложностью, которые снова читают текст, обновляя состояние: state space models (ищите S4 и Mamba), RWKV и семейство «linear attention» — разные попытки получить память RNN без её проблем с обучением. По состоянию на ноябрь 2026 промышленные LLM по-прежнему строятся на трансформере, но у флагманов с открытыми весами (Qwen3.5, Kimi Linear, Nemotron 3) нормой стали гибриды, где примерно три слоя из четырёх — linear attention семейства Gated DeltaNet/KDA или Mamba-2, а полный attention оставлен в каждом четвёртом; второй путь к длинному контексту — sparse attention (DeepSeek V4). О закрытых фронтир-моделях надёжных данных нет — см. <a href="../updates/01-transformer.html">актуализацию</a>.</p>
+</div>
+<p>Отсюда <strong>attention</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=3886">1:04:46</a>): раз модель плохо помнит прошлое, дадим ей прямые связи с прошлым. Пример — перевод с английского на французский: классический RNN кодирует «a cute teddy bear is reading» слово за словом в скрытое состояние, из которого декодируют перевод. Генерируя очередное слово перевода, хорошо бы «подсмотреть» в нужную часть входного текста. Attention — прямая связь между тем, что предсказываем, и тем, что было раньше. Механизм введён в 2014 году, решает проблему дальних зависимостей и будет ключевым понятием курса.</p>
+<h2 id="7-механизм-self-attention">7. Механизм self-attention<a class="headerlink" href="#7-механизм-self-attention" title="Permanent link">¶</a></h2>
+<p>⏱ 1:06:47–1:13:53 · <a href="https://youtu.be/Ub3GoFaUcds?t=4007">▶ смотреть на YouTube</a></p>
+<p>Attention — то, благодаря чему работает «если не всё, то большинство», и главный принцип статьи о трансформере (<a href="https://youtu.be/Ub3GoFaUcds?t=4011">1:06:51</a>). Трансформер — центральная архитектура курса — представлен в 2017 году в статье <strong>«Attention is All You Need»</strong>; уже из названия видно, что авторы хотели опираться только на attention. Их ход: отказаться от последовательной обработки и дать модели прямые связи со всеми частями текста сразу. Это и есть <strong>self-attention</strong>. Проверяли на переводе — получили отличные результаты.</p>
+<p>На примере (<a href="https://youtu.be/Ub3GoFaUcds?t=4069">1:07:49</a>): чтобы вычислить представление токена «teddy bear», смотрим на все остальные токены последовательности одновременно, по прямым связям. В результате представление «teddy bear» уникально для контекста, в котором он стоит. Это и есть ответ на вопрос про одинаково пишущиеся слова: в «riverbank» и «robbing a bank» у «bank» будут разные представления. (Здесь лектор сверяется с братом по времени — остаётся около 8 минут.)</p>
+<h3 id="query-key-value">Query, key, value<a class="headerlink" href="#query-key-value" title="Permanent link">¶</a></h3>
+<p>Терминология, которая будет очень важна (<a href="https://youtu.be/Ub3GoFaUcds?t=4126">1:08:46</a>): когда что-то выражают через что-то другое, используют слова <strong>query</strong> (запрос), <strong>key</strong> (ключ) и <strong>value</strong> (значение) — Q, K, V. Задача: понять, на какие другие токены больше всего похож запрос «teddy bear». Остальные токены состоят из ключей и значений. Запрос сравнивают с каждым ключом, чтобы измерить похожесть, и берут соответствующее значение, причём более похожим даётся больший вес (<a href="https://youtu.be/Ub3GoFaUcds?t=4183">1:09:43</a>).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — интуиция</p>
+<p>Для программиста query/key/value — это «мягкий» hash-map. В обычном словаре вы ищете ключ, в точности равный запросу, и получаете ровно одно значение; attention сравнивает запрос со всеми ключами сразу, получает для каждого степень похожести, превращает её через softmax в веса с суммой 1 и возвращает взвешенную смесь всех значений. Точного совпадения не требуется, ответ есть всегда, а «насколько какой ключ подошёл» — это и есть attention-веса, которые можно визуализировать. Та же схема в терминах поиска: query — поисковый запрос, keys — индекс документов, values — их содержимое.</p>
+</div>
+<p>Бонус такой формулировки (<a href="https://youtu.be/Ub3GoFaUcds?t=4241">1:10:41</a>): self-attention по всей последовательности записывается в матричном виде, а «GPU обожают матрицы» — метод словно сделан под имеющееся железо. В общем виде: softmax от (запрос, ключ) даёт веса — какие значения важнее, — и эти веса умножаются на значения. Если пока звучит туманно — подробный разбор будет в конце лекции.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>У матричной записи есть цена: матрица похожестей <span class="arithmatex">\(QK^\top\)</span> имеет размер <span class="arithmatex">\(n \times n\)</span>, то есть время и память self-attention растут квадратично с длиной последовательности. Для пользователя API это выливается в ограничение на размер контекста и в то, что очень длинный промпт обходится и ждётся непропорционально дольше короткого, — именно об этом было «превью» лектора в разделе о токенизации. Это верно для полного attention; sparse attention с фиксированным числом просматриваемых токенов на шаг снимает квадратичность, и к 2026 году контекст в 1M токенов стал нормой у части моделей. Инженерные приёмы, которыми снижают стоимость attention, разбираются дальше в курсе, начиная с <a href="02-transformer-models-tricks.html">Лекция 2</a>.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=4361">1:12:41</a>):</strong> что такое key и value, откуда они берутся и что означают? — <strong>Ответ:</strong> это обучаемые величины, их не задают руками. Интерпретация: key нужен, чтобы понять, какой элемент ближе всего к query; value — тот вектор, который реально используется. Веса во взвешенном среднем — скалярные произведения query с keys. Как верно заметил студент, Q, K, V получают проекциями, и эти проекции модель тоже выучивает.</p>
+<h2 id="8-архитектура-трансформера">8. Архитектура трансформера<a class="headerlink" href="#8-архитектура-трансформера" title="Permanent link">¶</a></h2>
+<p>⏱ 1:13:53–1:29:53 · <a href="https://youtu.be/Ub3GoFaUcds?t=4433">▶ смотреть на YouTube</a></p>
+<h3 id="encoder-и-decoder">Encoder и decoder<a class="headerlink" href="#encoder-и-decoder" title="Permanent link">¶</a></h3>
+<p>Чтобы self-attention заработал, авторы предложили архитектуру из двух частей (<a href="https://youtu.be/Ub3GoFaUcds?t=4437">1:13:57</a>): <strong>encoder</strong> слева и <strong>decoder</strong> справа. Задача у них — перевод: через encoder идёт входной текст на исходном языке, через decoder — текст на целевом языке, который мы предсказываем.</p>
+<p>Encoder вычисляет осмысленные embeddings входного текста. Self-attention здесь — представление каждого токена как функция остальных — реализован слоем <strong>multi-head attention</strong> («multi-head» значит, что это вычисление делается несколькими разными способами, чтобы модель выучила разные проекции). Все токены входа «attend» друг к другу: для «a cute teddy bear is reading» представление каждого токена вычисляется через остальные. Затем <strong>feedforward</strong> слой — ещё одна проекция, чтобы модель могла выучить что-то дополнительно. На выходе encoder — богатые представления токенов входного предложения (<a href="https://youtu.be/Ub3GoFaUcds?t=4552">1:15:52</a>).</p>
+<p>Decoder начинает перевод с токена начала предложения и использует все представления входа, чтобы решить, что предсказывать дальше. Это <strong>cross-attention</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=4610">1:16:50</a>): на схеме в него входят две стрелки из encoder и одна из decoder. Лектор спрашивает зал: стрелка из decoder — это query, key или value? (шанс угадать — 33 %). Правильно — <strong>query</strong>: вопрос звучит как «при данном запросе какие элементы входа важны?», а keys и values приходят из encoder, то есть из входной последовательности.</p>
+<p>Ещё один attention-слой в decoder (<a href="https://youtu.be/Ub3GoFaUcds?t=4668">1:17:48</a>) решает, какие из уже сгенерированных токенов выхода полезны для предсказания следующего. Скажем, переведено «un ours en peluche» — какие из этих токенов помогут предсказать следующее слово. Слой называется <strong>masked</strong>, потому что смотрит только на уже переведённые токены: справа от предсказываемого токена ничего нет, ведь это ещё не переведено.</p>
+<p>Итого три attention-слоя с разными ролями (<a href="https://youtu.be/Ub3GoFaUcds?t=4782">1:19:42</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Слой</th>
+<th>Где</th>
+<th>Что выражает через что</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-head self-attention</td>
+<td>encoder</td>
+<td>токены входа через сами себя</td>
+</tr>
+<tr>
+<td>Masked multi-head self-attention</td>
+<td>decoder</td>
+<td>текущий токен через всё, что уже декодировано</td>
+</tr>
+<tr>
+<td>Cross-attention</td>
+<td>decoder</td>
+<td>текущий токен через то, что было во входе (Q — из decoder, K и V — из encoder)</td>
+</tr>
+</tbody>
+</table>
+<p>Поскольку связи прямые, чувство порядка, которое было у RNN (слово за словом), теряется. Поэтому добавляют <strong>positional encodings</strong> — информацию о позиции слова в последовательности. Сегодня в них не углубляются.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 2</p>
+<p>Связка encoder + decoder — оригинал 2017 года для перевода, но большинство моделей, с которыми вы работаете через API, устроены проще. Семейств три: encoder-only (BERT и наследники — классификация, embeddings для поиска), decoder-only (GPT и почти все современные chat-модели) и encoder–decoder (T5, перевод; в своей нише живы и в 2026 году, например T5Gemma 2); отдельно стоят диффузионные LLM, которые генерируют не слева направо (см. <a href="09-recap-current-trends.html">Лекция 9</a>). В decoder-only модели нет ни encoder, ни cross-attention: промпт и генерируемый ответ — одна последовательность, которую обрабатывает только стек masked self-attention, так что из таблицы выше остаётся одна строка. Эти семейства и их типичные задачи — предмет <a href="02-transformer-models-tricks.html">Лекция 2</a>.</p>
+</div>
+<h3 id="весь-пайплайн-перевода">Весь пайплайн перевода<a class="headerlink" href="#весь-пайплайн-перевода" title="Permanent link">¶</a></h3>
+<p>Сквозная картина (<a href="https://youtu.be/Ub3GoFaUcds?t=4840">1:20:40</a>):</p>
+<ol>
+<li>Токенизируем текст — делим на произвольные единицы.</li>
+<li>Берём выученные embeddings токенов (input embedding).</li>
+<li>Добавляем кодирование позиции.</li>
+<li>Encoder: multi-head attention выражает токены через остальные токены входа; затем feedforward-сеть проецирует векторы — «больше степеней свободы, чтобы учиться».</li>
+<li>Decoder: начинаем с токена <strong>BOS</strong>; masked multi-head attention смотрит, какие переведённые слова полезны; cross-attention выражает это через вход; снова feedforward.</li>
+<li>На выходе — вектор, который через softmax превращается в вектор размера словаря; по нему выбираем следующее слово. «Легко, правда?»</li>
+</ol>
+<h3 id="multi-head">Multi-head<a class="headerlink" href="#multi-head" title="Permanent link">¶</a></h3>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=4947">1:22:27</a>):</strong> что значит «head»? — <strong>Ответ:</strong> в self-attention запросы взаимодействуют с ключами и берутся значения, и ничто не мешает проделать это несколько раз. «Head» — это набор проекционных матриц, которыми получают Q, K, V. Несколько голов — несколько разных проекций, дополнительная степень свободы, чтобы выучить разные ассоциации между векторами. Число голов обозначают строчной <span class="arithmatex">\(h\)</span>. На слайде (<a href="https://youtu.be/Ub3GoFaUcds?t=5050">1:24:10</a>): self-attention запускается несколько раз параллельно с разными обучаемыми проекционными матрицами. Аналогия для тех, кто из computer vision, — несколько фильтров в свёртке (идея та же, реализация другая).</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=5107">1:25:07</a>):</strong> проекции разных голов отличаются? — <strong>Ответ:</strong> ограничений не ставят, модель учится сама; на практике она приходит к «разным способам сказать одно и то же». Есть статьи, которые экспериментируют с ограничениями, но обычно их нет.</p>
+<h3 id="label-smoothing">Label smoothing<a class="headerlink" href="#label-smoothing" title="Permanent link">¶</a></h3>
+<p>Ещё один приём авторов трансформера (<a href="https://youtu.be/Ub3GoFaUcds?t=5166">1:26:06</a>). В NLP продолжение почти всегда не единственное: «what a great day / lecture / book…». <strong>Label smoothing</strong> учитывает это: вместо «следующее слово — вот это на 100 %, других нет» модели говорят «это слово, но есть шанс, что не оно». Технически меняют целевой one-hot вектор: вместо <span class="arithmatex">\((1, 0, 0, \dots)\)</span> целевая вероятность истинного слова становится</p>
+<div class="arithmatex">\[1 - \varepsilon, \qquad \text{а у каждого из остальных } v - 1 \text{ слов} \; \frac{\varepsilon}{v - 1},\]</div>
+<p>где <span class="arithmatex">\(\varepsilon\)</span> — небольшая константа сглаживания, <span class="arithmatex">\(v\)</span> — размер словаря. Модель становится «менее уверенной», и авторы наблюдают улучшение метрик вроде BLEU — proxy-метрики для перевода. Приём общий для NLP, стоит знать (<a href="https://youtu.be/Ub3GoFaUcds?t=5220">1:27:00</a>).</p>
+<p><strong>Вопросы из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=5279">1:27:59</a>):</strong> что такое <span class="arithmatex">\(u\)</span> в формуле на слайде? — «некая величина», не определённая, может быть константой; <span class="arithmatex">\(\delta\)</span> — по сути one-hot. Есть ли связь с explore/exploit? — «интересный вопрос»; суть в том, что в конце мы сравниваем предсказание с меткой, и вопрос только в том, сравнивать ли с <span class="arithmatex">\((1, 0, 0, 0)\)</span> или с чем-то другим — softmax сам по себе этого не даёт. Меняется именно метка, чтобы модель предсказывала менее уверенно. (Этот обмен в субтитрах обрывочный.)</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Обрывочный в субтитрах разговор про <span class="arithmatex">\(u\)</span> и <span class="arithmatex">\(\delta\)</span> — это стандартная запись label smoothing: сглаженная цель равна <span class="arithmatex">\((1-\varepsilon)\,\delta_y + \varepsilon\,u\)</span>, где <span class="arithmatex">\(\delta_y\)</span> — one-hot истинного слова, а <span class="arithmatex">\(u\)</span> — равномерное распределение по словарю (<span class="arithmatex">\(u_i = 1/v\)</span>). При такой записи истинное слово получает <span class="arithmatex">\(1-\varepsilon+\varepsilon/v\)</span>, остальные — по <span class="arithmatex">\(\varepsilon/v\)</span>; вариант лектора с <span class="arithmatex">\(\varepsilon/(v-1)\)</span> раскладывает ту же массу <span class="arithmatex">\(\varepsilon\)</span> только по неверным словам — встречаются обе формы. В оригинальной статье использовано <span class="arithmatex">\(\varepsilon = 0.1\)</span>. К explore/exploit это отношения не имеет: меняется только метка в loss, а не способ выбора следующего токена при генерации.</p>
+</div>
+<p>На этом Afshine передаёт слово (<a href="https://youtu.be/Ub3GoFaUcds?t=5340">1:29:00</a>): примерно за 20 минут до конца Shervine собирает всё вместе на одном примере.</p>
+<h2 id="9-подробный-пример">9. Подробный пример<a class="headerlink" href="#9-подробный-пример" title="Permanent link">¶</a></h2>
+<p>⏱ 1:29:53–≈1:41 · <a href="https://youtu.be/Ub3GoFaUcds?t=5393">▶ смотреть на YouTube</a></p>
+<p>Эту часть ведёт Shervine, пример — всё тот же «a cute teddy bear is reading».</p>
+<h3 id="вход">Вход<a class="headerlink" href="#вход" title="Permanent link">¶</a></h3>
+<p>Токенизация (<a href="https://youtu.be/Ub3GoFaUcds?t=5397">1:29:57</a>) — любая, плюс, как спрашивали из зала, нужно отметить начало и конец последовательности: токены <strong>BOS</strong> и <strong>EOS</strong>. Представление каждого токена складывается из двух частей: выученный embedding и <strong>position embedding</strong>. В оригинальной статье позиция кодируется синусами и косинусами, которые прибавляются к embedding поэлементно. Получаем position-aware embedding, повторяем для всех токенов и собираем их в матрицу размера <span class="arithmatex">\(d_{\text{model}} \times n\)</span>, где <span class="arithmatex">\(d_{\text{model}}\)</span> — размер embedding, <span class="arithmatex">\(n\)</span> — длина последовательности.</p>
+<h3 id="self-attention-в-encoder">Self-attention в encoder<a class="headerlink" href="#self-attention-в-encoder" title="Permanent link">¶</a></h3>
+<p>Входную матрицу проецируют на три пространства (<a href="https://youtu.be/Ub3GoFaUcds?t=5501">1:31:41</a>): через <span class="arithmatex">\(W_q\)</span> получаем запросы <span class="arithmatex">\(Q\)</span>, через <span class="arithmatex">\(W_k\)</span> — ключи <span class="arithmatex">\(K\)</span>, через <span class="arithmatex">\(W_v\)</span> — значения <span class="arithmatex">\(V\)</span>. <span class="arithmatex">\(W_q\)</span>, <span class="arithmatex">\(W_k\)</span>, <span class="arithmatex">\(W_v\)</span> — обучаемые проекционные матрицы. Дальше формула self-attention:</p>
+<div class="arithmatex">\[\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V,\]</div>
+<p>где <span class="arithmatex">\(Q\)</span> — матрица, в которой каждая строка — запрос одного токена; <span class="arithmatex">\(K^\top\)</span> — транспонированная матрица ключей, в ней каждый столбец — ключ одного токена; <span class="arithmatex">\(d_k\)</span> — размерность ключей; <span class="arithmatex">\(V\)</span> — матрица значений. Результат — снова матрица.</p>
+<p>Что происходит по шагам (<a href="https://youtu.be/Ub3GoFaUcds?t=5562">1:32:42</a>):</p>
+<ul>
+<li><span class="arithmatex">\(QK^\top\)</span>: в каждой строке — проекция одного запроса на все ключи.</li>
+<li>softmax по строкам: для каждого запроса получаем распределение вероятностей над ключами.</li>
+<li>Деление на <span class="arithmatex">\(\sqrt{d_k}\)</span> (<a href="https://youtu.be/Ub3GoFaUcds?t=5631">1:33:51</a>): можно было бы написать и <span class="arithmatex">\(d_q\)</span> — матричное умножение требует <span class="arithmatex">\(d_q = d_k\)</span>. С ростом размерности ключей и запросов растут и скалярные произведения, поэтому их нормируют на корень из размерности.</li>
+<li>Умножение на <span class="arithmatex">\(V\)</span>: запрос, спроецированный на ключи, умножается на соответствующие значения; value — это представление ключа, на который проецируемся. Для каждого запроса получается взвешенная сумма значений.</li>
+</ul>
+<p><strong>Multi-head</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=5689">1:34:49</a>): всё это делается <span class="arithmatex">\(h\)</span> раз параллельно, получается <span class="arithmatex">\(h\)</span> матриц; их конкатенируют по столбцам, а затем ещё одна проекционная матрица <span class="arithmatex">\(W_o\)</span> возвращает результат к исходной размерности embedding — так сеть не зависит от размерности промежуточных результатов.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/Ub3GoFaUcds?t=5749">1:35:49</a>):</strong> а если все <span class="arithmatex">\(h\)</span> голов выдадут одно и то же — зачем конкатенировать одинаковое? — <strong>Ответ:</strong> «магия градиентного спуска». У сети есть целевая функция и степени свободы; её стимул — построить представления, полезные для предсказания следующего слова, и копировать один и тот же механизм невыгодно. Ограничений нет, но сама природа обучения приводит к разным представлениям; «градиентный спуск творит чудеса».</p>
+<h3 id="ffn-и-стек-слоёв">FFN и стек слоёв<a class="headerlink" href="#ffn-и-стек-слоёв" title="Permanent link">¶</a></h3>
+<p>После self-attention — <strong>FFN</strong> (feedforward network) (<a href="https://youtu.be/Ub3GoFaUcds?t=5854">1:37:34</a>). По вопросу из зала о размерности скрытого слоя: в Word2vec скрытый слой был меньше входа и выхода, а здесь он <strong>больше</strong> — чтобы у модели было достаточно степеней свободы и признаки «усложнялись». (Конец реплики в субтитрах неразборчив.)</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Числа из оригинальной статьи делают это осязаемым: в базовой модели <span class="arithmatex">\(d_{\text{model}} = 512\)</span>, скрытый слой FFN <span class="arithmatex">\(d_{\text{ff}} = 2048\)</span> (в четыре раза шире), голов <span class="arithmatex">\(h = 8\)</span> при <span class="arithmatex">\(d_k = d_v = 64\)</span>, блоков <span class="arithmatex">\(N = 6\)</span> и в encoder, и в decoder. Лектор пропустил деталь, без которой стек из <span class="arithmatex">\(N\)</span> блоков не обучился бы: каждый подслой (attention и FFN) обёрнут в residual connection с последующей layer normalization — на схеме из статьи это блоки «Add &amp; Norm». Residual-связь прибавляет вход подслоя к его выходу, давая градиенту «обходной путь» мимо слоя, — та же борьба с затуханием, что и в разделе про RNN, только по глубине, а не по времени. Заметьте также, что FFN применяется к каждому токену независимо: информация между токенами смешивается только в attention.</p>
+</div>
+<p>Encoder-модулей не один, а <span class="arithmatex">\(N\)</span> (большое N в статье). На выходе стека — контекстно-зависимые embeddings входа, и именно последнее представление encoder подаётся в cross-attention <strong>каждого</strong> из <span class="arithmatex">\(N\)</span> decoder-модулей (<a href="https://youtu.be/Ub3GoFaUcds?t=5907">1:38:27</a>).</p>
+<h3 id="decoder-и-генерация">Decoder и генерация<a class="headerlink" href="#decoder-и-генерация" title="Permanent link">¶</a></h3>
+<p>Старт — токен BOS: «нам нужно предсказать следующее слово, поехали» (<a href="https://youtu.be/Ub3GoFaUcds?t=5907">1:38:27</a>). BOS проходит через decoder:</p>
+<ol>
+<li><strong>Self-attention</strong>, но <strong>причинный (causal)</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=5961">1:39:21</a>): токен смотрит только на себя и на предшествующие. Для первого BOS разницы нет — он attend'ит сам на себя; для последующих токенов отличие от encoder станет видно.</li>
+<li><strong>Cross-attention</strong>: keys и values — закодированные embeddings из encoder, queries — выход self-attention слоя.</li>
+<li><strong>FFN</strong> — делает представление богаче.</li>
+</ol>
+<p>Так <span class="arithmatex">\(N\)</span> раз. В конце — линейная проекция и softmax, которые превращают предсказание в распределение вероятностей над словарём (<a href="https://youtu.be/Ub3GoFaUcds?t=6012">1:40:12</a>). Выбранный токен (по сути one-hot) превращают в embedding, возвращают в decoder и повторяют. Когда остановиться — вопрос в зал: когда выпал <strong>EOS</strong> (<a href="https://youtu.be/Ub3GoFaUcds?t=6063">1:41:03</a>). Именно так авторы «знаковой» оригинальной статьи делали машинный перевод — это и был представленный в ней use case.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Маска в causal self-attention реализуется просто: в матрице <span class="arithmatex">\(QK^\top\)</span> элементы выше диагонали заменяют на <span class="arithmatex">\(-\infty\)</span> перед softmax, и их вес становится нулём. Благодаря этому при обучении весь целевой текст подают в decoder сразу и все позиции считаются параллельно (teacher forcing), а последовательным, токен за токеном, остаётся только инференс. При генерации ключи и значения уже обработанных токенов не пересчитывают, а хранят в KV cache — отсюда разная цена входных и выходных токенов в API и возможность кэшировать длинный общий префикс промпта (по состоянию на 2026 год такое prompt caching предлагают основные провайдеры). Наконец, итоговое распределение softmax по словарю — то место, где действуют параметры temperature и top-p; как из этих вероятностей выбирать следующий токен, разбирается в <a href="03-llms-moe-decoding-prompting.html">Лекция 3</a>.</p>
+</div>
+<h2 id="ключевые-термины">Ключевые термины<a class="headerlink" href="#ключевые-термины" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Термин</th>
+<th>Что это (как объясняли на лекции)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NLP (Natural Language Processing)</td>
+<td>область про вычисления над текстом; задачи делятся на классификацию, мульти-классификацию и генерацию</td>
+</tr>
+<tr>
+<td>NER (Named Entity Recognition)</td>
+<td>пометить отдельные слова категорией — локация, время и т. п.; пример мульти-классификации</td>
+</tr>
+<tr>
+<td>Precision / recall / F1</td>
+<td>доля верных среди предсказанных положительных / доля найденных среди истинно положительных / их гармоническое среднее; нужны из-за несбалансированных классов</td>
+</tr>
+<tr>
+<td>BLEU, ROUGE</td>
+<td>reference-based метрики для перевода и генерации (нужен эталон; чем выше, тем лучше)</td>
+</tr>
+<tr>
+<td>Perplexity</td>
+<td>мера «удивления» модели собственным выходом, считается только по вероятностям; чем ниже, тем лучше</td>
+</tr>
+<tr>
+<td>Токенизация, token</td>
+<td>разбиение текста на произвольные единицы (слова, подслова, символы); token — такая единица</td>
+</tr>
+<tr>
+<td>OOV (Out Of Vocabulary)</td>
+<td>токен, не встречавшийся при обучении; на инференсе попадает в unknown token</td>
+</tr>
+<tr>
+<td>One-hot encoding (OHE)</td>
+<td>представление токена вектором с одной единицей; все такие векторы ортогональны, похожесть не выражают</td>
+</tr>
+<tr>
+<td>Cosine similarity</td>
+<td>мера похожести по углу между векторами (скалярное произведение, нормированное на нормы)</td>
+</tr>
+<tr>
+<td>Embedding</td>
+<td>выученное плотное представление токена размерности <span class="arithmatex">\(d \ll v\)</span> (например, 768)</td>
+</tr>
+<tr>
+<td>Word2vec, CBOW, skip-gram</td>
+<td>метод 2013 года выучивать embeddings через предсказание слова по контексту (CBOW) или контекста по слову (skip-gram)</td>
+</tr>
+<tr>
+<td>Proxy task</td>
+<td>вспомогательная задача (предсказать следующее слово), решая которую модель получает осмысленные представления</td>
+</tr>
+<tr>
+<td>RNN</td>
+<td>рекуррентная сеть (80-е): обрабатывает токены по одному, держа скрытое состояние (hidden state / activation / context vector)</td>
+</tr>
+<tr>
+<td>LSTM</td>
+<td>расширение RNN с дополнительным cell state для «важного», чтобы лучше помнить прошлое</td>
+</tr>
+<tr>
+<td>Vanishing / exploding gradient, long-range dependencies</td>
+<td>произведение многих множителей при back-propagation through time уходит в 0 или в бесконечность; модели трудно помнить далёкое прошлое</td>
+</tr>
+<tr>
+<td>Attention</td>
+<td>прямая связь между тем, что предсказываем, и тем, что уже видели (2014)</td>
+</tr>
+<tr>
+<td>Self-attention</td>
+<td>каждый токен выражается через все остальные токены последовательности одновременно; даёт контекстно-зависимое представление</td>
+</tr>
+<tr>
+<td>Query, key, value (Q, K, V)</td>
+<td>запрос сравнивают с ключами, по похожести взвешивают значения; получаются обучаемыми проекциями <span class="arithmatex">\(W_q\)</span>, <span class="arithmatex">\(W_k\)</span>, <span class="arithmatex">\(W_v\)</span></td>
+</tr>
+<tr>
+<td>Head, multi-head attention</td>
+<td>«голова» — набор проекционных матриц для Q, K, V; <span class="arithmatex">\(h\)</span> голов работают параллельно, результаты конкатенируют и проецируют матрицей <span class="arithmatex">\(W_o\)</span></td>
+</tr>
+<tr>
+<td>Encoder / decoder</td>
+<td>левая часть трансформера кодирует вход (исходный язык), правая генерирует выход (целевой язык)</td>
+</tr>
+<tr>
+<td>Masked self-attention, cross-attention</td>
+<td>в decoder: внимание только на уже сгенерированные токены; внимание на выход encoder (Q из decoder, K и V из encoder)</td>
+</tr>
+<tr>
+<td>Positional encoding</td>
+<td>добавка к embedding, сообщающая позицию токена (в оригинале — синусы и косинусы), так как у attention нет чувства порядка</td>
+</tr>
+<tr>
+<td>BOS / EOS</td>
+<td>специальные токены начала и конца последовательности; EOS останавливает генерацию</td>
+</tr>
+<tr>
+<td>FFN (feedforward network)</td>
+<td>слой после attention, проецирующий векторы для дополнительных степеней свободы; в трансформере его скрытый слой шире входа</td>
+</tr>
+<tr>
+<td>Label smoothing</td>
+<td>целевой one-hot заменяют на <span class="arithmatex">\(1-\varepsilon\)</span> и <span class="arithmatex">\(\varepsilon/(v-1)\)</span>, чтобы модель была менее уверенной; улучшает BLEU</td>
+</tr>
+</tbody>
+</table>
+<h2 id="главные-выводы">Главные выводы<a class="headerlink" href="#главные-выводы" title="Permanent link">¶</a></h2>
+<ul>
+<li>Модели понимают числа, поэтому путь любого текста в модель начинается с токенизации; subword — рабочий компромисс между использованием корней, риском OOV и длиной последовательности, а длина последовательности напрямую влияет на стоимость вычислений.</li>
+<li>One-hot векторы не несут смысла (все ортогональны); осмысленные embeddings выучивают из данных через proxy-задачу — если модель умеет предсказывать соседнее слово, она что-то поняла про язык.</li>
+<li>Размер embedding (сотни–тысячи, типично 768) и размер словаря (десятки тысяч для одного языка, сотни тысяч для мультиязычных моделей с кодом) — эмпирические компромиссы между богатством представления и стоимостью.</li>
+<li>Для классификации важны precision/recall/F1, а не только accuracy; для генерации эталонные метрики BLEU/ROUGE дороги из-за разметки, и курс позже выйдет на reference-free оценку.</li>
+<li>RNN учитывают порядок, но хранят весь смысл в одном скрытом состоянии: отсюда забывание (vanishing gradient, long-range dependencies) и медленная последовательная обработка; LSTM помогает лишь отчасти.</li>
+<li>Attention — прямая связь с прошлым; self-attention выражает каждый токен через все остальные и даёт контекстно-зависимые представления (разные «bank» в разных предложениях).</li>
+<li>Query/key/value и проекции для них — обучаемые; вся операция записывается матрично и потому хорошо ложится на GPU.</li>
+<li>Трансформер = <span class="arithmatex">\(N\)</span> encoder-блоков + <span class="arithmatex">\(N\)</span> decoder-блоков; три вида attention (self, masked self, cross), feedforward-слои, positional encoding; на выходе — softmax по словарю, генерация идёт токен за токеном до EOS.</li>
+<li>Multi-head даёт модели свободу выучить разные проекции, и градиентный спуск сам разводит головы по разным представлениям — без явных ограничений.</li>
+</ul>
+<h2 id="вопросы-из-зала">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=392">06:32</a>–<a href="https://youtu.be/Ub3GoFaUcds?t=557">09:17</a> Организационные вопросы (код на экзаменах, waitlist, где слайды, веса экзаменов, содержание final) → ответы собраны в разделе 2.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=1989">33:09</a> Вопрос: почему в cosine similarity не важна норма вектора? → Ответ: это одна из возможных мер, не идеальная; обычно важен угол, но используют и dot product; значимость нормы зависит от того, как обучены векторы.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=2093">34:53</a> Вопрос: размер словаря и выбор word/subword для разных языков? → Ответ: для одного языка — subword, десятки тысяч токенов; мультиязычные модели с кодом — сотни тысяч.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=2261">37:41</a> Вопрос: как получить embeddings? → Ответ: следующий слайд — учить из данных (Word2vec).</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=2754">45:54</a> Вопрос: что такое <span class="arithmatex">\(v\)</span> и почему 6? → Ответ: размер словаря в игрушечном примере; для невиданных слов резервируют unknown/OOV token.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=2934">48:54</a> Вопрос: когда заканчивать обучение на proxy-задаче? → Ответ: смотреть loss по эпохам и ждать сходимости, помня о downstream-задаче.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=2985">49:45</a> Вопрос: как генерация останавливается? → Ответ: по специальному токену end of sequence.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=3040">50:40</a> Вопрос: чем определяется размер скрытого слоя? → Ответ: компромисс между сложностью downstream-задачи и latency/стоимостью; эмпирически сотни–тысячи, часто 768.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=3147">52:27</a> Вопрос: как различать одинаково написанные слова в разных контекстах? → Ответ: это следующая тема — контекстуализация (решается self-attention, см. <a href="https://youtu.be/Ub3GoFaUcds?t=4069">1:07:49</a>).</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=4361">1:12:41</a> Вопрос: что такое key и value, откуда берутся? → Ответ: обучаемые проекции; key — для поиска похожести на query, value — используемый вектор.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=4610">1:16:50</a> Вопрос лектора залу: стрелка из decoder в cross-attention — query, key или value? → Ответ: query; keys и values — из encoder.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=4947">1:22:27</a> Вопрос: что такое head? → Ответ: набор проекционных матриц для Q, K, V; несколько голов — разные проекции параллельно, как несколько фильтров в свёртке.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=5107">1:25:07</a> Вопрос: отличаются ли проекции голов? → Ответ: ограничений нет, модель учится сама, на практике головы расходятся.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=5279">1:27:59</a> Вопрос: что такое <span class="arithmatex">\(u\)</span> в формуле label smoothing и есть ли связь с explore/exploit? → Ответ: <span class="arithmatex">\(u\)</span> — некая величина или константа, <span class="arithmatex">\(\delta\)</span> — one-hot; суть в замене метки, с которой сравнивается предсказание, а не в softmax (ответ в субтитрах обрывочный).</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=5749">1:35:49</a> Вопрос: не выучат ли все головы одно и то же? → Ответ: никаких ограничений, но градиентный спуск при наличии степеней свободы приводит к разным представлениям — копировать невыгодно.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=5854">1:37:34</a> Вопрос: как выбирают размерность скрытого слоя FFN? → Ответ: в трансформере он больше входа и выхода — ради степеней свободы и более сложных признаков.</li>
+<li><a href="https://youtu.be/Ub3GoFaUcds?t=6063">1:41:03</a> Вопрос лектора залу: когда остановить декодирование? → Ответ: когда сгенерирован EOS.</li>
+</ul>
+<h2 id="чем-можно-дополнить">Чем можно дополнить<a class="headerlink" href="#чем-можно-дополнить" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Алгоритмы subword-токенизации.</strong> Лекция объясняет, зачем нужны подслова, но не как строится словарь: BPE итеративно сливает самые частые пары символов в корпусе, WordPiece и Unigram делают похожее по другим критериям. Это объясняет, откуда берутся «странные» токены и почему словари разных моделей несовместимы. Искать: byte-pair encoding (Sennrich et al., 2016), WordPiece, SentencePiece.</li>
+<li><strong>Positional encoding.</strong> Лектор отложил тему; стоит понять синусоидальную схему из статьи 2017 года и то, почему от неё ушли к относительным и «вращающим» кодировкам, которые лучше переносятся на длинный контекст. Искать: sinusoidal positional encoding, RoPE (Rotary Position Embedding), ALiBi.</li>
+<li><strong>Residual connections, layer normalization и dropout.</strong> На лекции блоки «Add &amp; Norm» не упоминались, хотя без них глубокий стек не обучается; полезно знать и разницу между post-LN (оригинал) и pre-LN (почти все современные модели). Искать: «On Layer Normalization in the Transformer Architecture» (Xiong et al., 2020), pre-LN vs post-LN.</li>
+<li><strong>Как обучают и декодируют seq2seq-перевод.</strong> Teacher forcing при обучении, cross-entropy по всем позициям сразу и beam search при инференсе (в оригинальной статье — beam size 4 с length penalty) — то, что остаётся за кадром фразы «повторяем, пока не выпадет EOS». Искать: teacher forcing, beam search, exposure bias.</li>
+<li><strong>Attention до трансформера.</strong> «Введён в 2014 году» — это attention поверх RNN для перевода, где веса attention читаются как выравнивание слов двух языков; эта работа делает интуицию «подсмотреть в нужное место входа» буквальной. Искать: Bahdanau et al., «Neural Machine Translation by Jointly Learning to Align and Translate»; Luong et al., 2015.</li>
+<li><strong>Контекстные embeddings: ELMo и BERT.</strong> Вопрос студента про «bank» исторически решался в два шага — сначала двунаправленными LSTM (ELMo), затем encoder трансформера (BERT); полезно увидеть, чем contextual embeddings отличаются от статичных Word2vec на практике. Искать: ELMo (Peters et al., 2018), BERT (Devlin et al., 2018).</li>
+<li><strong>Стоимость attention и её снижение.</strong> Квадратичная сложность по длине, точный, но экономный по памяти FlashAttention, разделение ключей и значений между головами (MQA/GQA), KV cache при генерации — всё, что определяет цену и скорость LLM в проде. Искать: FlashAttention (Dao et al., 2022), Multi-Query Attention, Grouped-Query Attention, KV cache.</li>
+<li><strong>Интерпретация attention-весов.</strong> Визуализация голов показывает, что часть из них выучивает узнаваемые роли (например, связь слова с предыдущим или с предлогом), но спор о том, являются ли attention-веса объяснением предсказания, не закрыт. Искать: BertViz, «What Does BERT Look At?» (Clark et al., 2019), «Attention is not Explanation» (Jain &amp; Wallace, 2019).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="../index.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: Главная">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                Главная
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="02-transformer-models-tricks.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 2. Модели на базе трансформера и приёмы">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                2. Модели на базе трансформера и приёмы
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

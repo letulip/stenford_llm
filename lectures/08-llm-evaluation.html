@@ -1,0 +1,3276 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/lectures/08-llm-evaluation.html">
+      
+      
+        <link rel="prev" href="07-agentic-llms-rag-tools.html">
+      
+      
+        <link rel="next" href="09-recap-current-trends.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>8. Оценка LLM - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              8. Оценка LLM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="08-llm-evaluation.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Введение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#повторение-лекции-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Повторение лекции 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-значит-оценить-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что значит «оценить LLM»
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-метрики-согласия-оценщиков" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Метрики согласия оценщиков
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Метрики согласия оценщиков">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#почему-даже-люди-не-договорятся" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему даже люди не договорятся
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agreement-rate-и-его-проблема" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agreement rate и его проблема
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cohens-kappa-и-родственники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cohen's kappa и родственники
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-это-используют-на-практике" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это используют на практике
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-rule-based-метрики" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Rule-based метрики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-meteor-bleu-rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. METEOR, BLEU, ROUGE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. METEOR, BLEU, ROUGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#meteor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        METEOR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bleu-и-rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BLEU и ROUGE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#общие-ограничения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общие ограничения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-llm-as-a-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LLM-as-a-judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-structured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Structured output
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Structured output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#два-главных-преимущества-llm-as-a-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два главных преимущества LLM-as-a-judge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-варианты-судьи-pointwise-и-pairwise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Варианты судьи: pointwise и pairwise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-смещения-судьи-position-verbosity-self-enhancement-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Смещения судьи: position, verbosity, self-enhancement bias
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Смещения судьи: position, verbosity, self-enhancement bias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Position bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbosity-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbosity bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-enhancement-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-enhancement bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-лучшие-практики" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Лучшие практики
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Лучшие практики">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#что-именно-измерять" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что именно измерять
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-factuality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Factuality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-оценка-агентов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Оценка агентов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Оценка агентов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#три-шага-одного-вызова-инструмента" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три шага одного вызова инструмента
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказы-на-шаге-предсказания-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказы на шаге предсказания (1–4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказы-на-шаге-выполнения-56" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказы на шаге выполнения (5–6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказ-на-шаге-синтеза-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказ на шаге синтеза (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#общие-закономерности" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общие закономерности
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-бенчмарки" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Бенчмарки
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-знания-mmlu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Знания: MMLU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-рассуждения-aime-и-piqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Рассуждения: AIME и PIQA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-код-swe-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Код: SWE-bench
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-безопасность-harmbench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Безопасность: HarmBench
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-агенты-tau-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Агенты: Tau-Bench
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. Агенты: Tau-Bench">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#бенчмарки-в-реальности" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Бенчмарки в реальности
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Введение">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#повторение-лекции-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Повторение лекции 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#что-значит-оценить-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что значит «оценить LLM»
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-метрики-согласия-оценщиков" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Метрики согласия оценщиков
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Метрики согласия оценщиков">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#почему-даже-люди-не-договорятся" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему даже люди не договорятся
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agreement-rate-и-его-проблема" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agreement rate и его проблема
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cohens-kappa-и-родственники" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cohen's kappa и родственники
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-это-используют-на-практике" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это используют на практике
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-rule-based-метрики" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Rule-based метрики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-meteor-bleu-rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. METEOR, BLEU, ROUGE
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. METEOR, BLEU, ROUGE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#meteor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        METEOR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bleu-и-rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BLEU и ROUGE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#общие-ограничения" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общие ограничения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-llm-as-a-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LLM-as-a-judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-structured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Structured output
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Structured output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#два-главных-преимущества-llm-as-a-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два главных преимущества LLM-as-a-judge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-варианты-судьи-pointwise-и-pairwise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Варианты судьи: pointwise и pairwise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-смещения-судьи-position-verbosity-self-enhancement-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Смещения судьи: position, verbosity, self-enhancement bias
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Смещения судьи: position, verbosity, self-enhancement bias">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Position bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbosity-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verbosity bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-enhancement-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-enhancement bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-лучшие-практики" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Лучшие практики
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Лучшие практики">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#что-именно-измерять" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что именно измерять
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-factuality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Factuality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-оценка-агентов" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Оценка агентов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Оценка агентов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#три-шага-одного-вызова-инструмента" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три шага одного вызова инструмента
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказы-на-шаге-предсказания-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказы на шаге предсказания (1–4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказы-на-шаге-выполнения-56" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказы на шаге выполнения (5–6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#отказ-на-шаге-синтеза-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отказ на шаге синтеза (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#общие-закономерности" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общие закономерности
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-бенчмарки" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Бенчмарки
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-знания-mmlu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Знания: MMLU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-рассуждения-aime-и-piqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Рассуждения: AIME и PIQA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-код-swe-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Код: SWE-bench
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-безопасность-harmbench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Безопасность: HarmBench
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-агенты-tau-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Агенты: Tau-Bench
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. Агенты: Tau-Bench">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#бенчмарки-в-реальности" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Бенчмарки в реальности
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки">Лекция 8. Оценка LLM: метрики, LLM-as-a-judge, бенчмарки<a class="headerlink" href="#лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки" title="Permanent link">¶</a></h1>
+<p><em>LLM Evaluation</em> · Stanford CME295 Transformers &amp; LLMs, Autumn 2025</p>
+<p><strong>Видео:</strong> https://youtu.be/8fNP4N46RRo · <strong>Дата лекции:</strong> 21 ноября 2025 · <strong>Длительность:</strong> 109 мин<br />
+<strong>Лекторы:</strong> Afshine Amidi и Shervine Amidi (братья-близнецы; Netflix, до этого Google и Uber; adjunct lecturers в Stanford)<br />
+<strong>Полный транскрипт:</strong> <a href="../transcripts/08-llm-evaluation.html">../transcripts/08-llm-evaluation.md</a></p>
+<p>← <a href="07-agentic-llms-rag-tools.html">Лекция 7. Агентные LLM: RAG, вызов инструментов, агенты</a> · <a href="../index.html">Оглавление курса</a> · <a href="09-recap-current-trends.html">Лекция 9. Итоги курса и текущие тренды: ViT, диффузионные LLM</a> →</p>
+<div class="admonition info">
+<p class="admonition-title">Актуализация к ноябрю 2026</p>
+<p>Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: <a href="../updates/08-llm-evaluation.html">читать актуализацию</a>.</p>
+</div>
+<h2 id="коротко-о-лекции">Коротко о лекции<a class="headerlink" href="#коротко-о-лекции" title="Permanent link">¶</a></h2>
+<p>Лекция о том, как измерять качество ответов LLM. Afshine называет её одной из самых важных в курсе: пока мы не умеем измерять, мы не знаем, что улучшать. Речь идёт именно о качестве вывода (output quality), а не о latency, цене или uptime.</p>
+<p>Первая половина (Afshine) идёт от идеала к практике. Идеал — человек оценивает каждый ответ, но это дорого, медленно и субъективно: отсюда метрики согласия оценщиков (inter-rater agreement, Cohen's kappa), сравнивающие согласие со случайной базовой линией. Затем rule-based метрики (METEOR, BLEU, ROUGE), которые сравнивают ответ с эталоном и не переносят стилистических вариаций. Наконец — главный метод лекции, LLM-as-a-judge: другая LLM возвращает обоснование и оценку, structured output гарантирует формат; разбираются смещения судьи (position, verbosity, self-enhancement bias), лучшие практики и оценка factuality через разложение текста на факты.</p>
+<p>Вторая половина (Shervine) посвящена агентам и бенчмаркам. Сначала систематический разбор семи типовых отказов агентного цикла — на этапе выбора инструмента, его выполнения и синтеза ответа — с причинами и способами починки. Затем категории бенчмарков с примерами: знания (MMLU), рассуждения (AIME, PIQA), код (SWE-bench), безопасность (HarmBench), агенты (Tau-Bench), и в финале — как читать результаты бенчмарков: профиль модели, Pareto frontier по цене, data contamination и закон Гудхарта.</p>
+<p>Ключевые идеи: (1) любое согласие оценщиков нужно сравнивать с базовой линией случайного выбора; (2) LLM-as-a-judge снимает требование эталонов и даёт объяснимость, но его нужно калибровать по человеческим оценкам и нельзя переоптимизировать как прокси; (3) бинарная шкала, rationale перед score, низкая температура; (4) ошибки агентов надо категоризировать и чинить группами, а инструменты должны всегда возвращать осмысленный структурированный ответ; (5) бенчмарки описывают профиль модели, а не говорят, подходит ли она вам.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-введение">Введение</a> — 00:00</li>
+<li><a href="#2-метрики-согласия-оценщиков">Метрики согласия оценщиков</a> — 07:08</li>
+<li><a href="#3-rule-based-метрики">Rule-based метрики</a> — 18:24</li>
+<li><a href="#4-meteor-bleu-rouge">METEOR, BLEU, ROUGE</a> — 21:00</li>
+<li><a href="#5-llm-as-a-judge">LLM-as-a-judge</a> — 28:00</li>
+<li><a href="#6-structured-output">Structured output</a> — 33:44</li>
+<li><a href="#7-варианты-судьи-pointwise-и-pairwise">Варианты судьи: pointwise и pairwise</a> — 36:48</li>
+<li><a href="#8-смещения-судьи-position-verbosity-self-enhancement-bias">Смещения судьи: position, verbosity, self-enhancement bias</a> — 38:47</li>
+<li><a href="#9-лучшие-практики">Лучшие практики</a> — 47:22</li>
+<li><a href="#10-factuality">Factuality</a> — 54:06</li>
+<li><a href="#11-оценка-агентов">Оценка агентов</a> — 1:00:15</li>
+<li><a href="#12-бенчмарки">Бенчмарки</a> — 1:23:50</li>
+<li><a href="#13-знания-mmlu">Знания: MMLU</a> — 1:25:12</li>
+<li><a href="#14-рассуждения-aime-и-piqa">Рассуждения: AIME и PIQA</a> — 1:29:34</li>
+<li><a href="#15-код-swe-bench">Код: SWE-bench</a> — 1:33:57</li>
+<li><a href="#16-безопасность-harmbench">Безопасность: HarmBench</a> — 1:36:15</li>
+<li>
+<p><a href="#17-агенты-tau-bench">Агенты: Tau-Bench</a> — 1:40:51</p>
+</li>
+<li>
+<p><a href="#ключевые-термины">Ключевые термины</a></p>
+</li>
+<li><a href="#главные-выводы">Главные выводы</a></li>
+<li><a href="#вопросы-из-зала">Вопросы из зала</a></li>
+<li><a href="#чем-можно-дополнить">Чем можно дополнить</a></li>
+</ol>
+<h2 id="1-введение">1. Введение<a class="headerlink" href="#1-введение" title="Permanent link">¶</a></h2>
+<p>⏱ 00:00–07:08 · <a href="https://youtu.be/8fNP4N46RRo?t=0">▶ смотреть на YouTube</a></p>
+<p>Afshine открывает лекцию и сразу задаёт её место в курсе: без измерения качества нельзя понять, что именно улучшать в модели, поэтому сегодняшняя тема — одна из самых важных в квартале.</p>
+<h3 id="повторение-лекции-7">Повторение лекции 7<a class="headerlink" href="#повторение-лекции-7" title="Permanent link">¶</a></h3>
+<p>Краткий recap (<a href="https://youtu.be/8fNP4N46RRo?t=58">00:58</a>):</p>
+<ul>
+<li><strong>RAG</strong> (Retrieval-Augmented Generation) — LLM достаёт информацию из внешних баз знаний. Поиск состоит из двух шагов: candidate retrieval на bi-encoder'е (пример — Sentence-BERT), который отсеивает потенциально релевантных кандидатов, и reranking на более тяжёлых cross-encoder'ах. Были и способы измерять качество самого поиска.</li>
+<li><strong>Tool calling</strong> — модель по описанию доступных инструментов решает, какую функцию вызвать и с какими аргументами, вызывает её и пересказывает результат пользователю на естественном языке.</li>
+<li><strong>Агентные workflow</strong> — комбинация RAG и tool calling: модель делает несколько вызовов разных инструментов, пока не придёт к ответу. Успешный пример из практики — AI-assisted coding. Типовой фреймворк — ReAct (reason + act) с шагами observe → plan → act.</li>
+</ul>
+<p>Лекции 6 и 7 были про то, как компенсировать слабости LLM: улучшить рассуждения, дать доступ к внешним знаниям и действиям. Сегодня — про то, как оценить полученный ответ (<a href="https://youtu.be/8fNP4N46RRo?t=227">03:47</a>).</p>
+<h3 id="что-значит-оценить-llm">Что значит «оценить LLM»<a class="headerlink" href="#что-значит-оценить-llm" title="Permanent link">¶</a></h3>
+<p>Слово «evaluation» многозначно (<a href="https://youtu.be/8fNP4N46RRo?t=282">04:42</a>): можно оценивать качество вывода (coherence, factuality), а можно — системные характеристики: latency, цену, доступность (uptime). Лекция почти целиком про первое: насколько хорош сам ответ.</p>
+<p>Почему это трудно: LLM — модель text-to-text, которая выдаёт произвольный текст — естественный язык, код, математические выкладки. Универсальной метрики для всего этого не существует.</p>
+<p>Отправная точка рассуждений — идеальный сценарий (<a href="https://youtu.be/8fNP4N46RRo?t=394">06:34</a>): даём промпт, получаем ответ, просим человека оценить, повторяем много раз, в конце агрегируем человеческие оценки. Очевидная проблема — стоимость. Но, как показывает следующий раздел, проблем у этого идеала больше одной.</p>
+<h2 id="2-метрики-согласия-оценщиков">2. Метрики согласия оценщиков<a class="headerlink" href="#2-метрики-согласия-оценщиков" title="Permanent link">¶</a></h2>
+<p>⏱ 07:08–18:24 · <a href="https://youtu.be/8fNP4N46RRo?t=428">▶ смотреть на YouTube</a></p>
+<h3 id="почему-даже-люди-не-договорятся">Почему даже люди не договорятся<a class="headerlink" href="#почему-даже-люди-не-договорятся" title="Permanent link">¶</a></h3>
+<p>Ответы LLM свободные, и сама задача оценки часто субъективна. Пример лектора (<a href="https://youtu.be/8fNP4N46RRo?t=429">07:09</a>): на вопрос «какой подарок на день рождения выбрать?» модель отвечает, что плюшевый мишка — почти всегда милый подарок, берите тот, что нравится. Оцениваем по критерию «полезность» (usefulness). Один оценщик скажет «полезно — направление задано». Другой — «бесполезно: не сказано, какой именно мишка — медведь, слон, жираф?».</p>
+<p>Отсюда понятие <strong>inter-rater agreement</strong> (согласие оценщиков): гайдлайны должны быть настолько чёткими, чтобы все оценивали одинаково, — и нужна метрика, показывающая, насколько оценщики согласны на самом деле.</p>
+<h3 id="agreement-rate-и-его-проблема">Agreement rate и его проблема<a class="headerlink" href="#agreement-rate-и-его-проблема" title="Permanent link">¶</a></h3>
+<p>Самая очевидная метрика — <strong>agreement rate</strong>: доля случаев, когда два оценщика дали одинаковый ответ (при бинарной шкале «хорошо / плохо»). Вопрос лектора залу (<a href="https://youtu.be/8fNP4N46RRo?t=544">09:04</a>): если вам назовут значение agreement rate, сможете ли вы сказать, хорошее это число или плохое?</p>
+<p>Вывод на доске (<a href="https://youtu.be/8fNP4N46RRo?t=609">10:09</a>). Пусть Alice ставит «1» (хорошо) с вероятностью <span class="arithmatex">\(p_A\)</span> и «0» с вероятностью <span class="arithmatex">\(1-p_A\)</span>, Bob — с вероятностями <span class="arithmatex">\(p_B\)</span> и <span class="arithmatex">\(1-p_B\)</span>, и оба отвечают случайно и независимо друг от друга. Они согласны, когда оба ставят 1 или оба ставят 0, так что согласие «по чистой случайности» равно</p>
+<div class="arithmatex">\[P_{\text{chance}} = p_A\,p_B + (1-p_A)(1-p_B).\]</div>
+<p>Здесь <span class="arithmatex">\(p_A p_B\)</span> — вероятность, что оба сказали «хорошо», <span class="arithmatex">\((1-p_A)(1-p_B)\)</span> — что оба сказали «плохо». При <span class="arithmatex">\(p_A = p_B = 0{,}5\)</span> получаем <span class="arithmatex">\(0{,}25 + 0{,}25 = 0{,}5\)</span>: два оценщика, бросающие монетку, согласны в 50% случаев, а чем сильнее они тяготеют к одной метке, тем выше случайное согласие. Поэтому голый agreement rate не с чем сравнить: неизвестно, сколько в нём «заработано», а сколько дала бы и монетка.</p>
+<h3 id="cohens-kappa-и-родственники">Cohen's kappa и родственники<a class="headerlink" href="#cohens-kappa-и-родственники" title="Permanent link">¶</a></h3>
+<p>Решение (<a href="https://youtu.be/8fNP4N46RRo?t=871">14:31</a>) — метрики, которые соотносят наблюдаемое согласие с базовой линией случайного выбора. <strong>Cohen's kappa</strong> для двух оценщиков устроена так, что:</p>
+<ul>
+<li>если наблюдаемое согласие выше случайного, <span class="arithmatex">\(\kappa &gt; 0\)</span> — «хотя бы движемся в правильную сторону»;</li>
+<li>при полном согласии (наблюдаемая доля равна 1) <span class="arithmatex">\(\kappa = 1\)</span>;</li>
+<li>если наблюдаемое согласие ниже случайного, <span class="arithmatex">\(\kappa &lt; 0\)</span>.</li>
+</ul>
+<p><em>Примечание:</em> в субтитрах формула не проговаривается, только эти свойства; стандартная запись — <span class="arithmatex">\(\kappa = \dfrac{p_o - p_e}{1 - p_e}\)</span>, где <span class="arithmatex">\(p_o\)</span> — наблюдаемая доля согласия, <span class="arithmatex">\(p_e\)</span> — ожидаемая при случайных ответах (та самая <span class="arithmatex">\(P_{\text{chance}}\)</span>).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Пусть два оценщика разметили 100 ответов: в 50 случаях оба поставили «хорошо», в 20 — оба «плохо», в 30 разошлись (по 15 в каждую сторону). Наблюдаемое согласие <span class="arithmatex">\(p_o = 0{,}7\)</span> выглядит прилично. Но каждый из них ставит «хорошо» в 65% случаев, поэтому случайное согласие <span class="arithmatex">\(p_e = 0{,}65^2 + 0{,}35^2 = 0{,}545\)</span>, и <span class="arithmatex">\(\kappa = (0{,}7 - 0{,}545)/(1 - 0{,}545) \approx 0{,}34\)</span> — лишь умеренное согласие. Именно это имел в виду лектор: чем сильнее оба оценщика тяготеют к одной метке, тем больше «бесплатного» согласия и тем меньше остаётся на долю реальной договорённости.</p>
+</div>
+<p>Расширения на ту же идею — <strong>Fleiss's kappa</strong> и <strong>Krippendorff's alpha</strong>; они встречаются, когда оценщиков больше двух. Все они отвечают на один вопрос: насколько реальное согласие лучше, чем у случайно отвечающих людей.</p>
+<h3 id="как-это-используют-на-практике">Как это используют на практике<a class="headerlink" href="#как-это-используют-на-практике" title="Permanent link">¶</a></h3>
+<p>Согласие отслеживают как health-метрику разметки (<a href="https://youtu.be/8fNP4N46RRo?t=1042">17:22</a>). Если оно неудовлетворительное, проводят «agreement sessions» — встречи оценщиков, на которых договариваются, как именно трактовать критерии.</p>
+<p>Итог раздела: первая проблема человеческой оценки — субъективность — измерима и управляема. Но есть и вторая: это медленно (оценить тысячу ответов — долго) и дорого. Так что идеальный сценарий «человек оценивает каждый ответ» на практике не работает.</p>
+<h2 id="3-rule-based-метрики">3. Rule-based метрики<a class="headerlink" href="#3-rule-based-метрики" title="Permanent link">¶</a></h2>
+<p>⏱ 18:24–21:00 · <a href="https://youtu.be/8fNP4N46RRo?t=1104">▶ смотреть на YouTube</a></p>
+<p>Людей всё же можно использовать — но иначе (<a href="https://youtu.be/8fNP4N46RRo?t=1109">18:29</a>). Вместо оценки каждого ответа просим их один раз написать <strong>эталоны</strong> (references, «идеальные ответы») для фиксированного набора промптов, а затем сравниваем вывод модели с эталоном при помощи какой-то метрики.</p>
+<p>Выигрыш: набор промптов и эталонов зафиксирован, можно сколько угодно итерировать модель и каждый раз сравнивать автоматически, не возвращаясь к людям.</p>
+<p>Требование к метрике (<a href="https://youtu.be/8fNP4N46RRo?t=1179">19:39</a>): она должна быть гибкой — один и тот же смысл на естественном языке выражается по-разному, и слегка иначе сформулированный ответ не хуже эталона. Дальше — три классические метрики этого семейства.</p>
+<h2 id="4-meteor-bleu-rouge">4. METEOR, BLEU, ROUGE<a class="headerlink" href="#4-meteor-bleu-rouge" title="Permanent link">¶</a></h2>
+<p>⏱ 21:00–28:00 · <a href="https://youtu.be/8fNP4N46RRo?t=1260">▶ смотреть на YouTube</a></p>
+<h3 id="meteor">METEOR<a class="headerlink" href="#meteor" title="Permanent link">¶</a></h3>
+<p><strong>METEOR</strong> — Metric for Evaluation of Translation with Explicit ORdering, метрика из машинного перевода (<a href="https://youtu.be/8fNP4N46RRo?t=1261">21:01</a>). Сравнивает предсказание с эталоном и штрафует за нарушение порядка слов — отсюда «explicit ordering». Формула:</p>
+<div class="arithmatex">\[\text{METEOR} = F \cdot (1 - \text{Penalty}).\]</div>
+<ul>
+<li><span class="arithmatex">\(F\)</span> — F-score, но не F1 с равными весами, а гармоническое среднее precision и recall с настраиваемым весом <span class="arithmatex">\(\alpha\)</span>. Precision — доля униграмм (слов) предсказания, которые нашлись в эталоне; recall — доля униграмм эталона, которые нашлись в предсказании. Это обычные precision/recall, только над словами.</li>
+<li><span class="arithmatex">\(\text{Penalty}\)</span> — штраф за порядок: функция отношения <span class="arithmatex">\(C / M\)</span>, где <span class="arithmatex">\(C\)</span> — число непрерывных совпадающих кусков (contiguous chunks), <span class="arithmatex">\(M\)</span> — число совпавших униграмм; <span class="arithmatex">\(\gamma\)</span> и <span class="arithmatex">\(\beta\)</span> — гиперпараметры, которые выбирают произвольно. Чем меньше <span class="arithmatex">\(C\)</span> при том же <span class="arithmatex">\(M\)</span>, тем длиннее совпадающие куски, тем ближе порядок слов к эталону и тем меньше штраф.</li>
+</ul>
+<p><em>Примечание:</em> в стандартной записи <span class="arithmatex">\(F = \dfrac{P \cdot R}{\alpha P + (1-\alpha) R}\)</span> и <span class="arithmatex">\(\text{Penalty} = \gamma \left(\dfrac{C}{M}\right)^{\beta}\)</span>; лектор описывает компоненты словами, не выписывая их.</p>
+<p>Чем выше METEOR, тем лучше перевод. Претензии лектора (<a href="https://youtu.be/8fNP4N46RRo?t=1422">23:42</a>): формула выглядит произвольно — <span class="arithmatex">\(\alpha\)</span>, <span class="arithmatex">\(\gamma\)</span>, <span class="arithmatex">\(\beta\)</span>, «скорее рецепт», — и она не допускает стилистических вариаций, потому что считает совпавшие слова. METEOR, правда, расширяет понятие совпадения на синонимы и однокоренные формы, но этого мало.</p>
+<h3 id="bleu-и-rouge">BLEU и ROUGE<a class="headerlink" href="#bleu-и-rouge" title="Permanent link">¶</a></h3>
+<p><strong>BLEU</strong> — BiLingual Evaluation Understudy, тоже из перевода (<a href="https://youtu.be/8fNP4N46RRo?t=1482">24:42</a>). Метрика precision-типа: число совпавших n-грамм делится на число n-грамм в предсказании. Поскольку precision легко «нагнать» очень коротким переводом, есть <strong>brevity penalty</strong> — штраф за слишком короткий вывод. В детали лектор не идёт — цель лишь показать, какие метрики существуют.</p>
+<p><strong>ROUGE</strong> — обычно для суммаризации; та же идея сравнения с эталоном, множество вариантов. <em>Примечание:</em> расшифровка — Recall-Oriented Understudy for Gisting Evaluation.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Крошечный расчёт на униграммах. Эталон «the cat sat on the mat» (6 слов), предсказание «the cat is on the mat» (6 слов): совпадают the, cat, on, the, mat — 5 слов, так что precision (BLEU-1 без штрафа) и recall (ROUGE-1) оба равны <span class="arithmatex">\(5/6 \approx 0{,}83\)</span>. Теперь парафраз «a kitten was sitting on a rug» (7 слов): совпало только «on», precision <span class="arithmatex">\(1/7\)</span>, recall <span class="arithmatex">\(1/6\)</span> — метрика считает, что перевод почти полностью неверен, хотя смысл сохранён. Это и есть «нет места стилистическим вариациям» в числах; ROUGE-L и n-граммы при <span class="arithmatex">\(n &gt; 1\)</span> только усугубляют картину, потому что требуют ещё и совпадения последовательностей.</p>
+</div>
+<h3 id="общие-ограничения">Общие ограничения<a class="headerlink" href="#общие-ограничения" title="Permanent link">¶</a></h3>
+<p>Все три сравнивают вывод с эталоном, и проблемы у них общие (<a href="https://youtu.be/8fNP4N46RRo?t=1602">26:42</a>):</p>
+<ol>
+<li><strong>Нет места стилистическим вариациям.</strong> Пример: «плюшевый мишка успокаивает ребёнка перед сном» можно сказать как «мягкие игрушки помогают детям чувствовать себя в безопасности, засыпая» или «многие малыши спят спокойнее, обнимая ласкового игрушечного друга» — смысл один, а метрики дадут почти ноль.</li>
+<li><strong>Слабая корреляция с человеческими оценками</strong>, несмотря на все гиперпараметры, которыми её пытались подтянуть.</li>
+<li><strong>Всё равно нужны люди</strong> — чтобы написать эталоны, а это не всегда по карману проекту.</li>
+</ol>
+<p>Это и мотивирует главный метод лекции.</p>
+<h2 id="5-llm-as-a-judge">5. LLM-as-a-judge<a class="headerlink" href="#5-llm-as-a-judge" title="Permanent link">¶</a></h2>
+<p>⏱ 28:00–33:44 · <a href="https://youtu.be/8fNP4N46RRo?t=1680">▶ смотреть на YouTube</a></p>
+<p>Идея (<a href="https://youtu.be/8fNP4N46RRo?t=1682">28:02</a>): семь лекций мы обсуждали модели, предобученные на огромных корпусах и дотюненные под человеческие предпочтения. Значит, в них уже есть и человеческие знания, и представление о том, что людям нравится. Так пусть ответ одной модели становится входом другой LLM, которая его оценивает. Эту вторую модель называют <strong>LLM-as-a-judge</strong> (LLM в роли судьи); термин появился в статье двухлетней давности. <em>Примечание:</em> по всей видимости, речь о статье Zheng et al. (2023) «Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena».</p>
+<p><strong>Вход судьи</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=1735">28:55</a>): промпт, по которому сгенерирован ответ; сам ответ; критерий, по которому оцениваем.</p>
+<p><strong>Выход судьи:</strong></p>
+<ul>
+<li><strong>score</strong> — например, бинарный pass / fail;</li>
+<li><strong>rationale</strong> — обоснование. Это принципиально новое по сравнению с rule-based метриками: модель понимает текст и может объяснить, почему поставила такую оценку. У формульных метрик число получалось из перемножений и само по себе ничего не объясняло.</li>
+</ul>
+<p>Типичный промпт судьи (<a href="https://youtu.be/8fNP4N46RRo?t=1846">30:46</a>): «Оцени ответ по критерию X. Вот промпт, вот ответ. Верни обоснование и оценку».</p>
+<p><strong>Приём: сначала rationale, потом score.</strong> Порядок важен — эмпирически он улучшает качество оценок. Лектор связывает это с reasoning-моделями из лекции 6: они тоже сначала выписывают chain of thought, а потом отвечают. Судья получает возможность «проговорить» рассуждение и разобраться, что в ответе хорошо, а что нет, прежде чем выставить балл.</p>
+<p>Вопрос залу (<a href="https://youtu.be/8fNP4N46RRo?t=1951">32:31</a>): гарантирует ли такой промпт, что на выходе будут rationale и score, которые можно распарсить? Зал правильно отвечает «нет»: генерация — вероятностный процесс с сэмплированием, формат вывода напрямую не контролируется. Какая техника из начала курса это исправляет — в следующем разделе.</p>
+<h2 id="6-structured-output">6. Structured output<a class="headerlink" href="#6-structured-output" title="Permanent link">¶</a></h2>
+<p>⏱ 33:44–36:48 · <a href="https://youtu.be/8fNP4N46RRo?t=2024">▶ смотреть на YouTube</a></p>
+<p>Ответ — <strong>constrained decoding</strong> (constraint-guided decoding) со слайда 65 лекции 3 (<a href="https://youtu.be/8fNP4N46RRo?t=2024">33:44</a>): на каждом шаге декодирования модели разрешают сэмплировать только «валидные» токены, то есть те, что не нарушают заданный формат, например JSON. У провайдеров API — OpenAI, Gemini, Anthropic — та же техника называется <strong>structured output</strong>.</p>
+<p>На практике (<a href="https://youtu.be/8fNP4N46RRo?t=2086">34:46</a>): описываете формат ответа классом с двумя полями — <code>rationale</code> и <code>score</code> — и передаёте его в запрос; у OpenAI это аргумент <code>text_format</code>, у других провайдеров имя аргумента может отличаться, но принцип тот же. Ключевое слово, которое надо запомнить, — structured output: всякий раз, когда нужен ответ заданной формы, берите его.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>В коде судья обычно выглядит так: system prompt с критерием и гайдлайнами («ответ проходит, если …; не проходит, если …»), в user-сообщении — исходный промпт и ответ в явных разделителях, а схема вывода — класс вроде <code>Verdict(rationale: str, score: Literal["pass", "fail"])</code>, причём поле <code>rationale</code> объявлено первым, чтобы модель сгенерировала его раньше <code>score</code>. У OpenAI такой класс передают в <code>text_format</code>; у Anthropic — в structured outputs (<code>output_config.format</code>; вышли в бета в ноябре 2025, за неделю до лекции, из беты — в январе 2026). Старый приём «tool use с единственным инструментом и принудительным <code>tool_choice</code>» на моделях Anthropic 2026 года (Claude Fable 5.1, Opus 5.5, Sonnet 5.5) уже возвращает ошибку 400: нужны structured outputs или <code>strict: true</code> у инструмента. Температуру 0–0.2 ставят там, где модель её ещё принимает (reasoning-модели и новые версии API часто её не поддерживают). Удобно сразу логировать и rationale: при разборе расхождений с людьми именно он показывает, где промпт судьи понят не так.</p>
+</div>
+<h3 id="два-главных-преимущества-llm-as-a-judge">Два главных преимущества LLM-as-a-judge<a class="headerlink" href="#два-главных-преимущества-llm-as-a-judge" title="Permanent link">¶</a></h3>
+<p>Afshine подводит промежуточный итог (<a href="https://youtu.be/8fNP4N46RRo?t=2139">35:39</a>):</p>
+<ol>
+<li><strong>Не нужны ни эталонные тексты, ни человеческие оценки, чтобы начать</strong> — судья уже «знает» мир из предобучения и человеческие предпочтения из тюнинга.</li>
+<li><strong>Оценка интерпретируема</strong> благодаря rationale: на запрос «оцени качество этого ответа» судья объясняет, чего в ответе не хватает или что в нём хорошо, и затем ставит балл.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Rule-based метрики (METEOR, BLEU, ROUGE)</th>
+<th>LLM-as-a-judge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Что нужно для старта</td>
+<td>Эталонные ответы, написанные людьми</td>
+<td>Только промпт, ответ и критерий</td>
+</tr>
+<tr>
+<td>Как считается</td>
+<td>Совпадение n-грамм с эталоном плюс штрафы с произвольными гиперпараметрами</td>
+<td>Другая LLM читает ответ и выносит вердикт</td>
+</tr>
+<tr>
+<td>Стилистические вариации</td>
+<td>Штрафуются</td>
+<td>Переносятся нормально</td>
+</tr>
+<tr>
+<td>Объяснимость</td>
+<td>Число без объяснения</td>
+<td>Rationale + score</td>
+</tr>
+<tr>
+<td>Корреляция с людьми</td>
+<td>Невысокая</td>
+<td>Нужно калибровать (раздел 9); есть смещения (раздел 8)</td>
+</tr>
+<tr>
+<td>Воспроизводимость</td>
+<td>Детерминирована</td>
+<td>Вероятностная — нужны structured output и низкая температура</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-варианты-судьи-pointwise-и-pairwise">7. Варианты судьи: pointwise и pairwise<a class="headerlink" href="#7-варианты-судьи-pointwise-и-pairwise" title="Permanent link">¶</a></h2>
+<p>⏱ 36:48–38:47 · <a href="https://youtu.be/8fNP4N46RRo?t=2208">▶ смотреть на YouTube</a></p>
+<p>Вариаций много, но основных типа два (<a href="https://youtu.be/8fNP4N46RRo?t=2211">36:51</a>):</p>
+<ul>
+<li><strong>Pointwise</strong> (одиночная оценка): судье дают один ответ и спрашивают, хорош он или нет.</li>
+<li><strong>Pairwise</strong> (парное сравнение): судье дают два ответа, A и B, и спрашивают, какой лучше.</li>
+</ul>
+<p>Pairwise-судья напрямую связан с лекцией 5 о preference tuning (<a href="https://youtu.be/8fNP4N46RRo?t=2276">37:56</a>): там нужны были данные о предпочтениях — пары ответов с пометкой, какой лучше. LLM-as-a-judge позволяет генерировать такие метки синтетически и использовать их для обучения reward model.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 5</p>
+<p>Это ровно тот конвейер, который в <a href="05-llm-tuning-rlhf-dpo.html">Лекции 5</a> требовал человеческих пар «лучше / хуже»: pairwise-судья заменяет разметчиков, и получившиеся предпочтения идут в reward model для RLHF или напрямую в DPO. В литературе такой подход называют RLAIF (reinforcement learning from AI feedback). Обратная сторона: все смещения судьи из раздела 8 — тяга к длинным ответам, к первому варианту, к «своему» стилю — наследуются обученной моделью, поэтому при генерации обучающих меток перестановка позиций и контроль длины важны вдвойне.</p>
+</div>
+<p>Дальше — что может пойти не так.</p>
+<h2 id="8-смещения-судьи-position-verbosity-self-enhancement-bias">8. Смещения судьи: position, verbosity, self-enhancement bias<a class="headerlink" href="#8-смещения-судьи-position-verbosity-self-enhancement-bias" title="Permanent link">¶</a></h2>
+<p>⏱ 38:47–47:22 · <a href="https://youtu.be/8fNP4N46RRo?t=2327">▶ смотреть на YouTube</a></p>
+<h3 id="position-bias">Position bias<a class="headerlink" href="#position-bias" title="Permanent link">¶</a></h3>
+<p><strong>Position bias</strong> (смещение по позиции, <a href="https://youtu.be/8fNP4N46RRo?t=2328">38:48</a>): в pairwise-режиме судья может выбрать ответ A просто потому, что он показан первым. Стандартное лекарство — спросить дважды, «A или B?» и «B или A?», и взять majority vote: совпали — хорошо, разошлись — результату доверять нельзя. Есть продвинутые приёмы вроде правки position embeddings, но «из коробки» их не делают; на практике — перестановка и усреднение либо голосование.</p>
+<h3 id="verbosity-bias">Verbosity bias<a class="headerlink" href="#verbosity-bias" title="Permanent link">¶</a></h3>
+<p><strong>Verbosity bias</strong> (смещение к многословности, <a href="https://youtu.be/8fNP4N46RRo?t=2435">40:35</a>): из двух ответов — короткого и подробного — судья склонен предпочесть подробный просто за объём, а не за правильность. Бороться труднее; три приёма:</p>
+<ol>
+<li>явно прописать в гайдлайнах судьи, что длина не должна влиять на оценку;</li>
+<li>добавить in-context примеры, показывающие, что многословие не является достоинством;</li>
+<li>ввести штраф за длину: оценить каждый ответ pointwise («насколько хорош 1, насколько хорош 2») и скорректировать оценку на длину.</li>
+</ol>
+<h3 id="self-enhancement-bias">Self-enhancement bias<a class="headerlink" href="#self-enhancement-bias" title="Permanent link">¶</a></h3>
+<p><strong>Self-enhancement bias</strong> (самопредпочтение, <a href="https://youtu.be/8fNP4N46RRo?t=2546">42:26</a>): если модель судит ответы, которые сама же сгенерировала, она предпочтёт их — независимо от того, что другой ответ ближе к желаемому. Интуиция: раз модель породила эту последовательность, значит, с её точки зрения она вероятна, то есть «хороша». Правило — не использовать одну и ту же модель как генератор и как судью. Оговорка: сегодня это правило трудно соблюсти строго, потому что все модели учатся примерно на одних и тех же данных и training mixes; но другую модель всё равно берут, чтобы риск минимизировать.</p>
+<table>
+<thead>
+<tr>
+<th>Смещение</th>
+<th>В чём проявляется</th>
+<th>Как смягчают</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Position bias</td>
+<td>Предпочтение первому из показанных ответов</td>
+<td>Переставить A и B, взять majority vote; продвинутое — правка position embeddings</td>
+</tr>
+<tr>
+<td>Verbosity bias</td>
+<td>Предпочтение более длинному ответу</td>
+<td>Явная инструкция про длину; in-context примеры; штраф за длину при pointwise-оценке</td>
+</tr>
+<tr>
+<td>Self-enhancement bias</td>
+<td>Предпочтение собственным генерациям</td>
+<td>Другая (и обычно более крупная) модель в роли судьи</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Двойной запрос «A или B» и «B или A» удваивает стоимость оценки. Дешёвый компромисс, когда нужен только агрегат по набору: случайно перемешивать порядок для каждой пары — на уровне отдельного вердикта шум остаётся, но систематический перекос в сумме компенсируется. Ещё полезно разрешить судье ответ «ничья» (tie): без него он вынужден выбирать между равноценными ответами, и именно там position bias проявляется сильнее всего. Самопредпочтение проверяется напрямую: дайте судье пары, где один ответ сгенерирован им самим, и посмотрите, отличается ли доля его побед от оценок людей.</p>
+</div>
+<h3 id="вопросы-из-зала">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала" title="Permanent link">¶</a></h3>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/8fNP4N46RRo?t=2658">44:18</a>):</strong> сам вопрос в субтитрах не слышен, в пересказе лектора: может ли судья быть не согласован с ground truth и систематически предпочитать одну метку? — <strong>Ответ:</strong> да, это ещё одно смещение — несогласованность с человеческими предпочтениями; три разобранных не исчерпывают список.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/8fNP4N46RRo?t=2724">45:24</a>):</strong> может ли судья предпочесть ответ другой LLM только потому, что он «звучит как LLM»? — <strong>Ответ:</strong> зависит от судьи; да, бывает. Поэтому в судьи берут модель не просто другую, а заметно более мощную, которая улавливает различия и не ведётся на «похоже на то, что сгенерировал бы я»; с появлением reasoning-моделей пробуют и их.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/8fNP4N46RRo?t=2790">46:30</a>):</strong> судья обязан быть больше оцениваемой модели? — <strong>Ответ:</strong> не жёсткое требование, но обычно берут модель покрупнее и с сильными способностями к рассуждению, чтобы она могла отделить хорошее от плохого.</p>
+<h2 id="9-лучшие-практики">9. Лучшие практики<a class="headerlink" href="#9-лучшие-практики" title="Permanent link">¶</a></h2>
+<p>⏱ 47:22–54:06 · <a href="https://youtu.be/8fNP4N46RRo?t=2842">▶ смотреть на YouTube</a></p>
+<p>Afshine собирает рекомендации (<a href="https://youtu.be/8fNP4N46RRo?t=2844">47:24</a>):</p>
+<ol>
+<li><strong>Чёткие гайдлайны.</strong> Критерии часто субъективны, поэтому в промпте судьи явно формулируют, что хорошо и что плохо.</li>
+<li><strong>Бинарная шкала.</strong> Шкалы бывают и гранулярные, но на практике предпочитают pass / fail: судье проще; людям при калибровке тоже проще выбирать из двух вариантов; лишняя гранулярность добавляет шум, а полезного сигнала почти не прибавляет.</li>
+<li><strong>Rationale перед score</strong> — та же идея, что chain of thought перед ответом у reasoning-моделей; стабильно улучшает качество судьи.</li>
+<li><strong>Помнить о смещениях</strong> — position, verbosity, self-enhancement и других — и применять описанные лекарства.</li>
+<li><strong>Калибровать по людям</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=2961">49:21</a>). Хотя для старта человеческие оценки не нужны, именно их судья аппроксимирует. Если есть бюджет: собрать человеческие оценки на выборке, получить оценки судьи, провести корреляционный анализ и по результатам править — главным образом промпт судьи.</li>
+<li><strong>Низкая температура</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=3016">50:16</a>). Температура регулирует, насколько генерация детерминирована; для оценки её ставят низкой — типичные значения 0.1–0.2, — чтобы прогон сегодня и прогон через два дня давали близкие числа.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Низкая температура уменьшает разброс, но не делает оценку детерминированной: у облачных API даже при temperature 0 ответы могут отличаться от прогона к прогону из-за батчинга и неточностей вычислений с плавающей точкой, а обновление модели провайдером меняет судью целиком. Поэтому воспроизводимость обеспечивают не только температурой: фиксируют версию модели (точный идентификатор, а не алиас «latest»), хранят rationale каждого вердикта и для спорных примеров усредняют несколько прогонов. Разумно также считать не одну цифру, а доверительный интервал — при 100 примерах разница в 3–4 пункта pass rate обычно в пределах шума.</p>
+</div>
+<p>Итог пути (<a href="https://youtu.be/8fNP4N46RRo?t=3071">51:11</a>): от идеала «человек оценивает каждый ответ» мы пришли к аппроксимации — LLM-as-a-judge, который работает без человеческих оценок. Но важно, чтобы оценки судьи и людей не расходились по мере улучшения модели. Иначе можно «улучшить» модель так, что судья ставит всё выше, а люди — нет: судья лишь прокси человеческих оценок, и переоптимизировать прокси нельзя.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Как собрать eval-набор для своего продукта: возьмите 100–300 реальных промптов из логов, покрывающих основные сценарии и известные провалы, и заморозьте их — это и есть «фиксированный набор промптов» из раздела 3. Разметьте вручную подмножество (например, 50–100) двумя людьми по бинарной шкале, посчитайте kappa и доведите гайдлайн до состояния, когда согласие приемлемо. Затем прогоните судью по тому же подмножеству и измерьте его согласие с людьми тем же kappa — это и есть калибровка из пункта 5. Версионируйте промпт судьи вместе с кодом и запускайте набор при каждом изменении системного промпта, модели или инструментов, как регрессионные тесты.</p>
+</div>
+<h3 id="что-именно-измерять">Что именно измерять<a class="headerlink" href="#что-именно-измерять" title="Permanent link">¶</a></h3>
+<p>Два основных семейства критериев (<a href="https://youtu.be/8fNP4N46RRo?t=3173">52:53</a>):</p>
+<ul>
+<li><strong>Качество выполнения задачи</strong> (task performance): полезность, фактическая точность, релевантность и т. п.</li>
+<li><strong>Соответствие формату и ожиданиям</strong>: тон, стиль, отсутствие небезопасного содержимого.</li>
+</ul>
+<p>Factuality из первого семейства требует отдельной техники — ей посвящён следующий раздел.</p>
+<h2 id="10-factuality">10. Factuality<a class="headerlink" href="#10-factuality" title="Permanent link">¶</a></h2>
+<p>⏱ 54:06–1:00:15 · <a href="https://youtu.be/8fNP4N46RRo?t=3246">▶ смотреть на YouTube</a></p>
+<p>Постановка (<a href="https://youtu.be/8fNP4N46RRo?t=3246">54:06</a>): есть текст, нужно числом выразить, насколько он фактически верен (factuality — фактическая точность). Пример лектора — фраза о том, что плюшевых мишек впервые сделали в 1920-х и назвали в честь президента Теодора Рузвельта, который на охоте с гордостью хотел застрелить пойманного медведя.</p>
+<p>Проблема: бинарная шкала, которую мы только что советовали, здесь плохо подходит. Текст может быть совсем неверным, слегка неверным или верным; в нём много предложений, и из-за одной мелкой ошибки неправильно списывать всё целиком. В примере ошибок две: мишки появились в 1900-х, а не в 1920-х, и президент, насколько помнит лектор, как раз отказался стрелять, а не «с гордостью хотел».</p>
+<p>Как квантифицировать эту нюансировку — открытый исследовательский вопрос; Afshine описывает то, что сейчас используют на практике (<a href="https://youtu.be/8fNP4N46RRo?t=3354">55:54</a>), в три шага:</p>
+<ol>
+<li><strong>Разложить текст на список фактов</strong> — один вызов LLM превращает многопредложенный (возможно, многоабзацный) текст в перечень атомарных утверждений. В примере их четыре.</li>
+<li><strong>Проверить каждый факт</strong> бинарно: верен / неверен. Факт либо верен, либо нет — промежуточные случаи возможны, но усложнять не стоит. Проверка — через техники прошлой лекции: RAG по базе знаний, web search, дополнительные вызовы LLM.</li>
+<li><strong>Агрегировать с весами.</strong> Факты неравноценны: то, что президент «хотел застрелить», менее важно, чем имя человека, в честь которого назвали игрушку. Поэтому каждому факту приписывают вес важности <span class="arithmatex">\(\alpha_i\)</span> (для простоты все могут быть равны единице) и считают (<a href="https://youtu.be/8fNP4N46RRo?t=3520">58:40</a>):</li>
+</ol>
+<div class="arithmatex">\[\text{Factuality} = \frac{\sum_i \alpha_i \, s_i}{\sum_i \alpha_i}, \qquad s_i = \begin{cases} 1, &amp; \text{факт } i \text{ верен} \\ 0, &amp; \text{иначе} \end{cases}\]</div>
+<p>Здесь <span class="arithmatex">\(s_i\)</span> — результат проверки факта <span class="arithmatex">\(i\)</span>, <span class="arithmatex">\(\alpha_i\)</span> — его вес. <em>Примечание:</em> нормировка на сумму весов — моя запись; лектор говорит об «агрегации по всем фактам с весами», а результат примера лежит в <span class="arithmatex">\([0, 1]\)</span>.</p>
+<p>В примере верны второй и третий факты; с их весами формула даёт <strong>0.6</strong> — ошибки есть, но часть текста фактически верна. (При равных весах получилось бы 0.5, так что веса в примере неравные.)</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Описанная схема «разложить на атомарные факты → проверить каждый через поиск → усреднить» в литературе известна как FActScore (Min et al., 2023); её развитие SAFE из статьи «Long-form factuality in large language models» (Wei et al., 2024) проверяет каждый факт веб-поиском, то есть ровно RAG-механикой из <a href="07-agentic-llms-rag-tools.html">Лекции 7</a>. Отсюда практическое следствие: качество такого factuality-скора ограничено качеством retrieval — если база знаний неполна, верный факт будет помечен как «не подтверждён». Сама история с мишкой, кстати, 1902 года: Рузвельт отказался стрелять в привязанного медведя, так что лектор по памяти воспроизвёл её верно.</p>
+</div>
+<p>На этом Afshine передаёт слово Shervine (<a href="https://youtu.be/8fNP4N46RRo?t=3575">59:35</a>).</p>
+<h2 id="11-оценка-агентов">11. Оценка агентов<a class="headerlink" href="#11-оценка-агентов" title="Permanent link">¶</a></h2>
+<p>⏱ 1:00:15–1:23:50 · <a href="https://youtu.be/8fNP4N46RRo?t=3615">▶ смотреть на YouTube</a></p>
+<p>Shervine делает «отступление» перед бенчмарками: как оценивать агента? В лекции 7 был ReAct — повторяющийся цикл атомарных шагов (observe, plan, act или другие названия). Оценивать цикл целиком трудно, поэтому Shervine берёт один виток и перечисляет, что в нём может сломаться: без этого непонятно, что вообще означает результат оценки агентного workflow.</p>
+<h3 id="три-шага-одного-вызова-инструмента">Три шага одного вызова инструмента<a class="headerlink" href="#три-шага-одного-вызова-инструмента" title="Permanent link">¶</a></h3>
+<p>Слайд из прошлой лекции (<a href="https://youtu.be/8fNP4N46RRo?t=3671">1:01:11</a>) на любимом примере курса — «найди мне медведя поблизости»:</p>
+<ol>
+<li><strong>Предсказание вызова</strong> — выбрать правильный инструмент и правильные аргументы.</li>
+<li><strong>Выполнение</strong> — вызвать инструмент.</li>
+<li><strong>Синтез</strong> — по предсказанию и результату инструмента сформулировать ответ.</li>
+</ol>
+<p>В агентном workflow таких троек много подряд. Shervine разбирает семь типовых отказов: четыре на первом шаге, два на втором, один на третьем. Для каждого — симптом, вероятные причины и починка.</p>
+<h3 id="отказы-на-шаге-предсказания-14">Отказы на шаге предсказания (1–4)<a class="headerlink" href="#отказы-на-шаге-предсказания-14" title="Permanent link">¶</a></h3>
+<p><strong>1. Инструмент нужен, но не вызван</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=3732">1:02:12</a>). Пользователь явно просит найти медведя, инструмент есть, но модель им не пользуется и отвечает «извините, не могу» — в терминологии ассистентов это <strong>punt</strong> (отказ отвечать). Две причины:</p>
+<ul>
+<li><em>Ошибка tool router'а.</em> Инструментов обычно много, и описания всех функций в преамбулу каждого запроса не положишь — промежуточный шаг, tool router / tool selector, отбирает подмножество. Он ориентирован на recall: экономит контекст, но обязан не потерять нужное. Не попал нужный инструмент в список — ошибка recall, чинить router.</li>
+<li><em>Инструмент был в списке, но модель о нём не подумала</em> и ответила напрямую. Тогда возвращаемся к тому, как модель учили пользоваться инструментами: при SFT — добавить такой паттерн в обучающие данные; при prompt tuning — переписать промпт.</li>
+</ul>
+<p><strong>2. Галлюцинация инструмента</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=3952">1:05:52</a>). Модель вызывает функцию, которой нет: определена <code>find_teddy_bear</code>, а вызвана <code>find_bear</code>. Причины и починка:</p>
+<ul>
+<li><em>Модель слабо «заземляется»</em> на инструкции — эмпирически это свойство слишком слабых моделей, которые додумывают правдоподобное. Лекарство только одно — обновить модель и проверить, воспроизводится ли проблема.</li>
+<li><em>Проблема в ваших API</em> (<a href="https://youtu.be/8fNP4N46RRo?t=4065">1:07:45</a>). На SFT модель видела образцово написанные API, а ваши функции могут быть хуже. Полезно прогнать реализацию через AI-assisted coding и посмотреть, осмысленна ли она «с точки зрения модели». Модель видит три вещи — имя функции, имена аргументов и их описания, — и переименование часто решает проблему.</li>
+<li><em>Горизонтальные инструкции</em> (<a href="https://youtu.be/8fNP4N46RRo?t=4124">1:08:44</a>). Это стоит проверить первым: понимает ли модель, что обязана пользоваться выданными ей функциями? Если галлюцинации массовые, проблема скорее в общих (top-level, одинаковых для всех инструментов) инструкциях. Их дорабатывают итеративно, можно с помощью самой LLM: нужны безупречные формат и логика, подробность помогает.</li>
+</ul>
+<p><strong>3. Не тот инструмент</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=4190">1:09:50</a>). На «найди медведя рядом» модель вместо поиска отправляет сообщение с просьбой о медведе. Разумно, но не то, что вы хотели, — модели неясно, какой подход предпочтителен, и прояснить это ваша обязанность. Чинить на двух уровнях: tool router (снова recall — для таких запросов нужный инструмент должен попадать в выдачу) и API обеих функций, у которых конфликтуют области применения: точно пропишите, какие ситуации обрабатывает каждая.</p>
+<p><strong>4. Тот инструмент, не те аргументы</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=4297">1:11:37</a>). Инструмент выбран верно, а «последняя миля» провалена: на «найди медведя рядом со мной» подставлены координаты (0, 0) — точка в Южной Атлантике. Причины:</p>
+<ul>
+<li><em>Модель не знает, где вы</em>: в запросе не сказано «я в Стэнфорде», в контексте локации нет — модель её выдумала. Проверьте, что контекст несёт нужную информацию; если нет — добавьте инструмент определения локации, выполняемый заранее, а при его отказе (нет доступа к геопозиции) показывайте пользователю actionable-ошибку, а не заглушки.</li>
+<li><em>Модель не понимает, что именно класть в аргументы</em> — тогда либо дообучать её на использовании инструментов, либо переписать API.</li>
+</ul>
+<h3 id="отказы-на-шаге-выполнения-56">Отказы на шаге выполнения (5–6)<a class="headerlink" href="#отказы-на-шаге-выполнения-56" title="Permanent link">¶</a></h3>
+<p><strong>5. Инструмент возвращает не то</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=4421">1:13:41</a>). Широкая категория: баг в логике, Python выбрасывает ValueError и т. п. Ошибка не всегда зло — отказ в доступе к геопозиции модель может честно донести до пользователя. Но в общем случае голые ошибки возвращать не принято: модель трактует их как внутреннюю поломку и отвечает «простите, не вышло, это моя вина» — ничего actionable. Правильно — отдавать результат через structured output с реальным содержимым вместо исключения; в остальном это обычная инженерная задача: инструмент надо починить.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Как выглядит «осмысленный ответ вместо исключения» на примере локации из пункта 4. Плохо: инструмент бросает <code>PermissionError</code>, модель видит traceback и отвечает «произошла ошибка». Хорошо: инструмент возвращает структуру вида <code>{"status": "unavailable", "reason": "location_permission_denied", "user_action": "разрешите доступ к геопозиции в настройках"}</code> — из неё модель формулирует конкретный следующий шаг для пользователя, а не извиняется. Тот же принцип для пустого результата: <code>{"bears": []}</code> читается как «искал и не нашёл», тогда как <code>None</code> оставляет модель гадать.</p>
+</div>
+<p><strong>6. Инструмент ничего не возвращает</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=4594">1:16:34</a>). Особенно опасно для инструментов-действий. Пример из прошлой лекции: мишке холодно, агент поднимает термостат; если инструмент молчит, модель не знает, удалось ли, и может выдать ложное подтверждение «всё сделано». Правило: за каждым вызовом — содержательный структурированный ответ, чтобы модель знала, что сказать пользователю или как продолжить цикл. Неожиданный, по признанию Shervine, совет (<a href="https://youtu.be/8fNP4N46RRo?t=4665">1:17:45</a>): если медведей не нашлось, верните <strong>пустой JSON, а не None</strong> — пустой JSON означает «искал, не нашёл», а None не означает ничего.</p>
+<h3 id="отказ-на-шаге-синтеза-7">Отказ на шаге синтеза (7)<a class="headerlink" href="#отказ-на-шаге-синтеза-7" title="Permanent link">¶</a></h3>
+<p><strong>7. Результат правильный, а модель не может его пересказать</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=4716">1:18:36</a>). Инструмент нашёл медведя по имени Teddy в миле от вас, а модель говорит «ничего не нашла». Причины:</p>
+<ul>
+<li><em>Модель не опирается на содержимое контекста</em> — не умеет ссылаться на ранее переданное. Та же «ванильная» рекомендация обновить модель; сейчас это почти не встречается, но в ранних LLM бывало.</li>
+<li><em>Слишком много вывода</em> — частый случай: инструмент вернул гору данных, и Teddy «тонет в океане» нерелевантного. Решение — отдавать только то, что модели пригодится на следующем шаге.</li>
+<li><em>Вывод плохо структурирован</em> (<a href="https://youtu.be/8fNP4N46RRo?t=4832">1:20:32</a>). Даже обрезанный результат может быть представлен невнятно. В Python для этого есть классы: вернуть объект <code>TeddyBear</code> с атрибутами <code>name</code>, <code>distance</code> и т. д. куда понятнее, чем сырые данные.</li>
+</ul>
+<h3 id="общие-закономерности">Общие закономерности<a class="headerlink" href="#общие-закономерности" title="Permanent link">¶</a></h3>
+<p>Shervine подчёркивает, что семь — не полный список, а то, с чем он сталкивается чаще всего. Общие темы (<a href="https://youtu.be/8fNP4N46RRo?t=4884">1:21:24</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Источник проблемы</th>
+<th>Что проверять / чинить</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Моделирование</td>
+<td>Способность модели рассуждать и опираться на контекст (вплоть до смены модели)</td>
+</tr>
+<tr>
+<td>Контекст</td>
+<td>Релевантность того, что попадает в окно контекста</td>
+</tr>
+<tr>
+<td>Tool router и API инструментов</td>
+<td>Обучение (SFT) или промпт; само описание API — имя функции, аргументы, docstring</td>
+</tr>
+<tr>
+<td>Сам инструмент</td>
+<td>Баги, формат и полнота возвращаемого значения</td>
+</tr>
+</tbody>
+</table>
+<p>Главный совет: ошибок у агентов множество, и каждая в отдельности — «приключение»; поэтому будьте методичны — категоризируйте отказы и чините их группами, а не по одному. Вопросов из зала нет, и Shervine переходит к бенчмаркам.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Совет «категоризировать и чинить группами» превращается в инструмент, если логировать каждый виток агента как трассу: какой инструмент предсказан, с какими аргументами, что он вернул, что модель сказала в итоге. Тогда семь отказов из лекции становятся измеримыми счётчиками по шагам: доля punt'ов на запросах, где инструмент ожидался; доля вызовов несуществующих функций; recall tool router'а (попал ли нужный инструмент в список); доля ответов, противоречащих результату инструмента. Для первых двух шагов проверки детерминированные (ожидаемый инструмент и аргументы известны заранее), и только для синтеза нужен LLM-as-a-judge. Отдельная метрика, которой лекция не касается, — стоимость: число витков и токенов на задачу, иначе агент «чинится» в сторону бесконечных повторных вызовов.</p>
+</div>
+<h2 id="12-бенчмарки">12. Бенчмарки<a class="headerlink" href="#12-бенчмарки" title="Permanent link">¶</a></h2>
+<p>⏱ 1:23:50–1:25:12 · <a href="https://youtu.be/8fNP4N46RRo?t=5030">▶ смотреть на YouTube</a></p>
+<p>Вопрос второй половины лекции: вы обучили модель — как сравнить её с другими? Ответ — бенчмарки. Shervine обещает пройтись по категориям, в которые укладывается большинство современных бенчмарков, с примером на каждую.</p>
+<p>Первая категория — <strong>бенчмарки знаний</strong> (knowledge-based): проверяют, может ли модель воспроизвести факты из самых разных областей — не глубоко в одной, а широко во всех, которые могут интересовать пользователей. Такой бенчмарк в основном (хотя и не только) измеряет качество предобучения: сколько информации из большого корпуса модель удержала и может использовать на inference. Главный пример — MMLU.</p>
+<h2 id="13-знания-mmlu">13. Знания: MMLU<a class="headerlink" href="#13-знания-mmlu" title="Permanent link">¶</a></h2>
+<p>⏱ 1:25:12–1:29:34 · <a href="https://youtu.be/8fNP4N46RRo?t=5112">▶ смотреть на YouTube</a></p>
+<p><strong>MMLU</strong> — Massive Multitask Language Understanding (<a href="https://youtu.be/8fNP4N46RRo?t=5112">1:25:12</a>): почти 60 разнородных задач — бытовые темы, право, медицина и всё, что можно придумать. Формат жёстко ограничен: вопрос и четыре варианта ответа, модель выбирает один — «как на экзамене CME 295», где тоже есть multiple choice.</p>
+<p>Shervine отмечает общий тренд бенчмарков (<a href="https://youtu.be/8fNP4N46RRo?t=5165">1:26:05</a>): не просить модель отвечать свободно и затем звать LLM-as-a-judge, потому что судья добавляет ещё один слой возможных ошибок — он, как мы видели, не идеален. Вместо этого формат позволяет извлечь ответ «жёстко закодированным» способом: модель просят выдать букву в конце ответа, букву извлекают и сравнивают с ключом.</p>
+<p>Каждая задача требует именно предметных знаний, а не чистой логики. Пример со слайда — медицинский кейс с показателями пациента и вопросом, где локализовано повреждение: такое берётся из медицинских учебников. То же с правом — всё где-то кодифицировано, и это «где-то» нужно знать. MMLU не единственный бенчмарк категории, просто самый показательный.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — что изменилось с тех пор</p>
+<p>Точное число задач в MMLU — 57, и у бенчмарка есть известные проблемы: часть вопросов с ошибочными ключами, а главное — сильнейшие модели упёрлись в потолок, так что он почти перестал различать их между собой. Поэтому в отчётах всё чаще фигурируют преемники: MMLU-Pro (десять вариантов ответа вместо четырёх и более трудные вопросы) и исправленный MMLU-Redux, а для «знаний уровня PhD» — GPQA. По состоянию на ноябрь 2026 и GPQA Diamond у фронтира близок к потолку (около 94–95 %) и моделей почти не различает; дальше идут Humanity's Last Exam и HLE-Diamond — подробнее в <a href="../updates/08-llm-evaluation.html">актуализации</a>. Ещё одна тонкость формата «выбери букву»: модели чувствительны к порядку вариантов, поэтому аккуратные прогоны перемешивают ответы или усредняют по перестановкам — тот же position bias, что и у судьи.</p>
+</div>
+<p><strong>Вторая категория — рассуждения</strong> (reasoning, <a href="https://youtu.be/8fNP4N46RRo?t=5278">1:27:58</a>): задачи, где перед ответом нужно подумать; оценивается качество chain of thought — или, для reasoning-моделей, их «thinking-токенов». Два примера: математика и так называемый common-sense reasoning, укоренённый в повседневной жизни.</p>
+<h2 id="14-рассуждения-aime-и-piqa">14. Рассуждения: AIME и PIQA<a class="headerlink" href="#14-рассуждения-aime-и-piqa" title="Permanent link">¶</a></h2>
+<p>⏱ 1:29:34–1:33:57 · <a href="https://youtu.be/8fNP4N46RRo?t=5374">▶ смотреть на YouTube</a></p>
+<p><strong>AIME</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=5375">1:29:35</a>) — экзамен, который сдают школьники на пути к математической олимпиаде; очень трудный. Формат удобен для LLM: условие задачи, а ответ — трёхзначное число, так что проверка «жёсткая», как у MMLU. <em>Примечание:</em> AIME — American Invitational Mathematics Examination. На слайде — задачи из AIME этого года: условие может быть в одно предложение и выглядеть просто, но без выписанного рассуждения ответ не найти — именно это и проверяется.</p>
+<p><strong>PIQA</strong> — Physical Interaction Question Answering (<a href="https://youtu.be/8fNP4N46RRo?t=5425">1:30:25</a>): рассуждения о физическом мире, о том, как устроены вещи вокруг нас, без математики. В отличие от четырёх вариантов MMLU здесь два; всего 20 000 примеров. Любимый пример Shervine из статьи: как найти мелкую вещь, потерянную на ковре? Варианты — пылесосить с плотным уплотнением или пылесосить, натянув на трубу сетку для волос. Правильный ответ — сетка: воздух проходит, а потерянная вещь застревает в ней; плотное уплотнение воздух вообще не пропустит. Это здравый смысл, но не очевидный — его и проверяют.</p>
+<p><strong>Третья категория — код</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=5532">1:32:12</a>). Две причины, почему её стоит измерять даже тем, кто сам не пишет код:</p>
+<ol>
+<li>AI-assisted coding — сценарий, о котором шла речь в конце прошлой лекции; модели под него и делают.</li>
+<li>В агентном сеттинге инструменты написаны, например, на Python, и модель должна уметь читать и писать код, чтобы вызывать их и интерпретировать результат.</li>
+</ol>
+<h2 id="15-код-swe-bench">15. Код: SWE-bench<a class="headerlink" href="#15-код-swe-bench" title="Permanent link">¶</a></h2>
+<p>⏱ 1:33:57–1:36:15 · <a href="https://youtu.be/8fNP4N46RRo?t=5637">▶ смотреть на YouTube</a></p>
+<p><strong>SWE-bench</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=5640">1:34:00</a>) — авторы не расшифровывают аббревиатуру, но SWE обычно значит software engineering. Устройство: взяли популярные Python-репозитории и отфильтровали pull request'ы, которые закрывают issue и одновременно добавляют тесты. Тогда есть измеримое поведение «до и после»: разумно предположить, что без фикса эти тесты падали, а с фиксом проходят — в духе test-driven development.</p>
+<p>Модели дают кодовую базу и GitHub issue и просят вернуть <strong>патч</strong> — только его. Патч применяют и смотрят статус тестов до и после; прошли — задача решена. Shervine показывает схему из статьи: кодовая база → модель → патч → прогон тестов (<a href="https://youtu.be/8fNP4N46RRo?t=5752">1:35:52</a>).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Критерий успеха в SWE-bench формализован двумя наборами тестов: FAIL_TO_PASS (падали до фикса, должны пройти после) и PASS_TO_PASS (проходили и должны продолжать проходить — защита от «починки», ломающей всё остальное); задача зачтена, только если выполнены оба условия. В оригинальном наборе часть задач оказалась нерешаемой или недоопределённой, поэтому в 2024–2025 годах лаборатории отчитывались по SWE-bench Verified — подмножеству из 500 задач, проверенных людьми (к 2026 году исчерпал себя и он: часть тестов отвергает корректные решения, OpenAI с февраля 2026 перестала по нему отчитываться, на смену пришли SWE-bench Pro и Terminal-Bench — см. <a href="../updates/08-llm-evaluation.html">актуализацию</a>); «вариант SWE-bench» в отчёте Gemini, о котором говорит Shervine, скорее всего он. Прогон недешёвый: для каждой задачи нужен контейнер с репозиторием и его тестами.</p>
+</div>
+<h2 id="16-безопасность-harmbench">16. Безопасность: HarmBench<a class="headerlink" href="#16-безопасность-harmbench" title="Permanent link">¶</a></h2>
+<p>⏱ 1:36:15–1:40:51 · <a href="https://youtu.be/8fNP4N46RRo?t=5775">▶ смотреть на YouTube</a></p>
+<p>Последняя категория базовых бенчмарков — <strong>safety</strong>, и у неё особый статус (<a href="https://youtu.be/8fNP4N46RRo?t=5776">1:36:16</a>). В рекламных сравнениях новых моделей safety-бенчмарков обычно нет: безопасность субъективна — у каждой компании своя политика, и никто не обещает «решить» чужой бенчмарк на 100%, так что сравнивать модели по нему некорректно. В model cards есть раздел о безопасности с описанием проделанной работы, но без сравнений с конкурентами.</p>
+<p>Safety-бенчмарки в целом согласуются с общими представлениями о допустимом, но поверх них у провайдера есть собственные политики — чьи-то конкретные, не универсальные решения. Поэтому перед запуском safety-бенчмарка прочитайте его содержимое, чтобы понимать, что означает результат (<a href="https://youtu.be/8fNP4N46RRo?t=5834">1:37:14</a>).</p>
+<p><strong>HarmBench</strong> (видимо, harmful behavior benchmark, <a href="https://youtu.be/8fNP4N46RRo?t=5887">1:38:07</a>) — четыре категории:</p>
+<ul>
+<li><strong>standard</strong> — «ванильное» вредоносное поведение;</li>
+<li><strong>copyright</strong> — способность модели воспроизводить защищённый авторским правом контент (нежелательна);</li>
+<li><strong>contextual</strong> — вредоносность, зависящая от текстового контекста;</li>
+<li><strong>multimodal</strong> — то же для других модальностей.</li>
+</ul>
+<p>Отличие от предыдущих бенчмарков (<a href="https://youtu.be/8fNP4N46RRo?t=5939">1:38:59</a>): жёсткое сравнение с ключом невозможно — вредоносные ответы открытые, regex'ом их не поймать. Интересное решение статьи: авторы разделяют качество модели и безопасность — если модель <em>попыталась</em> выполнить вредоносное действие, пусть и неудачно из-за низкого качества, атака считается успешной. Для распознавания таких случаев обучен классификатор. Это единственный из показанных бенчмарков, где оценку выносит классификатор, который сам может ошибаться, — остальные опираются на ограниченное множество правильных ответов. Примеры со слайда: открыть замок, который открывать нельзя; повлиять на чьё-то голосование на выборах.</p>
+<h2 id="17-агенты-tau-bench">17. Агенты: Tau-Bench<a class="headerlink" href="#17-агенты-tau-bench" title="Permanent link">¶</a></h2>
+<p>⏱ 1:40:51–≈1:49 · <a href="https://youtu.be/8fNP4N46RRo?t=6051">▶ смотреть на YouTube</a></p>
+<p>Всё перечисленное в принципе решается без инструментов (хотя некоторые задачи их допускают). Как измерять агентов? <strong>τ-bench</strong> (Tau-Bench, <a href="https://youtu.be/8fNP4N46RRo?t=6052">1:40:52</a>): τ — греческая буква, которую авторы расшифровывают как Tool, Agent, User. Бенчмарк задаёт две предметные области — авиаперевозки и розничная торговля (airline и retail) — и для каждой: набор инструментов, набор политик (что агенту можно и нельзя) и набор задач. Задача — формулировка цели, которую выдают пользователю; пользователь должен достичь её через агента.</p>
+<p>Ключевая особенность — <strong>симулированный пользователь</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=6105">1:41:45</a>): диалог нельзя записать заранее, потому что следующая реплика зависит от того, что агент уже сделал. Поэтому роль пользователя играет отдельная большая языковая модель.</p>
+<p>Пример — перебронировать рейс. Агент с доступными инструментами помогает пользователю, а успех оценивается через <strong>reward</strong>, зависящую от изменения состояния базы данных (оказалась ли БД в ожидаемом состоянии — билет действительно изменён) и/или от выполнения заданного действия (например, отмены).</p>
+<p><strong>pass@k и pass^k</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=6216">1:43:36</a>). На прошлой лекции вводили pass@k — вероятность, что хотя бы одна из k попыток успешна. Статья о τ-bench играет словами и вводит <strong>pass^k</strong> («pass hat k») — вероятность, что успешны <em>все</em> k попыток. Для автоматизации поддержки в авиа- и розничной сфере важны надёжность и постоянство результата, поэтому «хотя бы раз» недостаточно. Вывод формулы Shervine за недостатком времени не делает, отсылает к выводу Afshine на прошлой лекции и предлагает проделать его дома.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Оценка pass^k в статье о τ-bench считается так: каждую задачу прогоняют <span class="arithmatex">\(n\)</span> раз, из них <span class="arithmatex">\(c\)</span> успешных, и тогда <span class="arithmatex">\(\text{pass}^k = \mathbb{E}_{\text{задачи}}\left[\binom{c}{k} \Big/ \binom{n}{k}\right]\)</span> — доля способов выбрать <span class="arithmatex">\(k\)</span> попыток так, чтобы все оказались успешными (при <span class="arithmatex">\(k = 1\)</span> это обычный pass rate). Полезно помнить, как быстро она падает: если агент решает задачу с вероятностью 0.8 независимо от попытки к попытке, то <span class="arithmatex">\(\text{pass}^8 = 0{,}8^8 \approx 0{,}17\)</span> — на практике кривые pass^k у агентов именно так и выглядят, в отличие от растущих с <span class="arithmatex">\(k\)</span> кривых pass@k. τ²-bench, упомянутый в отчёте Gemini, развивает идею: там и пользователь может выполнять действия по инструкциям агента, что ближе к реальной техподдержке. В 2026 году семейство продолжили τ³-bench (март: голосовой канал и новые домены) и τ-bench 2.0 (октябрь: шесть языков; результаты несопоставимы с версиями 1.x).</p>
+</div>
+<h3 id="бенчмарки-в-реальности">Бенчмарки в реальности<a class="headerlink" href="#бенчмарки-в-реальности" title="Permanent link">¶</a></h3>
+<p>Свежий релиз Gemini за несколько дней до лекции (<a href="https://youtu.be/8fNP4N46RRo?t=6321">1:45:21</a>) — иллюстрация: в отчёте о превосходстве модели есть почти всё упомянутое. Reasoning — AIME и PIQA, часть бенчмарков в многоязычной версии (Global PIQA); код — вариант SWE-bench; инструменты — вариант τ-bench, <strong>τ²-bench</strong>. <em>Примечание:</em> по всей видимости, речь о Gemini 3, представленной 18 ноября 2025.</p>
+<p>Напутствие Shervine (<a href="https://youtu.be/8fNP4N46RRo?t=6379">1:46:19</a>):</p>
+<ul>
+<li><strong>Бенчмарки описывают профиль модели</strong>, а не делят модели на хорошие и плохие: у каждой свои сильные и слабые стороны. Личный опыт Shervine — модели Sonnet очень хороши для кода, а для быстрых и дешёвых ответов подходит Gemini Flash; но это не универсальная рекомендация, у каждого свой набор задач.</li>
+<li><strong>Pareto frontier</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=6435">1:47:15</a>): нанесите качество моделей на график против цены — граница «лучших при своей цене» и есть парето-фронт. Такой же фронт строят по безопасности и длине контекста.</li>
+<li><strong>Data contamination</strong> (утечка тестов в обучение): результат имеет смысл, только если модель не видела бенчмарк при обучении. Меры: хэши тестовых примеров; для tool use — блок-листы сайтов с ответами; для математики — «роскошь» свежих экзаменов, которых модель точно не видела.</li>
+<li><strong>Закон Гудхарта</strong> (<a href="https://youtu.be/8fNP4N46RRo?t=6488">1:48:08</a>): «когда мера становится целью, она перестаёт быть хорошей мерой». Бенчмарки не говорят, подходит ли модель именно вам; Chatbot Arena из одной из прошлых лекций ближе к «реальной» производительности, но в конечном счёте лучшие модели нужно пробовать самому.</li>
+</ul>
+<p>Сводная таблица бенчмарков лекции:</p>
+<table>
+<thead>
+<tr>
+<th>Категория</th>
+<th>Бенчмарк</th>
+<th>Что проверяет</th>
+<th>Формат / способ проверки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Знания</td>
+<td>MMLU</td>
+<td>Факты из почти 60 областей; качество предобучения</td>
+<td>Вопрос + 4 варианта; буква сравнивается с ключом</td>
+</tr>
+<tr>
+<td>Рассуждения (математика)</td>
+<td>AIME</td>
+<td>Олимпиадная математика</td>
+<td>Ответ — трёхзначное число</td>
+</tr>
+<tr>
+<td>Рассуждения (здравый смысл)</td>
+<td>PIQA</td>
+<td>Понимание физического мира</td>
+<td>2 варианта, 20 000 примеров</td>
+</tr>
+<tr>
+<td>Код</td>
+<td>SWE-bench</td>
+<td>Решение GitHub issue в Python-репозиториях</td>
+<td>Патч → прогон тестов до/после</td>
+</tr>
+<tr>
+<td>Безопасность</td>
+<td>HarmBench</td>
+<td>Вредоносное поведение: standard, copyright, contextual, multimodal</td>
+<td>Обученный классификатор (единственный model-based)</td>
+</tr>
+<tr>
+<td>Агенты</td>
+<td>τ-bench</td>
+<td>Работа с инструментами и политиками в airline / retail</td>
+<td>LLM-симулированный пользователь; reward по состоянию БД; pass^k</td>
+</tr>
+</tbody>
+</table>
+<p>На этом Shervine поздравляет всех с Днём благодарения и завершает лекцию.</p>
+<h2 id="ключевые-термины">Ключевые термины<a class="headerlink" href="#ключевые-термины" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Термин</th>
+<th>Что это (как объясняли на лекции)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evaluation (оценка)</td>
+<td>Здесь — измерение качества ответа модели (output quality), в отличие от latency, цены и uptime</td>
+</tr>
+<tr>
+<td>Inter-rater agreement</td>
+<td>Степень согласия нескольких оценщиков; показатель того, насколько ясны гайдлайны и объективна задача</td>
+</tr>
+<tr>
+<td>Agreement rate</td>
+<td>Доля случаев, когда оценщики дали одинаковую оценку; сам по себе не интерпретируем, потому что часть согласия случайна</td>
+</tr>
+<tr>
+<td>Cohen's kappa</td>
+<td>Согласие двух оценщиков относительно случайного: &gt; 0 лучше случая, 1 — полное, &lt; 0 хуже случая; расширения — Fleiss's kappa, Krippendorff's alpha</td>
+</tr>
+<tr>
+<td>Rule-based метрики</td>
+<td>Метрики, сравнивающие вывод модели с эталоном, написанным человеком (METEOR, BLEU, ROUGE)</td>
+</tr>
+<tr>
+<td>METEOR</td>
+<td>F-score по униграммам × (1 − штраф за порядок слов); гиперпараметры α, γ, β; учитывает синонимы и однокоренные формы</td>
+</tr>
+<tr>
+<td>BLEU</td>
+<td>Precision-метрика по n-граммам с brevity penalty за короткий вывод; из машинного перевода</td>
+</tr>
+<tr>
+<td>ROUGE</td>
+<td>Семейство метрик для суммаризации, та же идея сравнения с эталоном</td>
+</tr>
+<tr>
+<td>LLM-as-a-judge</td>
+<td>LLM, которая получает промпт, ответ и критерий, а возвращает rationale и score</td>
+</tr>
+<tr>
+<td>Rationale</td>
+<td>Текстовое обоснование оценки; просят выдавать его до score — аналог chain of thought</td>
+</tr>
+<tr>
+<td>Structured output</td>
+<td>Constrained decoding у провайдеров API: гарантированный формат ответа (например, класс с полями rationale и score)</td>
+</tr>
+<tr>
+<td>Pointwise / pairwise</td>
+<td>Оценка одного ответа «хорошо/плохо» vs. выбор лучшего из двух; pairwise даёт синтетические данные предпочтений для reward model</td>
+</tr>
+<tr>
+<td>Position bias</td>
+<td>Судья предпочитает ответ, показанный первым; лечится перестановкой и majority vote</td>
+</tr>
+<tr>
+<td>Verbosity bias</td>
+<td>Судья предпочитает более длинный ответ; лечится инструкцией, примерами, штрафом за длину</td>
+</tr>
+<tr>
+<td>Self-enhancement bias</td>
+<td>Судья предпочитает собственные генерации; лечится другой, обычно более крупной моделью</td>
+</tr>
+<tr>
+<td>Калибровка судьи</td>
+<td>Сравнение оценок судьи с человеческими (корреляционный анализ) и правка промпта; судья — лишь прокси</td>
+</tr>
+<tr>
+<td>Factuality</td>
+<td>Взвешенная по важности доля верных атомарных фактов в тексте; факты извлекаются LLM и проверяются через RAG / web search</td>
+</tr>
+<tr>
+<td>Punt</td>
+<td>Отказ ассистента отвечать («извините, не могу») — симптом невызванного инструмента</td>
+</tr>
+<tr>
+<td>Tool router / tool selector</td>
+<td>Промежуточный шаг, отбирающий подмножество инструментов в преамбулу; ориентирован на recall</td>
+</tr>
+<tr>
+<td>Tool hallucination</td>
+<td>Вызов несуществующей функции</td>
+</tr>
+<tr>
+<td>Benchmark</td>
+<td>Стандартизированный набор задач для сравнения моделей; категории: знания, рассуждения, код, безопасность, агенты</td>
+</tr>
+<tr>
+<td>pass@k / pass^k</td>
+<td>Вероятность, что успешна хотя бы одна из k попыток / что успешны все k попыток (τ-bench)</td>
+</tr>
+<tr>
+<td>Pareto frontier</td>
+<td>Граница моделей, лучших при своей цене (или другом ресурсе: безопасность, длина контекста)</td>
+</tr>
+<tr>
+<td>Data contamination</td>
+<td>Попадание тестов бенчмарка в обучающие данные; меры — хэши, блок-листы сайтов, свежие экзамены</td>
+</tr>
+<tr>
+<td>Goodhart's law</td>
+<td>«Когда мера становится целью, она перестаёт быть хорошей мерой»</td>
+</tr>
+</tbody>
+</table>
+<h2 id="главные-выводы">Главные выводы<a class="headerlink" href="#главные-выводы" title="Permanent link">¶</a></h2>
+<ul>
+<li>Нельзя улучшать то, что не умеешь измерять; лекция — про измерение качества ответа, а не latency или цены.</li>
+<li>Человеческая оценка — идеал, но она дорогая, медленная и субъективная; согласие оценщиков имеет смысл только относительно случайной базовой линии (Cohen's kappa и родственники), а расхождения лечатся agreement sessions.</li>
+<li>Rule-based метрики (METEOR, BLEU, ROUGE) дёшевы, но требуют эталонов, штрафуют стилистические вариации и слабо коррелируют с людьми.</li>
+<li>LLM-as-a-judge не требует эталонов и объясняет оценку; форму ответа гарантирует structured output.</li>
+<li>Рецепт хорошего судьи: чёткие гайдлайны, бинарная шкала, rationale перед score, температура 0.1–0.2, другая и более сильная модель, чем оцениваемая, проверка на position / verbosity / self-enhancement bias.</li>
+<li>Судья — прокси человеческих оценок: калибруйте его по людям и не переоптимизируйте модель под прокси.</li>
+<li>Factuality считают по атомарным фактам: извлечь, проверить каждый (RAG, web search), агрегировать с весами важности.</li>
+<li>У агентов ошибки возникают на трёх шагах — выбор инструмента, выполнение, синтез; инструменты должны всегда возвращать осмысленный структурированный ответ (пустой JSON лучше None), а отказы надо категоризировать и чинить группами.</li>
+<li>Бенчмарки предпочитают жёстко проверяемые форматы (буква, число, тесты), чтобы не зависеть от судьи; HarmBench — исключение с классификатором; safety-бенчмарки не годятся для сравнения провайдеров.</li>
+<li>Бенчмарки описывают профиль модели, страдают от data contamination и подвержены закону Гудхарта — выбирайте модель по своим задачам и Pareto frontier по цене, а не по заголовкам релизов.</li>
+</ul>
+<h2 id="вопросы-из-зала_1">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала_1" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://youtu.be/8fNP4N46RRo?t=2658">44:18</a> Вопрос (слышен только в пересказе лектора): может ли судья быть не согласован с ground truth и систематически предпочитать одну метку? → Ответ: да, это ещё одно смещение — несогласованность судьи с человеческими предпочтениями; список из трёх смещений не исчерпывающий.</li>
+<li><a href="https://youtu.be/8fNP4N46RRo?t=2724">45:24</a> Вопрос: может ли судья предпочесть ответ другой LLM просто потому, что он «звучит как LLM»? → Ответ: может; поэтому берут судью с заметно большей ёмкостью, которого не обмануть похожестью; пробуют и reasoning-модели.</li>
+<li><a href="https://youtu.be/8fNP4N46RRo?t=2790">46:30</a> Вопрос: должен ли судья быть больше оцениваемой модели? → Ответ: не обязательно, но обычно берут более крупную модель с сильными способностями к рассуждению.</li>
+</ul>
+<h2 id="чем-можно-дополнить">Чем можно дополнить<a class="headerlink" href="#чем-можно-дополнить" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Метрики на эмбеддингах.</strong> Промежуточный класс между n-граммами и LLM-судьёй: ответ и эталон сравниваются по близости контекстных эмбеддингов токенов, поэтому парафразы вроде примера с мишкой получают высокий балл без вызова LLM. Искать: BERTScore (Zhang et al., 2020), BLEURT.</li>
+<li><strong>Рейтинги из парных сравнений.</strong> Лекция упоминает Chatbot Arena вскользь; полезно знать, как тысячи парных голосов превращаются в один рейтинг и как применить то же к внутреннему сравнению версий своего продукта. Искать: Chatbot Arena (LMSYS), Bradley–Terry model, Elo rating.</li>
+<li><strong>Оценка RAG-систем.</strong> Для продуктов с retrieval к критериям ответа добавляют отдельные: опирается ли ответ на найденные документы (faithfulness / groundedness), релевантен ли он вопросу, нашёл ли поиск нужный контекст (context precision / recall). Искать: RAGAS, «RAG triad».</li>
+<li><strong>Доверительные интервалы и чувствительность бенчмарков к промпту.</strong> Разница в несколько пунктов между моделями часто в пределах шума, а формат few-shot примеров может сдвигать результат сильнее, чем смена модели; об этом стоит помнить, читая таблицы из релизов. Искать: «Adding Error Bars to Evals» (Anthropic, 2024), HELM (Stanford CRFM).</li>
+<li><strong>Переоптимизация судьи и reward hacking.</strong> Лекция предупреждает «не переоптимизируйте прокси»; есть количественные исследования того, как быстро качество по мнению людей начинает падать, когда модель обучают прямо на оценках reward model или судьи. Искать: «Scaling Laws for Reward Model Overoptimization» (Gao et al., 2023), reward hacking.</li>
+<li><strong>Perplexity и loss на отложенных данных.</strong> Классическая внутренняя метрика языковых моделей, по которой следят за этапом обучения, которому посвящена <a href="04-llm-training.html">Лекция 4</a>; полезно понимать, почему она слабо коррелирует с полезностью ответов и не упоминается в этой лекции. Искать: perplexity, held-out loss.</li>
+<li><strong>Оценка длинного контекста.</strong> Shervine называет длину контекста одной из осей Pareto frontier, но заявленная длина и реально используемая — разные вещи; есть тесты на поиск «иголки» в длинном документе и более строгие наборы. Искать: needle-in-a-haystack, RULER.</li>
+<li><strong>Онлайн-оценка в проде.</strong> Всё в лекции — офлайн-оценка на фиксированном наборе; после выкатки нужны A/B-тесты, неявные сигналы (принятые предложения, повторные запросы, оценки пользователей) и мониторинг дрейфа качества со временем. Искать: online evaluation, A/B testing for LLM features, LLM observability.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="07-agentic-llms-rag-tools.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 7. Агенты: RAG, инструменты, MCP">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                7. Агенты: RAG, инструменты, MCP
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="09-recap-current-trends.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 9. Итоги и тренды: ViT, диффузионные LLM">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                9. Итоги и тренды: ViT, диффузионные LLM
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

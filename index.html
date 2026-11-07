@@ -1,0 +1,2105 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/index.html">
+      
+      
+      
+        <link rel="next" href="lectures/01-transformer.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="assets/css/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#stanford-cme295--transformers--large-language-models-осень-2025" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Главная
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="lectures/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#как-пользоваться" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как пользоваться
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Как пользоваться">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#пометки-дополнения-в-конспектах" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пометки-дополнения в конспектах
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекции
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Лекции">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#лекция-1-трансформер" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 1. Трансформер
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 2. Модели на базе трансформера и инженерные приёмы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-3-большие-языковые-модели-moe-декодирование-промптинг" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 3. Большие языковые модели: MoE, декодирование, промптинг
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 4. Обучение LLM: предобучение, оптимизации, SFT и LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-6-рассуждающие-модели-rl-для-reasoning-grpo-deepseek-r1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 6. Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-7-агентные-llm-rag-вызов-инструментов-агенты" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 7. Агентные LLM: RAG, вызов инструментов, агенты
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 8. Оценка LLM: метрики, LLM-as-a-judge, бенчмарки
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-9-итоги-курса-и-текущие-тренды-vit-диффузионные-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 9. Итоги курса и текущие тренды: ViT, диффузионные LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#карта-курса" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Карта курса
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#актуализация-к-ноябрю-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Актуализация к ноябрю 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#сайт" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сайт
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#как-это-собрано" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это собрано
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lectures/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#как-пользоваться" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как пользоваться
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Как пользоваться">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#пометки-дополнения-в-конспектах" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пометки-дополнения в конспектах
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекции
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Лекции">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#лекция-1-трансформер" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 1. Трансформер
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 2. Модели на базе трансформера и инженерные приёмы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-3-большие-языковые-модели-moe-декодирование-промптинг" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 3. Большие языковые модели: MoE, декодирование, промптинг
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 4. Обучение LLM: предобучение, оптимизации, SFT и LoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-6-рассуждающие-модели-rl-для-reasoning-grpo-deepseek-r1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 6. Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-7-агентные-llm-rag-вызов-инструментов-агенты" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 7. Агентные LLM: RAG, вызов инструментов, агенты
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 8. Оценка LLM: метрики, LLM-as-a-judge, бенчмарки
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#лекция-9-итоги-курса-и-текущие-тренды-vit-диффузионные-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Лекция 9. Итоги курса и текущие тренды: ViT, диффузионные LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#карта-курса" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Карта курса
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#актуализация-к-ноябрю-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Актуализация к ноябрю 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#сайт" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сайт
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#как-это-собрано" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это собрано
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="stanford-cme295--transformers--large-language-models-осень-2025">Stanford CME295 — Transformers &amp; Large Language Models (осень 2025)<a class="headerlink" href="#stanford-cme295--transformers--large-language-models-осень-2025" title="Permanent link">¶</a></h1>
+<p>Конспекты девяти лекций курса Stanford CME295 «Transformers &amp; LLMs» на русском языке, собранные из официальных субтитров видео Stanford Online на YouTube. Курс читают <strong>Afshine Amidi</strong> и <strong>Shervine Amidi</strong> (братья-близнецы; работают над LLM в Netflix, до этого Google и Uber; adjunct lecturers в Stanford). Курс идёт от устройства трансформера через обучение и дообучение LLM к reasoning-моделям, агентам и оценке качества.</p>
+<ul>
+<li><strong>Плейлист:</strong> https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy</li>
+<li><strong>Сайт курса и программа:</strong> https://cme295.stanford.edu/syllabus/</li>
+<li><strong>Канал:</strong> Stanford Online</li>
+<li><strong>Репозиторий:</strong> https://github.com/letulip/stenford_llm</li>
+<li><strong>Сайт (GitHub Pages):</strong> https://letulip.github.io/stenford_llm/</li>
+</ul>
+<h2 id="как-пользоваться">Как пользоваться<a class="headerlink" href="#как-пользоваться" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Папка</th>
+<th>Что внутри</th>
+<th>Когда открывать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="lectures/01-transformer.html"><code>lectures/</code></a></td>
+<td>Конспекты на русском: по одному файлу на лекцию, разделы повторяют главы видео, у каждого раздела таймкод и ссылка на YouTube, в конце термины, выводы и вопросы из зала</td>
+<td>Начинать отсюда</td>
+</tr>
+<tr>
+<td><a href="transcripts/01-transformer.html"><code>transcripts/</code></a></td>
+<td>Полный английский текст субтитров, разбитый по главам; каждый абзац начинается с кликабельного таймкода</td>
+<td>Когда нужно прочитать, что именно сказал лектор</td>
+</tr>
+<tr>
+<td><code>raw/</code></td>
+<td>Исходные VTT-субтитры и метаданные видео (json), включая <code>raw/index.json</code> со списком глав</td>
+<td>Если захочется переобработать</td>
+</tr>
+</tbody>
+</table>
+<p>Все таймкоды в конспектах и транскриптах кликабельны и открывают нужный момент видео.</p>
+<h3 id="пометки-дополнения-в-конспектах">Пометки-дополнения в конспектах<a class="headerlink" href="#пометки-дополнения-в-конспектах" title="Permanent link">¶</a></h3>
+<p>Внутри конспектов встречаются блоки вида</p>
+<blockquote>
+<p>💡 <strong>Дополнение — пример:</strong> …</p>
+</blockquote>
+<p>Это <strong>не слова лекторов</strong>, а добавления составителя конспекта: дополнительный пример, более сильная интуиция или аналогия, связь с другой лекцией курса, практическое следствие для разработчика, оговорка или уточнение. Всё, что вне таких блоков, пересказывает содержание лекции. В конце каждого конспекта есть раздел «Чем можно дополнить» со списком тем, которых лекция не касается, но которые стоит знать рядом с ней.</p>
+<h2 id="лекции">Лекции<a class="headerlink" href="#лекции" title="Permanent link">¶</a></h2>
+<h3 id="лекция-1-трансформер"><a href="lectures/01-transformer.html">Лекция 1. Трансформер</a><a class="headerlink" href="#лекция-1-трансформер" title="Permanent link">¶</a></h3>
+<p><em>Transformer</em> · 26 сентября 2025 · 101 мин · <a href="https://youtu.be/Ub3GoFaUcds">видео</a> · <a href="transcripts/01-transformer.html">транскрипт</a></p>
+<p>Путь от сырого текста до трансформера: три класса задач NLP и их метрики (precision/recall/F1, BLEU/ROUGE, perplexity), токенизация (слова, подслова, символы, OOV), представление токенов от one-hot до обучаемых embeddings через proxy-задачу Word2vec, затем RNN/LSTM и их проблемы (vanishing gradient, дальние зависимости, последовательность вычислений). Отсюда выводится attention как прямая связь с прошлым и self-attention с query/key/value, а в финале Shervine по шагам разбирает encoder–decoder архитектуру «Attention is All You Need»: формулу softmax(QKᵀ/√d_k)V, multi-head, masked и cross-attention, positional encoding, label smoothing и генерацию токен за токеном до EOS. Сквозной пример курса — фраза «a cute teddy bear is reading».</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/Ub3GoFaUcds?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/Ub3GoFaUcds?t=234">Class logistics</a> (03:54) · <a href="https://youtu.be/Ub3GoFaUcds?t=580">NLP overview</a> (09:40) · <a href="https://youtu.be/Ub3GoFaUcds?t=1377">Tokenization</a> (22:57) · <a href="https://youtu.be/Ub3GoFaUcds?t=1828">Word representation</a> (30:28) · <a href="https://youtu.be/Ub3GoFaUcds?t=3203">Recurrent neural networks</a> (53:23) · <a href="https://youtu.be/Ub3GoFaUcds?t=4007">Self-attention mechanism</a> (1:06:47) · <a href="https://youtu.be/Ub3GoFaUcds?t=4433">Transformer architecture</a> (1:13:53) · <a href="https://youtu.be/Ub3GoFaUcds?t=5393">Detailed example</a> (1:29:53)</p>
+<h3 id="лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы"><a href="lectures/02-transformer-models-tricks.html">Лекция 2. Модели на базе трансформера и инженерные приёмы</a><a class="headerlink" href="#лекция-2-модели-на-базе-трансформера-и-инженерные-приёмы" title="Permanent link">¶</a></h3>
+<p><em>Transformer-Based Models &amp; Tricks</em> · 3 октября 2025 · 107 мин · <a href="https://youtu.be/yT84Y5zCnaA">видео</a> · <a href="transcripts/02-transformer-models-tricks.html">транскрипт</a></p>
+<p>Какие части трансформера 2017 года изменились в современных моделях: позиционное кодирование (от выученных и синусоидальных embeddings к T5 bias, ALiBi и RoPE), нормализация (pre-norm и RMSNorm вместо post-norm и LayerNorm) и приёмы удешевления attention — sliding window attention и общие проекции key/value (MQA, GQA) ради меньшего KV-кэша. Во второй части — карта семейств encoder-decoder / encoder-only / decoder-only (T5 и span corruption, почему победили decoder-only) и подробный разбор BERT: двунаправленность, токены [CLS]/[SEP], предобучение на MLM и NSP, fine-tuning под классификацию и QA, затем DistilBERT (дистилляция) и RoBERTa (отказ от NSP, динамическое маскирование).</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/yT84Y5zCnaA?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/yT84Y5zCnaA?t=90">Recap of Transformers</a> (01:30) · <a href="https://youtu.be/yT84Y5zCnaA?t=637">Overview of position embeddings</a> (10:37) · <a href="https://youtu.be/yT84Y5zCnaA?t=936">Sinusoidal embeddings</a> (15:36) · <a href="https://youtu.be/yT84Y5zCnaA?t=1556">T5 bias, ALiBi</a> (25:56) · <a href="https://youtu.be/yT84Y5zCnaA?t=1862">RoPE</a> (31:02) · <a href="https://youtu.be/yT84Y5zCnaA?t=2622">Layer normalization</a> (43:42) · <a href="https://youtu.be/yT84Y5zCnaA?t=3039">Sparse attention</a> (50:39) · <a href="https://youtu.be/yT84Y5zCnaA?t=3338">Sharing attention heads</a> (55:38) · <a href="https://youtu.be/yT84Y5zCnaA?t=3762">Transformer-based models</a> (1:02:42) · <a href="https://youtu.be/yT84Y5zCnaA?t=4298">BERT deep dive</a> (1:11:38) · <a href="https://youtu.be/yT84Y5zCnaA?t=5604">BERT finetuning</a> (1:33:24) · <a href="https://youtu.be/yT84Y5zCnaA?t=6210">Extensions of BERT</a> (1:43:30)</p>
+<h3 id="лекция-3-большие-языковые-модели-moe-декодирование-промптинг"><a href="lectures/03-llms-moe-decoding-prompting.html">Лекция 3. Большие языковые модели: MoE, декодирование, промптинг</a><a class="headerlink" href="#лекция-3-большие-языковые-модели-moe-декодирование-промптинг" title="Permanent link">¶</a></h3>
+<p><em>Transformers &amp; Large Language Models</em> · 10 октября 2025 · 108 мин · <a href="https://youtu.be/Q5baLehv5So">видео</a> · <a href="transcripts/03-llms-moe-decoding-prompting.html">транскрипт</a></p>
+<p>Что такое LLM (языковая модель, «большая» по параметрам, данным и compute; почти все современные — decoder-only) и как устроен Mixture of Experts: dense и sparse MoE, замена feedforward-блока экспертами с token-level router'ом, routing collapse и балансирующий loss, активные параметры. Вторая часть — как из распределения над словарём получается текст: greedy decoding, beam search, сэмплирование с top-k/top-p, температура в softmax (с выводом на доске) и guided decoding для JSON. Третья часть (Shervine) — context length и context rot, структура prompt'а, in-context learning, chain-of-thought и self-consistency, а также оптимизации инференса: KV cache, GQA, PagedAttention/vLLM, multi-head latent attention (DeepSeek), speculative decoding и multi-token prediction.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/Q5baLehv5So?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/Q5baLehv5So?t=62">Recap of Transformers-based models</a> (01:02) · <a href="https://youtu.be/Q5baLehv5So?t=223">LLM definition</a> (03:43) · <a href="https://youtu.be/Q5baLehv5So?t=457">Mixture of Experts</a> (07:37) · <a href="https://youtu.be/Q5baLehv5So?t=763">Dense &amp; Sparse MoE</a> (12:43) · <a href="https://youtu.be/Q5baLehv5So?t=947">MoE in LLMs</a> (15:47) · <a href="https://youtu.be/Q5baLehv5So?t=2195">Response generation</a> (36:35) · <a href="https://youtu.be/Q5baLehv5So?t=2314">Greedy decoding &amp; beam search</a> (38:34) · <a href="https://youtu.be/Q5baLehv5So?t=2796">Sampling-based methods</a> (46:36) · <a href="https://youtu.be/Q5baLehv5So?t=3144">Impact of temperature on predictions</a> (52:24) · <a href="https://youtu.be/Q5baLehv5So?t=3893">Guided decoding</a> (1:04:53) · <a href="https://youtu.be/Q5baLehv5So?t=4027">Prompting strategies</a> (1:07:07) · <a href="https://youtu.be/Q5baLehv5So?t=4449">In-context learning</a> (1:14:09) · <a href="https://youtu.be/Q5baLehv5So?t=4715">Chain-of-thought, self-consistency</a> (1:18:35) · <a href="https://youtu.be/Q5baLehv5So?t=5100">Inference optimizations with KV cache</a> (1:25:00) · <a href="https://youtu.be/Q5baLehv5So?t=5589">PagedAttention, MLA</a> (1:33:09)</p>
+<h3 id="лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora"><a href="lectures/04-llm-training.html">Лекция 4. Обучение LLM: предобучение, оптимизации, SFT и LoRA</a><a class="headerlink" href="#лекция-4-обучение-llm-предобучение-оптимизации-sft-и-lora" title="Permanent link">¶</a></h3>
+<p><em>LLM Training</em> · 17 октября 2025 · 107 мин · <a href="https://youtu.be/VlA_jt_3Qc4">видео</a> · <a href="transcripts/04-llm-training.html">транскрипт</a></p>
+<p>Весь конвейер обучения LLM: предобучение на триллионах токенов (FLOPs, scaling laws, закон Chinchilla «20 токенов на параметр», knowledge cutoff), затем инженерия — что занимает память GPU и как её экономят через data parallelism с ZeRO, model parallelism, Flash Attention, квантизацию и mixed precision. Вторая половина (Shervine) — как из предсказателя текста сделать ассистента: SFT и instruction tuning с loss только на ответе, почему данные дороги и как оценивать модели (MMLU, GSM8K, Chatbot Arena и их слабости), и, наконец, LoRA и QLoRA — дообучение через низкоранговые добавки к замороженным (и квантизованным в NF4) весам.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/VlA_jt_3Qc4?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/VlA_jt_3Qc4?t=439">Pretraining</a> (07:19) · <a href="https://youtu.be/VlA_jt_3Qc4?t=806">FLOPs, FLOPS</a> (13:26) · <a href="https://youtu.be/VlA_jt_3Qc4?t=994">Scaling laws, Chinchilla law</a> (16:34) · <a href="https://youtu.be/VlA_jt_3Qc4?t=1489">Training optimizations overview</a> (24:49) · <a href="https://youtu.be/VlA_jt_3Qc4?t=1869">Data parallelism with ZeRO</a> (31:09) · <a href="https://youtu.be/VlA_jt_3Qc4?t=2151">Model parallelism</a> (35:51) · <a href="https://youtu.be/VlA_jt_3Qc4?t=2306">Flash Attention</a> (38:26) · <a href="https://youtu.be/VlA_jt_3Qc4?t=3157">Quantization</a> (52:37) · <a href="https://youtu.be/VlA_jt_3Qc4?t=3360">Mixed precision training</a> (56:00) · <a href="https://youtu.be/VlA_jt_3Qc4?t=3751">Supervised finetuning</a> (1:02:31) · <a href="https://youtu.be/VlA_jt_3Qc4?t=4161">Instruction tuning</a> (1:09:21) · <a href="https://youtu.be/VlA_jt_3Qc4?t=5873">Parameter-efficient finetuning with LoRA</a> (1:37:53) · <a href="https://youtu.be/VlA_jt_3Qc4?t=6316">QLoRA</a> (1:45:16)</p>
+<h3 id="лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo"><a href="lectures/05-llm-tuning-rlhf-dpo.html">Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO</a><a class="headerlink" href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo" title="Permanent link">¶</a></h3>
+<p><em>LLM tuning</em> · 31 октября 2025 · 107 мин · <a href="https://youtu.be/PmW_TMQ3l0I">видео</a> · <a href="transcripts/05-llm-tuning-rlhf-dpo.html">транскрипт</a></p>
+<p>Третий этап обучения LLM — выравнивание с человеческими предпочтениями. Afshine разбирает конвейер RLHF: сбор pairwise-данных, обучение reward model по формулировке Bradley-Terry, RL-шаг с PPO (KL к reference-модели, advantage и value function, варианты Clip и KL-penalty), проблемы RL-подхода и best-of-N как альтернативу без обучения. Shervine выводит DPO из objective PPO — supervised-loss прямо на парах предпочтений без reward model — и сравнивает: PPO сильнее, но тяжёл в настройке, DPO проще и почти так же хорош, но страдает от distribution shift.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/PmW_TMQ3l0I?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/PmW_TMQ3l0I?t=290">Preference tuning</a> (04:50) · <a href="https://youtu.be/PmW_TMQ3l0I?t=691">Data collection</a> (11:31) · <a href="https://youtu.be/PmW_TMQ3l0I?t=1063">RLHF overview</a> (17:43) · <a href="https://youtu.be/PmW_TMQ3l0I?t=1704">Reward model</a> (28:24) · <a href="https://youtu.be/PmW_TMQ3l0I?t=1786">Bradley-Terry formulation</a> (29:46) · <a href="https://youtu.be/PmW_TMQ3l0I?t=2762">Reinforcement learning</a> (46:02) · <a href="https://youtu.be/PmW_TMQ3l0I?t=3234">PPO</a> (53:54) · <a href="https://youtu.be/PmW_TMQ3l0I?t=3476">Advantage, value function</a> (57:56) · <a href="https://youtu.be/PmW_TMQ3l0I?t=3819">PPO variants: Clip, KL-penalty</a> (1:03:39) · <a href="https://youtu.be/PmW_TMQ3l0I?t=4580">Challenges</a> (1:16:20) · <a href="https://youtu.be/PmW_TMQ3l0I?t=4798">On-policy vs off-policy</a> (1:19:58) · <a href="https://youtu.be/PmW_TMQ3l0I?t=4963">Best-of-N</a> (1:22:43) · <a href="https://youtu.be/PmW_TMQ3l0I?t=5387">DPO</a> (1:29:47)</p>
+<h3 id="лекция-6-рассуждающие-модели-rl-для-reasoning-grpo-deepseek-r1"><a href="lectures/06-llm-reasoning.html">Лекция 6. Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1</a><a class="headerlink" href="#лекция-6-рассуждающие-модели-rl-для-reasoning-grpo-deepseek-r1" title="Permanent link">¶</a></h3>
+<p><em>LLM Reasoning</em> · 7 ноября 2025 · 107 мин · <a href="https://youtu.be/k5Fh-UgTuCo">видео</a> · <a href="transcripts/06-llm-reasoning.html">транскрипт</a></p>
+<p>Что такое reasoning-модели (LLM, которые перед ответом выводят цепочку рассуждений — chain-of-thought, доведённый до масштаба обучения), как их измеряют (бенчмарки по коду и математике с проверяемым ответом, метрика pass@k с выводом формулы, роль температуры) и как обучают: вместо SFT — RL на проверяемых наградах за формат и правильность, алгоритм GRPO с advantage относительно группы ответов и без value function, его сравнение с PPO. Разбирается length bias (нормировка на длину ответа поощряет длинные неверные ответы) и исправления DAPO и Dr. GRPO. В финале — рецепт DeepSeek R1-Zero и R1 (cold start → RL → SFT с rejection sampling → RL на helpfulness/harmlessness) и дистилляция reasoning в малые модели через SFT на выходах учителя.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/k5Fh-UgTuCo?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/k5Fh-UgTuCo?t=763">Reasoning models</a> (12:43) · <a href="https://youtu.be/k5Fh-UgTuCo?t=1669">Benchmarks</a> (27:49) · <a href="https://youtu.be/k5Fh-UgTuCo?t=1924">Pass@k metric</a> (32:04) · <a href="https://youtu.be/k5Fh-UgTuCo?t=2887">Scaling with RL</a> (48:07) · <a href="https://youtu.be/k5Fh-UgTuCo?t=3464">GRPO</a> (57:44) · <a href="https://youtu.be/k5Fh-UgTuCo?t=3963">Comparison between GRPO and PPO</a> (1:06:03) · <a href="https://youtu.be/k5Fh-UgTuCo?t=4574">Length bias</a> (1:16:14) · <a href="https://youtu.be/k5Fh-UgTuCo?t=5100">DAPO, Dr. GRPO</a> (1:25:00) · <a href="https://youtu.be/k5Fh-UgTuCo?t=5378">DeepSeek R1 recipe</a> (1:29:38)</p>
+<h3 id="лекция-7-агентные-llm-rag-вызов-инструментов-агенты"><a href="lectures/07-agentic-llms-rag-tools.html">Лекция 7. Агентные LLM: RAG, вызов инструментов, агенты</a><a class="headerlink" href="#лекция-7-агентные-llm-rag-вызов-инструментов-агенты" title="Permanent link">¶</a></h3>
+<p><em>Agentic LLMs</em> · 14 ноября 2025 · 109 мин · <a href="https://youtu.be/h-7S6HNq0Vg">видео</a> · <a href="transcripts/07-agentic-llms-rag-tools.html">транскрипт</a></p>
+<p>Как связать LLM с внешним миром. Afshine разбирает RAG: почему ни дообучение, ни «всё в контекст» не решают проблему knowledge cutoff, как строится knowledge base из chunks и embeddings, двухэтапный retrieval (bi-encoder и cosine similarity, затем re-ranking cross-encoder'ом), BM25 и гибридный поиск, HyDE, contextual retrieval, prompt caching и метрики NDCG, MRR, precision@k и recall@k с бенчмарком MTEB. Shervine переходит к действиям: tool calling (модель видит только описание функции и предсказывает аргументы; обучение через SFT-пары или через инструкцию, которую итеративно пишет reasoning-модель), tool selection, стандарт MCP, агенты как цикл observe → plan → act по ReAct, протокол Agent2Agent и безопасность агентных систем.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/h-7S6HNq0Vg?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/h-7S6HNq0Vg?t=398">RAG overview</a> (06:38) · <a href="https://youtu.be/h-7S6HNq0Vg?t=1659">Similarity search with SBERT and bi-encoders</a> (27:39) · <a href="https://youtu.be/h-7S6HNq0Vg?t=2065">Heuristic search with BM25</a> (34:25) · <a href="https://youtu.be/h-7S6HNq0Vg?t=2274">HyDE and contextual retrieval</a> (37:54) · <a href="https://youtu.be/h-7S6HNq0Vg?t=2460">Prompt caching</a> (41:00) · <a href="https://youtu.be/h-7S6HNq0Vg?t=2724">Re-ranking with cross-encoders</a> (45:24) · <a href="https://youtu.be/h-7S6HNq0Vg?t=2869">Retrieval evaluation with NDCG, MRR</a> (47:49) · <a href="https://youtu.be/h-7S6HNq0Vg?t=3568">Tool calling</a> (59:28) · <a href="https://youtu.be/h-7S6HNq0Vg?t=5182">Tool selection</a> (1:26:22) · <a href="https://youtu.be/h-7S6HNq0Vg?t=5357">Model Context Protocol (MCP)</a> (1:29:17) · <a href="https://youtu.be/h-7S6HNq0Vg?t=5516">Agents with ReAct</a> (1:31:56) · <a href="https://youtu.be/h-7S6HNq0Vg?t=6136">Safety and closing thoughts</a> (1:42:16)</p>
+<h3 id="лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки"><a href="lectures/08-llm-evaluation.html">Лекция 8. Оценка LLM: метрики, LLM-as-a-judge, бенчмарки</a><a class="headerlink" href="#лекция-8-оценка-llm-метрики-llm-as-a-judge-бенчмарки" title="Permanent link">¶</a></h3>
+<p><em>LLM Evaluation</em> · 21 ноября 2025 · 109 мин · <a href="https://youtu.be/8fNP4N46RRo">видео</a> · <a href="transcripts/08-llm-evaluation.html">транскрипт</a></p>
+<p>Как измерять качество ответов LLM: от человеческой разметки и метрик согласия оценщиков (Cohen's kappa) через rule-based метрики (METEOR, BLEU, ROUGE) к главному методу — LLM-as-a-judge со structured output, его смещениям (position, verbosity, self-enhancement) и лучшим практикам, включая оценку factuality по атомарным фактам. Во второй половине Shervine разбирает семь типовых отказов агентного цикла (выбор инструмента, выполнение, синтез) и категории бенчмарков — MMLU, AIME, PIQA, SWE-bench, HarmBench, τ-bench — с предостережениями о data contamination и законе Гудхарта.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/8fNP4N46RRo?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/8fNP4N46RRo?t=428">Inter-rater agreement metrics</a> (07:08) · <a href="https://youtu.be/8fNP4N46RRo?t=1104">Rule-based metrics</a> (18:24) · <a href="https://youtu.be/8fNP4N46RRo?t=1260">METEOR, BLEU ROUGE</a> (21:00) · <a href="https://youtu.be/8fNP4N46RRo?t=1680">LLM-as-a-judge</a> (28:00) · <a href="https://youtu.be/8fNP4N46RRo?t=2024">Structured outputs</a> (33:44) · <a href="https://youtu.be/8fNP4N46RRo?t=2208">Variants</a> (36:48) · <a href="https://youtu.be/8fNP4N46RRo?t=2327">Position, verbosity, self-enhancement bias</a> (38:47) · <a href="https://youtu.be/8fNP4N46RRo?t=2842">Best practices</a> (47:22) · <a href="https://youtu.be/8fNP4N46RRo?t=3246">Factuality</a> (54:06) · <a href="https://youtu.be/8fNP4N46RRo?t=3615">Agent evaluation</a> (1:00:15) · <a href="https://youtu.be/8fNP4N46RRo?t=5030">Benchmarks</a> (1:23:50) · <a href="https://youtu.be/8fNP4N46RRo?t=5112">Knowledge with MMLU</a> (1:25:12) · <a href="https://youtu.be/8fNP4N46RRo?t=5374">Reasoning AIME, PIQA</a> (1:29:34) · <a href="https://youtu.be/8fNP4N46RRo?t=5637">Coding with SWE-bench</a> (1:33:57) · <a href="https://youtu.be/8fNP4N46RRo?t=5775">Safety with HarmBench</a> (1:36:15) · <a href="https://youtu.be/8fNP4N46RRo?t=6051">Agents with Tau-Bench</a> (1:40:51)</p>
+<h3 id="лекция-9-итоги-курса-и-текущие-тренды-vit-диффузионные-llm"><a href="lectures/09-recap-current-trends.html">Лекция 9. Итоги курса и текущие тренды: ViT, диффузионные LLM</a><a class="headerlink" href="#лекция-9-итоги-курса-и-текущие-тренды-vit-диффузионные-llm" title="Permanent link">¶</a></h3>
+<p><em>Recap &amp; Current Trends</em> · 5 декабря 2025 · 111 мин · <a href="https://youtu.be/Q86qzJ1K1Ss">видео</a> · <a href="transcripts/09-recap-current-trends.html">транскрипт</a></p>
+<p>Заключительная лекция: Afshine за 49 минут собирает восемь предыдущих лекций в одну цепочку (трансформер → decoder-only LLM и MoE → pre-training/SFT/preference tuning → RL-тюнинг и GRPO → RAG и tool calling → оценка) и уточняет объём финального экзамена. Затем два тренда 2025 года: Vision Transformer (картинка как последовательность patch-векторов, CLS-токен как в BERT, путь к VLM вроде LLaVA) и диффузионные LLM, где роль шума играет mask-токен, а весь ответ генерируется за фиксированное число шагов. Shervine закрывает курс 27-минутным взглядом на поле: взаимное влияние модальностей, незастывший дизайн трансформера, model collapse и mid-training, малые модели и аналоговое железо, безопасность AI-браузинга, «галлюцинации» как следствие next-token prediction и как следить за областью дальше.</p>
+<p><strong>Главы:</strong> <a href="https://youtu.be/Q86qzJ1K1Ss?t=0">Introduction</a> (00:00) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=72">Transformer</a> (01:12) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=395">Transformer-based models &amp; tricks</a> (06:35) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=677">Large Language Models</a> (11:17) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=905">LLM training</a> (15:05) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=1449">LLM tuning</a> (24:09) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=1781">LLM reasoning</a> (29:41) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=2317">Agentic LLMs (RAG, tool calling)</a> (38:37) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=2649">LLM evaluation</a> (44:09) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=2937">Vision Transformer</a> (48:57) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=3842">Diffusion-based LLMs</a> (1:04:02) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=5018">Closing thoughts</a> (1:23:38) · <a href="https://youtu.be/Q86qzJ1K1Ss?t=6616">Thank you!</a> (1:50:16)</p>
+<h2 id="карта-курса">Карта курса<a class="headerlink" href="#карта-курса" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Лекция</th>
+<th>О чём (по программе курса)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="lectures/01-transformer.html">Трансформер</a></td>
+<td>Background on NLP and tasks; Tokenization; Embeddings; Word2vec, RNN, LSTM; Attention mechanism; Transformer architecture</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="lectures/02-transformer-models-tricks.html">Модели на базе трансформера и инженерные приёмы</a></td>
+<td>Attention approximation; MHA, MQA, GQA; Position embeddings (regular, learned); RoPE and applications; Transformer-based architectures; BERT and its derivatives</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="lectures/03-llms-moe-decoding-prompting.html">Большие языковые модели: MoE, декодирование, промптинг</a></td>
+<td>Definition and architecture; Mixture of experts; Context length, temperature; Sampling strategies; Prompting, in-context learning; Chain of thought; Self-consistency</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="lectures/04-llm-training.html">Обучение LLM: предобучение, оптимизации, SFT и LoRA</a></td>
+<td>Pretraining; Quantization; Hardware optimization; Supervised finetuning (SFT); Parameter-efficient finetuning (LoRA)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="lectures/05-llm-tuning-rlhf-dpo.html">Дообучение LLM на предпочтениях: RLHF, PPO, DPO</a></td>
+<td>Preference tuning; RLHF overview; Reward modeling; RL approaches (PPO and variants); DPO</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="lectures/06-llm-reasoning.html">Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1</a></td>
+<td>Reasoning models; RL for reasoning; GRPO; Scaling</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="lectures/07-agentic-llms-rag-tools.html">Агентные LLM: RAG, вызов инструментов, агенты</a></td>
+<td>Retrieval-augmented generation; Advanced RAG techniques; Function calling; Agents; ReAct framework</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="lectures/08-llm-evaluation.html">Оценка LLM: метрики, LLM-as-a-judge, бенчмарки</a></td>
+<td>LLM-as-a-judge overview; Best practices and benefits; Biases and pitfalls</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="lectures/09-recap-current-trends.html">Итоги курса и текущие тренды: ViT, диффузионные LLM</a></td>
+<td>Recap; Trending topics; Closing thoughts</td>
+</tr>
+</tbody>
+</table>
+<p>Итого 9 лекций, 966 минут видео (≈16.1 часа).</p>
+<h2 id="актуализация-к-ноябрю-2026">Актуализация к ноябрю 2026<a class="headerlink" href="#актуализация-к-ноябрю-2026" title="Permanent link">¶</a></h2>
+<p>Лекции прочитаны осенью 2025 года. В папке <a href="updates/index.html"><code>updates/</code></a> по каждой лекции сверено с источниками, что с тех пор осталось верным, что устарело и что появилось нового; у каждого конспекта есть ссылка на свою актуализацию.</p>
+<h2 id="сайт">Сайт<a class="headerlink" href="#сайт" title="Permanent link">¶</a></h2>
+<p>Те же материалы собраны в статический сайт с навигацией, поиском, тёмной темой и формулами (MkDocs + Material):</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>.venv/bin/pip<span class="w"> </span>install<span class="w"> </span>mkdocs-material<span class="w">   </span><span class="c1"># один раз</span>
+python3<span class="w"> </span>-I<span class="w"> </span>tools/build_docs.py<span class="w">                                    </span><span class="c1"># md -&gt; docs/ + mkdocs.yml</span>
+.venv/bin/mkdocs<span class="w"> </span>serve<span class="w">                                            </span><span class="c1"># http://127.0.0.1:8000</span>
+</code></pre></div>
+<p><code>.venv/bin/mkdocs build</code> кладёт готовый сайт в <code>site/</code>; его можно открыть и без сервера (<code>site/index.html</code>), не будет работать только поиск. Стили, скрипты и локальная копия KaTeX лежат в <code>site_src/</code>.</p>
+<p>Публикация: <code>.venv/bin/mkdocs gh-deploy</code> собирает сайт и отправляет его в ветку <code>gh-pages</code>, откуда его раздаёт GitHub Pages.</p>
+<h2 id="как-это-собрано">Как это собрано<a class="headerlink" href="#как-это-собрано" title="Permanent link">¶</a></h2>
+<ol>
+<li>Метаданные и ручные английские субтитры (en-US) каждого видео выгружены через <code>yt-dlp</code>.</li>
+<li>VTT-субтитры склеены в абзацы (~1 минута речи) и разбиты по главам видео, таймкоды превращены в ссылки <code>youtu.be/&lt;id&gt;?t=&lt;сек&gt;</code> — это папка <code>transcripts/</code>.</li>
+<li>По каждому транскрипту написан конспект на русском по единому шаблону: краткое содержание, оглавление, раздел на каждую главу видео, ключевые термины, главные выводы, вопросы из зала — это папка <code>lectures/</code>.</li>
+<li>Вторым проходом в конспекты добавлены пометки <code>&gt; 💡 Дополнение</code> (примеры, интуиция, связи, практика) и раздел «Чем можно дополнить»; они явно отделены от пересказа лекции.</li>
+</ol>
+<p>Дата сборки: 7 ноября 2026.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+        
+          
+          <a href="lectures/01-transformer.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 1. Трансформер">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                1. Трансформер
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="assets/katex/katex.min.js"></script>
+      
+        <script src="assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="assets/js/math.js"></script>
+      
+        <script src="assets/js/links.js"></script>
+      
+    
+  </body>
+</html>

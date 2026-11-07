@@ -1,0 +1,3237 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конспекты девяти лекций Stanford CME295 (осень 2025) на русском, английские транскрипты и актуализация к 2026 году">
+      
+      
+      
+        <link rel="canonical" href="https://letulip.github.io/stenford_llm/lectures/05-llm-tuning-rlhf-dpo.html">
+      
+      
+        <link rel="prev" href="04-llm-training.html">
+      
+      
+        <link rel="next" href="06-llm-reasoning.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>5. Дообучение: RLHF, PPO, DPO - Stanford CME295 · Transformers & LLMs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/katex/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-header__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Stanford CME295 · Transformers & LLMs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. Дообучение: RLHF, PPO, DPO
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-orange"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Конспекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../updates/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Актуализация 2026
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../transcripts/01-transformer.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Транскрипты (EN)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Stanford CME295 · Transformers &amp; LLMs" class="md-nav__button md-logo" aria-label="Stanford CME295 · Transformers & LLMs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+
+    </a>
+    Stanford CME295 · Transformers & LLMs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/letulip/stenford_llm" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    letulip/stenford_llm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Конспекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Конспекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="05-llm-tuning-rlhf-dpo.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-дообучение-на-предпочтениях" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Дообучение на предпочтениях
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Дообучение на предпочтениях">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#зачем-третий-этап-если-уже-есть-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем третий этап, если уже есть SFT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-сбор-данных" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Сбор данных
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Сбор данных">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#рецепт-получения-пары-1327" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рецепт получения пары (13:27)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-обзор-rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Обзор RLHF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Обзор RLHF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#азы-rl-и-перенос-на-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Азы RL и перенос на LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-этапа-rlhf-2545" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два этапа RLHF (25:45)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reward-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reward model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-формулировка-bradley-terry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Формулировка Bradley-Terry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Формулировка Bradley-Terry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#схема-обучения-3228" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Схема обучения (32:28)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вывод-функции-потерь-из-первых-принципов-3320" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вывод функции потерь из первых принципов (33:20)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#практика-3936" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практика (39:36)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вопросы-41294507" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы (41:29–45:07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reinforcement-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reinforcement learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Reinforcement learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#общий-рецепт-4656" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общий рецепт (46:56)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-нельзя-уходить-далеко-от-базовой-модели-4849" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему нельзя уходить далеко от базовой модели (48:49)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#данные-и-loss-5259" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Данные и loss (52:59)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. PPO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. PPO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kl-divergence-5452" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL divergence (54:52)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-advantage-и-value-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Advantage и value function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-варианты-ppo-clip-и-kl-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Варианты PPO: Clip и KL-penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Варианты PPO: Clip и KL-penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ppo-clip-10340" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPO-Clip (1:03:40)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kl-penalty-11207" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-penalty (1:12:07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#сколько-моделей-нужно-для-ppo-11400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сколько моделей нужно для PPO (1:14:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-проблемы-rl-подхода" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Проблемы RL-подхода
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-on-policy-и-off-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. On-policy и off-policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-best-of-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Best-of-N
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. DPO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. DPO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#жалобы-12950" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Жалобы (1:29:50)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#формула-13234" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Формула (1:32:34)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-это-получено-1342913854" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это получено (1:34:29–1:38:54)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpo-против-rlhf-13854" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPO против RLHF (1:38:54)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#любимый-пример-14425" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Любимый пример (1:44:25)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../updates/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Актуализация 2026
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Актуализация 2026
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Трансформер
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Модели на базе трансформера и приёмы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. LLM: MoE, декодирование, промптинг
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обучение LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Дообучение: RLHF, PPO, DPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Reasoning-модели и GRPO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Агенты: RAG, инструменты, MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Оценка LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updates/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Итоги и тренды: ViT, диффузионные LLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Транскрипты (EN)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Транскрипты (EN)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/01-transformer.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/02-transformer-models-tricks.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Transformer-Based Models & Tricks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/03-llms-moe-decoding-prompting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/04-llm-training.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. LLM Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/05-llm-tuning-rlhf-dpo.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. LLM Tuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/06-llm-reasoning.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. LLM Reasoning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/07-agentic-llms-rag-tools.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Agentic LLMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/08-llm-evaluation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. LLM Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transcripts/09-recap-current-trends.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Recap & Current Trends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#коротко-о-лекции" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Коротко о лекции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#оглавление" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Оглавление
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-введение" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-дообучение-на-предпочтениях" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Дообучение на предпочтениях
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Дообучение на предпочтениях">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#зачем-третий-этап-если-уже-есть-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем третий этап, если уже есть SFT
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-сбор-данных" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Сбор данных
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Сбор данных">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#рецепт-получения-пары-1327" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рецепт получения пары (13:27)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-обзор-rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Обзор RLHF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Обзор RLHF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#азы-rl-и-перенос-на-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Азы RL и перенос на LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#два-этапа-rlhf-2545" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два этапа RLHF (25:45)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reward-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reward model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-формулировка-bradley-terry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Формулировка Bradley-Terry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Формулировка Bradley-Terry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#схема-обучения-3228" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Схема обучения (32:28)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вывод-функции-потерь-из-первых-принципов-3320" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вывод функции потерь из первых принципов (33:20)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#практика-3936" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практика (39:36)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#вопросы-41294507" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы (41:29–45:07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reinforcement-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reinforcement learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Reinforcement learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#общий-рецепт-4656" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Общий рецепт (46:56)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#почему-нельзя-уходить-далеко-от-базовой-модели-4849" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему нельзя уходить далеко от базовой модели (48:49)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#данные-и-loss-5259" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Данные и loss (52:59)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ppo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. PPO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. PPO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kl-divergence-5452" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL divergence (54:52)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-advantage-и-value-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Advantage и value function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-варианты-ppo-clip-и-kl-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Варианты PPO: Clip и KL-penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Варианты PPO: Clip и KL-penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ppo-clip-10340" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPO-Clip (1:03:40)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kl-penalty-11207" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KL-penalty (1:12:07)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#сколько-моделей-нужно-для-ppo-11400" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сколько моделей нужно для PPO (1:14:00)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-проблемы-rl-подхода" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Проблемы RL-подхода
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-on-policy-и-off-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. On-policy и off-policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-best-of-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Best-of-N
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. DPO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. DPO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#жалобы-12950" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Жалобы (1:29:50)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#формула-13234" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Формула (1:32:34)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#как-это-получено-1342913854" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как это получено (1:34:29–1:38:54)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpo-против-rlhf-13854" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPO против RLHF (1:38:54)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#любимый-пример-14425" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Любимый пример (1:44:25)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ключевые-термины" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые термины
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#главные-выводы" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Главные выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#вопросы-из-зала" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вопросы из зала
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#чем-можно-дополнить" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем можно дополнить
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo">Лекция 5. Дообучение LLM на предпочтениях: RLHF, PPO, DPO<a class="headerlink" href="#лекция-5-дообучение-llm-на-предпочтениях-rlhf-ppo-dpo" title="Permanent link">¶</a></h1>
+<p><em>LLM tuning</em> · Stanford CME295 Transformers &amp; LLMs, Autumn 2025</p>
+<p><strong>Видео:</strong> https://youtu.be/PmW_TMQ3l0I · <strong>Дата лекции:</strong> 31 октября 2025 · <strong>Длительность:</strong> 107 мин<br />
+<strong>Лекторы:</strong> Afshine Amidi и Shervine Amidi (братья-близнецы; Netflix, до этого Google и Uber; adjunct lecturers в Stanford)<br />
+<strong>Полный транскрипт:</strong> <a href="../transcripts/05-llm-tuning-rlhf-dpo.html">../transcripts/05-llm-tuning-rlhf-dpo.md</a></p>
+<p>← <a href="04-llm-training.html">Лекция 4. Обучение LLM: предобучение, оптимизации, SFT и LoRA</a> · <a href="../index.html">Оглавление курса</a> · <a href="06-llm-reasoning.html">Лекция 6. Рассуждающие модели: RL для reasoning, GRPO, DeepSeek R1</a> →</p>
+<div class="admonition info">
+<p class="admonition-title">Актуализация к ноябрю 2026</p>
+<p>Лекция прочитана осенью 2025. Что в этой теме изменилось с тех пор: <a href="../updates/05-llm-tuning-rlhf-dpo.html">читать актуализацию</a>.</p>
+</div>
+<h2 id="коротко-о-лекции">Коротко о лекции<a class="headerlink" href="#коротко-о-лекции" title="Permanent link">¶</a></h2>
+<p>Лекция посвящена третьему этапу обучения LLM — после предобучения и SFT — выравниванию модели с человеческими предпочтениями (preference tuning). Отправная точка такая: SFT-модель уже ведёт себя как ассистент, но может отвечать не тем тоном, грубо или небезопасно, а чинить это через SFT дорого — нужно писать идеальные ответы и следить за распределением промптов. Вместо этого собирают пары ответов «лучше / хуже» и учат модель предпочитать первый. Заодно модель впервые получает негативный сигнал — «так не отвечай», чего SFT дать не может.</p>
+<p>Основную часть читает Afshine Amidi. Он проходит классический конвейер RLHF: сбор pairwise-данных → обучение reward model по формулировке Bradley-Terry (с выводом функции потерь «из первых принципов» прямо на доске) → RL-шаг, где LLM рассматривается как policy, а reward model выдаёт награды. Затем разбирается PPO: зачем в objective нужна KL-divergence к reference-модели (иначе reward hacking), что такое advantage и value function, как устроены варианты PPO-Clip и KL-penalty и почему для PPO приходится держать в памяти четыре модели. После списка проблем RL-подхода и термина on-policy показывается «ленивая» альтернатива — best-of-N на инференсе.</p>
+<p>Последние 17 минут Shervine Amidi выводит DPO: берёт objective PPO, записывает его оптимальное решение, выражает через него reward, подставляет в Bradley-Terry — и получает supervised-loss прямо на парах предпочтений, без reward model и без RL. Заканчивается всё сравнением: PPO даёт лучший результат, но тяжёл в настройке; DPO проще и почти так же хорош, но страдает от distribution shift.</p>
+<p>Пять идей, которые стоит унести: (1) предпочтения проще собирать парами, чем писать эталонные ответы; (2) Bradley-Terry превращает пары в pointwise reward model; (3) RL-objective — это награда минус <span class="arithmatex">\(\beta \cdot\)</span> KL от reference-модели, иначе модель начинает «взламывать» несовершенную награду; (4) PPO дополнительно ограничивает размер шага clipping'ом или KL-штрафом; (5) DPO — та же задача, решённая аналитически и сведённая к обычному supervised-обучению.</p>
+<h2 id="оглавление">Оглавление<a class="headerlink" href="#оглавление" title="Permanent link">¶</a></h2>
+<ol>
+<li><a href="#1-введение">Введение</a> — 00:00</li>
+<li><a href="#2-дообучение-на-предпочтениях">Дообучение на предпочтениях</a> — 04:50</li>
+<li><a href="#3-сбор-данных">Сбор данных</a> — 11:31</li>
+<li><a href="#4-обзор-rlhf">Обзор RLHF</a> — 17:43</li>
+<li><a href="#5-reward-model">Reward model</a> — 28:24</li>
+<li><a href="#6-формулировка-bradley-terry">Формулировка Bradley-Terry</a> — 29:46</li>
+<li><a href="#7-reinforcement-learning">Reinforcement learning</a> — 46:02</li>
+<li><a href="#8-ppo">PPO</a> — 53:54</li>
+<li><a href="#9-advantage-и-value-function">Advantage и value function</a> — 57:56</li>
+<li><a href="#10-варианты-ppo-clip-и-kl-penalty">Варианты PPO: Clip и KL-penalty</a> — 1:03:39</li>
+<li><a href="#11-проблемы-rl-подхода">Проблемы RL-подхода</a> — 1:16:20</li>
+<li><a href="#12-on-policy-и-off-policy">On-policy и off-policy</a> — 1:19:58</li>
+<li><a href="#13-best-of-n">Best-of-N</a> — 1:22:43</li>
+<li>
+<p><a href="#14-dpo">DPO</a> — 1:29:47</p>
+</li>
+<li>
+<p><a href="#ключевые-термины">Ключевые термины</a></p>
+</li>
+<li><a href="#главные-выводы">Главные выводы</a></li>
+<li><a href="#вопросы-из-зала">Вопросы из зала</a></li>
+<li><a href="#чем-можно-дополнить">Чем можно дополнить</a></li>
+</ol>
+<h2 id="1-введение">1. Введение<a class="headerlink" href="#1-введение" title="Permanent link">¶</a></h2>
+<p>⏱ 00:00–04:50 · <a href="https://youtu.be/PmW_TMQ3l0I?t=0">▶ смотреть на YouTube</a></p>
+<p>Afshine начинает с организационного: на прошлой неделе был midterm, задания и решения выложены на сайте курса (полезно и вольнослушателям — видно формат). Финальный экзамен будет в том же формате, но по материалу лекций 5–9, то есть начиная с этой.</p>
+<p>Дальше — повторение лекции 4 (она была две недели назад). Обучение LLM состояло из двух этапов:</p>
+<ul>
+<li><strong>Pre-training.</strong> Инициализированную модель учат языку и коду на огромном объёме текста. Этап долгий, дорогой и compute-heavy, поэтому обсуждались оптимизации обучения: распараллеливание по GPU, data parallelism и ZeRO с его вариантами, коротко — model parallelism. На выходе модель знает структуру языка и кода, но умеет только предсказывать следующий токен: «отличный автокомплит», но ещё не помощник.</li>
+<li><strong>SFT (supervised fine-tuning).</strong> Предобученную модель учат вести себя нужным образом — например, как чат-ассистент. Датасет здесь на порядки меньше, но гораздо качественнее, а задача та же — next-token prediction, только теперь модели показывают, какие именно токены предсказывать. Разбирали LoRA — parameter-efficient метод, который обучает не все веса, а добавленные низкоранговые матрицы.</li>
+</ul>
+<p>Сегодняшняя тема — третий этап: выравнивание (alignment) модели с человеческими предпочтениями или с какой-то заданной нами метрикой. Мотивирующий пример: ассистент после SFT делает в целом то, что нужно, но не тем тоном — недостаточно дружелюбен или небезопасен. Именно такие вещи и настраивают на третьем шаге.</p>
+<h2 id="2-дообучение-на-предпочтениях">2. Дообучение на предпочтениях<a class="headerlink" href="#2-дообучение-на-предпочтениях" title="Permanent link">¶</a></h2>
+<p>⏱ 04:50–11:31 · <a href="https://youtu.be/PmW_TMQ3l0I?t=290">▶ смотреть на YouTube</a></p>
+<p>Этап называется preference tuning (дообучение на предпочтениях). Контекст: есть SFT-модель — прошедшая и pre-training, и fine-tuning. Сквозной пример лекции: просим предложить новое занятие с плюшевым мишкой, а модель отвечает в духе «советую вообще не тратить время на мишку». Это ответ ассистента, но не тот, что мы хотим. Идея: взять такой «плохой» выход и найти или переписать ответ, который мы хотели бы видеть вместо него — например, «конечно, мишки отличные компаньоны не только для сна, но и для игр…» со списком занятий.</p>
+<p>Такая пара — <strong>preference pair</strong> (пара предпочтений): один промпт и два ответа, желательный и нежелательный. Цель — выровнять модель с человеческими предпочтениями.</p>
+<h3 id="зачем-третий-этап-если-уже-есть-sft">Зачем третий этап, если уже есть SFT<a class="headerlink" href="#зачем-третий-этап-если-уже-есть-sft" title="Permanent link">¶</a></h3>
+<p>Лектор даёт три причины и в конце добавляет четвёртую (<a href="https://youtu.be/PmW_TMQ3l0I?t=407">06:47</a>):</p>
+<ol>
+<li><strong>Собирать данные проще.</strong> SFT-датасет должен быть очень высокого качества, его трудно и долго составлять. Здесь же мы не говорим модели «сгенерируй вот это», а говорим «из двух вариантов я предпочитаю этот». Написать отличное стихотворение с нуля куда сложнее, чем посмотреть на два стихотворения и сказать, какое лучше.</li>
+<li><strong>Распределение промптов.</strong> При составлении SFT-данных тщательно следят за тем, каких промптов сколько: если какого-то типа слишком много, модель смещается в сторону соответствующего поведения. Поэтому «просто добавить один пример» в SFT-датасет, чтобы исправить ошибку, — рискованно: надо думать, не перекосит ли он модель.</li>
+<li><strong>Качество.</strong> Собирать все промахи модели и превращать их в высококачественные SFT-примеры — очень долго.</li>
+<li><strong>Негативный сигнал</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=678">11:18</a>). SFT учит модель, что предсказывать, но ничего не говорит о том, чего предсказывать <em>не надо</em>. Preference tuning такой сигнал даёт.</li>
+</ol>
+<p>Важная оговорка: если SFT-модель сильно и часто ошибается, возможно, проблема в самом SFT-датасете. Preference tuning — не ответ на всё; иногда лучше сначала проверить SFT-данные.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/PmW_TMQ3l0I?t=577">09:37</a>):</strong> для SFT мы видели LoRA — что является его аналогом для preference tuning? — <strong>Ответ:</strong> это ортогональные вещи. LoRA — способ сократить число обучаемых параметров, а preference tuning — другая целевая функция (objective). Они совместимы: LoRA можно использовать и на этом этапе. Подробнее станет ясно позже по ходу лекции.</p>
+<h2 id="3-сбор-данных">3. Сбор данных<a class="headerlink" href="#3-сбор-данных" title="Permanent link">¶</a></h2>
+<p>⏱ 11:31–17:43 · <a href="https://youtu.be/PmW_TMQ3l0I?t=691">▶ смотреть на YouTube</a></p>
+<p>Сначала нужны сами preference pairs. Setup: промпт («напиши стихотворение») и ответ, сгенерированный моделью. Три способа разметки:</p>
+<ul>
+<li><strong>Pointwise</strong> — каждому ответу ставится оценка сама по себе (относительно одного наблюдения). Можно, но человеку тяжело: что значит «это 0.9, а это 0.2», как калибровать шкалу — неясно.</li>
+<li><strong>Pairwise</strong> — показывают два ответа и спрашивают, какой лучше. Намного проще.</li>
+<li><strong>Listwise</strong> — дают список из n ответов и просят отранжировать от лучшего к худшему. Проще pointwise (не нужно говорить, <em>насколько</em> лучше), но всё же сложнее pairwise.</li>
+</ul>
+<p>Поэтому на практике собирают pairwise-данные: на каждый промпт два ответа и пометка, какой лучше. С ними лекция и работает дальше.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>«Pairwise» на практике не обязательно значит, что разметчик видел ровно два ответа. В InstructGPT (статья OpenAI 2022 года «Training language models to follow instructions with human feedback», канонический RLHF-пайплайн) разметчики ранжировали от 4 до 9 ответов на один промпт, а reward model обучалась на всех парах, которые можно извлечь из такого ранжирования, — то есть собирали listwise, а учили pairwise. Из открытых preference-датасетов стоит знать Anthropic HH-RLHF (helpful / harmless) и UltraFeedback, где метки ставила другая LLM, — это уже RLAIF-данные.</p>
+</div>
+<h3 id="рецепт-получения-пары-1327">Рецепт получения пары (<a href="https://youtu.be/PmW_TMQ3l0I?t=807">13:27</a>)<a class="headerlink" href="#рецепт-получения-пары-1327" title="Permanent link">¶</a></h3>
+<ol>
+<li>Берём промпт <span class="arithmatex">\(x\)</span> — из логов или из заранее составленного набора. Важно, чтобы распределение промптов соответствовало тому, что реально спрашивают пользователи.</li>
+<li>Подаём промпт в модель дважды с положительной температурой (это обсуждали в лекции 3: при <span class="arithmatex">\(T &gt; 0\)</span> получаются разные ответы) — получаем два разных ответа.</li>
+<li>Сравниваем два «наблюдения» — (промпт, ответ 1) и (промпт, ответ 2). Чем сравнивать:</li>
+<li>человеческие оценки;</li>
+<li>LLM as a judge — будет в одной из следующих лекций;</li>
+<li>rule-based метрики вроде BLEU и ROUGE — сейчас почти не используются.</li>
+<li>Шкала сравнения. Простейшая — бинарная: ответ 1 лучше или хуже ответа 2. Можно и более тонкую («намного лучше / лучше / чуть лучше / чуть хуже / …»), но задачи субъективны, оценки получаются шумными, поэтому в большинстве случаев берут бинарную.</li>
+</ol>
+<p>Второй способ (<a href="https://youtu.be/PmW_TMQ3l0I?t=969">16:09</a>): найти в логах ответ, который не понравился, и переписать его вручную в хороший — так и сделали в примере с мишкой. Это дороже, потому что требует генерации текста человеком, но тоже практикуется.</p>
+<h2 id="4-обзор-rlhf">4. Обзор RLHF<a class="headerlink" href="#4-обзор-rlhf" title="Permanent link">¶</a></h2>
+<p>⏱ 17:43–28:24 · <a href="https://youtu.be/PmW_TMQ3l0I?t=1063">▶ смотреть на YouTube</a></p>
+<p>Данные есть; теперь хотим, чтобы модель предпочитала ответы, отмеченные как лучшие, и понижала вес худших. Метод — <strong>RLHF</strong> (Reinforcement Learning from Human Feedback). Он опирается на RL, поэтому сначала — азы (экспертов по RL в аудитории не нашлось, «идём медленно»).</p>
+<h3 id="азы-rl-и-перенос-на-llm">Азы RL и перенос на LLM<a class="headerlink" href="#азы-rl-и-перенос-на-llm" title="Permanent link">¶</a></h3>
+<p>В RL есть <strong>agent</strong> (агент), который взаимодействует с <strong>environment</strong> (средой). В момент <span class="arithmatex">\(t\)</span> агент находится в состоянии <span class="arithmatex">\(s_t\)</span> и выбирает действие <span class="arithmatex">\(a_t\)</span> согласно <strong>policy</strong> (политике) <span class="arithmatex">\(\pi_\theta(a_t \mid s_t)\)</span> — это просто вероятность совершить действие при данном состоянии. За действие агент получает <strong>reward</strong> (награду) — хорошую или плохую.</p>
+<p>Как это ложится на LLM (<a href="https://youtu.be/PmW_TMQ3l0I?t=1175">19:35</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Понятие RL</th>
+<th>В мире LLM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent</td>
+<td>сама LLM</td>
+</tr>
+<tr>
+<td>state <span class="arithmatex">\(s_t\)</span></td>
+<td>вход на данный момент: промпт плюс уже сгенерированные токены</td>
+</tr>
+<tr>
+<td>action <span class="arithmatex">\(a_t\)</span></td>
+<td>предсказать следующий токен</td>
+</tr>
+<tr>
+<td>множество действий / environment</td>
+<td>словарь токенов</td>
+</tr>
+<tr>
+<td>policy <span class="arithmatex">\(\pi_\theta(a_t \mid s_t)\)</span></td>
+<td>распределение вероятностей следующего токена, которое выдаёт forward pass</td>
+</tr>
+<tr>
+<td>reward</td>
+<td>оценка, построенная из preference data (как именно — дальше)</td>
+</tr>
+</tbody>
+</table>
+<p>То есть LLM берёт вход, по своему выходному распределению выбирает следующий токен, сгенерированный выход получает награду, и награда используется для подстройки агента.</p>
+<p>Серия вопросов (<a href="https://youtu.be/PmW_TMQ3l0I?t=1326">22:06</a>–<a href="https://youtu.be/PmW_TMQ3l0I?t=1545">25:45</a>):</p>
+<ul>
+<li><strong>Вопрос:</strong> не слишком ли это дорого для всех пар? — <strong>Ответ:</strong> работают батчами; это дорого, но примерно как любая другая процедура обучения. По сравнению с SFT добавляются некоторые компоненты — увидим дальше.</li>
+<li><strong>Вопрос:</strong> достаточно ли силён такой сигнал, чтобы модель изменилась? — <strong>Ответ:</strong> сигнал заметно разреженнее, чем в SFT. Там модель на каждом префиксе учится предсказывать следующий токен, здесь же — примерно один сигнал на весь completion. Поэтому RLHF считают подходом со sparse signals.</li>
+<li><strong>Вопрос:</strong> награда за каждый токен или за ответ целиком? — <strong>Ответ:</strong> за ответ целиком.</li>
+<li><strong>Вопрос:</strong> что такое <span class="arithmatex">\(a_t\)</span> и <span class="arithmatex">\(s_t\)</span>? — <strong>Ответ:</strong> <span class="arithmatex">\(s_t\)</span> — текущий вход, <span class="arithmatex">\(a_t\)</span> — какой токен сгенерировать при этом входе.</li>
+</ul>
+<h3 id="два-этапа-rlhf-2545">Два этапа RLHF (<a href="https://youtu.be/PmW_TMQ3l0I?t=1545">25:45</a>)<a class="headerlink" href="#два-этапа-rlhf-2545" title="Permanent link">¶</a></h3>
+<p>Формулировка задачи: найти <span class="arithmatex">\(\theta\)</span> — параметры LLM — такие, чтобы <span class="arithmatex">\(\pi_\theta\)</span> соответствовала предпочтениям. RLHF делает это в два шага:</p>
+<ol>
+<li><strong>Научиться отличать хорошие выходы от плохих.</strong> Все собранные preference pairs используются, чтобы обучить модель, которая на вход получает конкатенацию промпта и ответа, а на выход даёт score.</li>
+<li><strong>RL-шаг.</strong> С помощью этих наград подстроить LLM так, чтобы по промптам генерировались <span class="arithmatex">\(\hat y\)</span>, лучше согласованные с наградами.</li>
+</ol>
+<p>Терминологическое замечание (<a href="https://youtu.be/PmW_TMQ3l0I?t=1646">27:26</a>): «Human Feedback» в названии относится к меткам, на которых обучается reward model. Если пары размечены людьми — это RLHF. Если предпочтения не человеческие (их выдала другая модель) — это <strong>RLAIF</strong>, Reinforcement Learning from AI Feedback.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 8</p>
+<p>Самый известный пример RLAIF — Constitutional AI от Anthropic (2022): модель сама критикует и переписывает свои ответы по списку принципов («конституции»), а метки предпочтений по безопасности ставит не человек, а модель. Главный инструмент здесь — LLM as a judge, который лекторы обещают разобрать позже; по программе курса это <a href="08-llm-evaluation.html">Лекция 8</a> про оценку LLM. Для инженера важно, что «судья» переносит все свои смещения в reward model, поэтому его самого нужно валидировать на человеческой разметке.</p>
+</div>
+<h2 id="5-reward-model">5. Reward model<a class="headerlink" href="#5-reward-model" title="Permanent link">¶</a></h2>
+<p>⏱ 28:24–29:46 · <a href="https://youtu.be/PmW_TMQ3l0I?t=1704">▶ смотреть на YouTube</a></p>
+<p>Короткая постановка задачи для шага 1. Нужна модель, которая знает, какой выход хорош, а какой плох — причём с учётом входа, потому что ответ надо контекстуализировать. На любимом примере: для промпта про мишку <strong>reward model (RM)</strong> должна сказать, что переписанный ответ — хороший, а исходный, увиденный в логах, — плохой. Иначе говоря, <span class="arithmatex">\(\mathrm{RM}(x, y_{\text{good}}) \to\)</span> «хорошо», <span class="arithmatex">\(\mathrm{RM}(x, y_{\text{bad}}) \to\)</span> «плохо». Как построить такую модель — следующий раздел.</p>
+<h2 id="6-формулировка-bradley-terry">6. Формулировка Bradley-Terry<a class="headerlink" href="#6-формулировка-bradley-terry" title="Permanent link">¶</a></h2>
+<p>⏱ 29:46–46:02 · <a href="https://youtu.be/PmW_TMQ3l0I?t=1786">▶ смотреть на YouTube</a></p>
+<p>«Это важная формула, задержимся здесь». <strong>Bradley-Terry</strong> задаёт вероятность того, что выход <span class="arithmatex">\(y_i\)</span> лучше выхода <span class="arithmatex">\(y_j\)</span>:</p>
+<div class="arithmatex">\[P(y_i \succ y_j) = \frac{e^{r_i}}{e^{r_i} + e^{r_j}} = \sigma(r_i - r_j)\]</div>
+<p>Здесь <span class="arithmatex">\(r_i\)</span> и <span class="arithmatex">\(r_j\)</span> — скалярные оценки (rewards) выходов <span class="arithmatex">\(i\)</span> и <span class="arithmatex">\(j\)</span>, а <span class="arithmatex">\(\sigma\)</span> — сигмоида:</p>
+<div class="arithmatex">\[\sigma(x) = \frac{1}{1 + e^{-x}}\]</div>
+<p>При <span class="arithmatex">\(x \to -\infty\)</span> она стремится к 0, при <span class="arithmatex">\(x \to +\infty\)</span> — к 1. Значит, если <span class="arithmatex">\(i\)</span> лучше <span class="arithmatex">\(j\)</span>, аргумент сигмоиды должен быть как можно больше, чтобы вероятность была близка к 1: <span class="arithmatex">\(r_i\)</span> высокий для хорошего ответа, <span class="arithmatex">\(r_j\)</span> низкий для плохого. Задача — обучить модель, выдающую такие <span class="arithmatex">\(r\)</span>. В формулировке две величины, потому что датасет pairwise.</p>
+<h3 id="схема-обучения-3228">Схема обучения (<a href="https://youtu.be/PmW_TMQ3l0I?t=1948">32:28</a>)<a class="headerlink" href="#схема-обучения-3228" title="Permanent link">¶</a></h3>
+<p>Инициализируем модель. Подаём промпт <span class="arithmatex">\(x\)</span> с выигравшим ответом <span class="arithmatex">\(\hat y_w\)</span> (w — winning) — получаем score <span class="arithmatex">\(r_\theta(x, \hat y_w)\)</span>. Подаём <span class="arithmatex">\(x\)</span> с проигравшим <span class="arithmatex">\(\hat y_l\)</span> (l — losing) — получаем <span class="arithmatex">\(r_\theta(x, \hat y_l)\)</span>. Нужна функция потерь, которая учитывает оба score.</p>
+<h3 id="вывод-функции-потерь-из-первых-принципов-3320">Вывод функции потерь из первых принципов (<a href="https://youtu.be/PmW_TMQ3l0I?t=2000">33:20</a>)<a class="headerlink" href="#вывод-функции-потерь-из-первых-принципов-3320" title="Permanent link">¶</a></h3>
+<p>Студент предлагает binary cross-entropy / negative log-likelihood; лектор показывает, откуда это берётся.</p>
+<ol>
+<li>Есть датасет из <span class="arithmatex">\(n\)</span> пар <span class="arithmatex">\((\hat y_w^{(k)}, \hat y_l^{(k)})\)</span>, которые считаем независимыми. Хотим найти параметры <span class="arithmatex">\(\theta\)</span>, максимизирующие вероятность увидеть такие данные (maximum likelihood). По Bradley-Terry это произведение:</li>
+</ol>
+<div class="arithmatex">\[\prod_{k=1}^{n} P\big(\hat y_w^{(k)} \succ \hat y_l^{(k)}\big) = \prod_{k=1}^{n} \sigma\Big(r_\theta\big(x^{(k)}, \hat y_w^{(k)}\big) - r_\theta\big(x^{(k)}, \hat y_l^{(k)}\big)\Big)\]</div>
+<p>где <span class="arithmatex">\(r_\theta(x, y)\)</span> — обучаемая функция от промпта и ответа.</p>
+<ol>
+<li>Видим произведение вероятностей — первое, о чём нужно подумать, это логарифм: произведение становится очень маленьким, что ведёт к численной нестабильности. Максимизировать произведение — то же, что максимизировать его логарифм, то есть сумму (<a href="https://youtu.be/PmW_TMQ3l0I?t=2201">36:41</a>):</li>
+</ol>
+<div class="arithmatex">\[\sum_{k=1}^{n} \log \sigma\Big(r_\theta\big(x^{(k)}, \hat y_w^{(k)}\big) - r_\theta\big(x^{(k)}, \hat y_l^{(k)}\big)\Big)\]</div>
+<ol>
+<li>«Люди в ML любят минимизировать» — ставим минус и записываем через математическое ожидание по датасету (<a href="https://youtu.be/PmW_TMQ3l0I?t=2262">37:42</a>):</li>
+</ol>
+<div class="arithmatex">\[\mathcal{L}_{RM}(\theta) = -\,\mathbb{E}_{(x,\, \hat y_w,\, \hat y_l)}\Big[\log \sigma\big(r_\theta(x, \hat y_w) - r_\theta(x, \hat y_l)\big)\Big]\]</div>
+<p>Это и есть функция потерь reward model; cross-entropy можно считать её частным случаем.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Прогоним формулу на числах. Пусть reward model выдала <span class="arithmatex">\(r_w = 1\)</span> для хорошего ответа и <span class="arithmatex">\(r_l = -2\)</span> для плохого: <span class="arithmatex">\(P(y_w \succ y_l) = e^{1}/(e^{1} + e^{-2}) \approx 2.718 / 2.854 \approx 0.95\)</span>, то же самое даёт <span class="arithmatex">\(\sigma(1 - (-2)) = \sigma(3) \approx 0.95\)</span>, а вклад пары в loss <span class="arithmatex">\(-\log 0.95 \approx 0.05\)</span> — почти ничего, модель уже «знает» ответ. Если модель не различает ответы (<span class="arithmatex">\(r_w = r_l\)</span>), то <span class="arithmatex">\(\sigma(0) = 0.5\)</span> и loss <span class="arithmatex">\(= \ln 2 \approx 0.69\)</span> — ровно с этого уровня стартует необученная reward model. Если же она ошибается в обратную сторону (<span class="arithmatex">\(r_w = -1\)</span>, <span class="arithmatex">\(r_l = 1\)</span>), то <span class="arithmatex">\(\sigma(-2) \approx 0.12\)</span> и loss <span class="arithmatex">\(\approx 2.1\)</span>: градиент сильнее всего там, где модель уверенно неправа.</p>
+</div>
+<p><strong>Pairwise или pointwise?</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=2320">38:40</a>) Loss — pairwise, но сама reward model — pointwise: «that's the beauty of things». Обучаем на парах, а на выходе получаем модель, которая берёт один промпт и один ответ и выдаёт одно число — высокое для выигравших, низкое для проигравших.</p>
+<h3 id="практика-3936">Практика (<a href="https://youtu.be/PmW_TMQ3l0I?t=2376">39:36</a>)<a class="headerlink" href="#практика-3936" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Данные:</strong> десятки тысяч пар или больше; метка — preference rating, для RLHF — от людей.</li>
+<li><strong>Архитектура:</strong> сейчас чаще всего берут decoder-only LLM и ставят classification head на конец последовательности, из которого предсказывают reward. Альтернатива из начала курса — encoder-only модель вроде BERT с проекцией эмбеддинга CLS-токена. Но «everything is an LLM these days», поэтому обычно идут первым путём.</li>
+<li><strong>Бенчмарк:</strong> RewardBench — популярный способ оценить качество reward model.</li>
+</ul>
+<p>На выходе — модель, которая по промпту и ответу выдаёт score.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — интуиция</p>
+<p>Bradley-Terry — модель парных сравнений из 1950-х, и инженеру она знакома под другим именем: шахматный рейтинг Elo устроен точно так же — вероятность выигрыша зависит только от разности рейтингов через логистическую кривую. Отсюда же ответ на вопросы о шкале ниже: в loss входит только разность <span class="arithmatex">\(r_w - r_l\)</span>, поэтому прибавление одной и той же константы ко всем reward ничего не меняет. Абсолютные значения score определены «с точностью до сдвига», и именно поэтому их нормализуют, прежде чем подавать в RL-loss.</p>
+</div>
+<h3 id="вопросы-41294507">Вопросы (<a href="https://youtu.be/PmW_TMQ3l0I?t=2489">41:29</a>–<a href="https://youtu.be/PmW_TMQ3l0I?t=2707">45:07</a>)<a class="headerlink" href="#вопросы-41294507" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Вопрос:</strong> в разных задачах «предпочтение» означает разное? — <strong>Ответ:</strong> да, reward всегда относится к какому-то измерению (dimension): полезен ли ответ, дружелюбен ли, безопасен ли. Под каждое измерение может быть своя reward model, либо один holistic score. Заодно: человеческие оценки очень чувствительны к guidelines для разметчиков — их нужно делать настолько объективными и чёткими, насколько возможно, иначе метки шумят.</li>
+<li><strong>Вопрос:</strong> это регрессия или классификация? — <strong>Ответ:</strong> формулировка вероятностная. Ближе к классификации — метка «лучше / хуже», 1 или 0, — но в итоге используются сами rewards, так что это не чистая классификация. Шкала rewards свободная (free-form), на инференсе её нормализуют по батчу.</li>
+<li><strong>Вопрос:</strong> нормализуем ли score? — <strong>Ответ:</strong> как правило, да; методов много. В регрессии мы предсказывали бы число на заданной шкале, здесь же шкала произвольная, поэтому потом делают rescaling.</li>
+<li><strong>Вопрос:</strong> что конкретно выдаёт reward model? — <strong>Ответ:</strong> число на непрерывной шкале: хороший ответ, скажем, 1, плохой — <span class="arithmatex">\(-2\)</span> или <span class="arithmatex">\(-3\)</span>. Пример будет в разделе про best-of-N.</li>
+</ul>
+<h2 id="7-reinforcement-learning">7. Reinforcement learning<a class="headerlink" href="#7-reinforcement-learning" title="Permanent link">¶</a></h2>
+<p>⏱ 46:02–53:54 · <a href="https://youtu.be/PmW_TMQ3l0I?t=2762">▶ смотреть на YouTube</a></p>
+<p>Шаг 2: с помощью обученной reward model выровнять LLM — ту, что прошла pre-training и SFT — методами RL.</p>
+<h3 id="общий-рецепт-4656">Общий рецепт (<a href="https://youtu.be/PmW_TMQ3l0I?t=2816">46:56</a>)<a class="headerlink" href="#общий-рецепт-4656" title="Permanent link">¶</a></h3>
+<ol>
+<li>Промпт подаётся в LLM, она генерирует <strong>completion</strong> — полный ответ (синоним — rollout).</li>
+<li>Промпт вместе с completion идёт в reward model. Та выдаёт не «палец вниз», а число — например, <span class="arithmatex">\(-2\)</span>.</li>
+<li>С учётом этой награды LLM подстраивается. На практике всё сложнее — об этом дальше.</li>
+</ol>
+<p>Важно: reward model уже обучена и <strong>заморожена</strong>; обучается только LLM. Цель — оптимизировать на более высокие награды, <strong>но не уходя слишком далеко от исходной модели</strong>.</p>
+<h3 id="почему-нельзя-уходить-далеко-от-базовой-модели-4849">Почему нельзя уходить далеко от базовой модели (<a href="https://youtu.be/PmW_TMQ3l0I?t=2929">48:49</a>)<a class="headerlink" href="#почему-нельзя-уходить-далеко-от-базовой-модели-4849" title="Permanent link">¶</a></h3>
+<p>Лектор собирает ответы из зала и дополняет:</p>
+<ol>
+<li><strong>Catastrophic forgetting.</strong> В исходной модели — предобученной и instruction-tuned — огромный объём знаний, и терять его нельзя.</li>
+<li><strong>Reward hacking.</strong> Из зала: модель переобучится на не очень чистых данных; reward model шумная. Лектор обобщает: оптимизируя награду слишком сильно, мы молчаливо предполагаем, что она точно измеряет то, что нам нужно. Но reward model несовершенна. Иллюстрация (<a href="https://youtu.be/PmW_TMQ3l0I?t=3058">50:58</a>): цель лектора — информативная лекция; измеримый proxy — громкость аплодисментов в конце. Если выяснится, что аудитория любит шутки, лектор начнёт шутить, аплодисменты будут громкими, награда максимальна — а цель не достигнута. Reward hacking — это когда модель максимизирует несовершенную метрику, не выполняя настоящую задачу.</li>
+<li><strong>Нестабильность обучения.</strong></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Аплодисменты вместо информативности — это закон Гудхарта: когда метрика становится целью, она перестаёт быть хорошей метрикой. Самый частый реальный случай reward hacking в LLM — length bias: reward model, обученная на человеческих парах, чуть-чуть предпочитает длинные развёрнутые ответы, policy быстро это обнаруживает — ответы раздуваются, а средний reward растёт. Поэтому при RLHF обычно следят за средней длиной ответа, а в бенчмарках появились length-controlled варианты метрик.</p>
+</div>
+<h3 id="данные-и-loss-5259">Данные и loss (<a href="https://youtu.be/PmW_TMQ3l0I?t=3179">52:59</a>)<a class="headerlink" href="#данные-и-loss-5259" title="Permanent link">¶</a></h3>
+<p>Наблюдений здесь обычно больше, чем при обучении reward model — как минимум 100K. Метки приходят от reward model. Стартуем с SFT-модели. Функция потерь будет состоять из двух частей: максимизировать награды и не давать модели отклоняться от базовой.</p>
+<h2 id="8-ppo">8. PPO<a class="headerlink" href="#8-ppo" title="Permanent link">¶</a></h2>
+<p>⏱ 53:54–57:56 · <a href="https://youtu.be/PmW_TMQ3l0I?t=3234">▶ смотреть на YouTube</a></p>
+<p>Самый популярный RL-алгоритм для этой задачи — <strong>PPO, Proximal Policy Optimization</strong>. «Proximal» — потому что модель не должна уходить далеко от базовой. Структура objective: часть с reward, которую максимизируем, плюс часть, измеряющая, насколько далеко распределение обучаемой policy ушло от <strong>reference model</strong> — базовой модели, то есть SFT-модели:</p>
+<div class="arithmatex">\[J(\theta) = \mathbb{E}_{x,\ \hat y \sim \pi_\theta}\big[r(x, \hat y)\big] \;-\; \beta\,\mathrm{KL}\big(\pi_\theta \,\|\, \pi_{\text{ref}}\big)\]</div>
+<p>Здесь <span class="arithmatex">\(r\)</span> — замороженная reward model, <span class="arithmatex">\(\pi_\theta\)</span> — обучаемая policy, <span class="arithmatex">\(\pi_{\text{ref}}\)</span> — SFT-модель, <span class="arithmatex">\(\beta\)</span> — коэффициент, задающий силу штрафа за отклонение (к нему ещё вернутся в разделах про проблемы и DPO).</p>
+<h3 id="kl-divergence-5452">KL divergence (<a href="https://youtu.be/PmW_TMQ3l0I?t=3292">54:52</a>)<a class="headerlink" href="#kl-divergence-5452" title="Permanent link">¶</a></h3>
+<p>Лектор не хочет предполагать, что все знают, что это. KL divergence — мера того, насколько далеки друг от друга два распределения <span class="arithmatex">\(P\)</span> и <span class="arithmatex">\(Q\)</span>. Не «расстояние» — у этого слова слишком много коннотаций, и формально это не метрика:</p>
+<div class="arithmatex">\[\mathrm{KL}(P \,\|\, Q) = \sum_i p_i \log \frac{p_i}{q_i}\]</div>
+<p>где <span class="arithmatex">\(p_i\)</span> и <span class="arithmatex">\(q_i\)</span> — вероятности <span class="arithmatex">\(i\)</span>-го исхода. Минимизируя loss, мы минимизируем расхождение между policy и reference.</p>
+<p><strong>Вопрос лектора в зал (<a href="https://youtu.be/PmW_TMQ3l0I?t=3355">55:55</a>):</strong> KL положительна или отрицательна и почему? — Отдельные слагаемые могут быть любого знака (логарифм бывает отрицательным), но вся сумма всегда <span class="arithmatex">\(\ge 0\)</span> — это доказывается через неравенство Йенсена (Jensen's inequality). И <span class="arithmatex">\(\mathrm{KL}(P \,\|\, Q) = 0\)</span> тогда и только тогда, когда <span class="arithmatex">\(P = Q\)</span>.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Два распределения на двух исходах: <span class="arithmatex">\(P = (0.5,\ 0.5)\)</span> и <span class="arithmatex">\(Q = (0.9,\ 0.1)\)</span>. Тогда <span class="arithmatex">\(\mathrm{KL}(P \,\|\, Q) = 0.5 \ln\frac{0.5}{0.9} + 0.5 \ln\frac{0.5}{0.1} \approx -0.29 + 0.80 = 0.51\)</span>: первое слагаемое отрицательное (о чём и говорил лектор), но сумма положительна. А в обратную сторону <span class="arithmatex">\(\mathrm{KL}(Q \,\|\, P) = 0.9 \ln\frac{0.9}{0.5} + 0.1 \ln\frac{0.1}{0.5} \approx 0.53 - 0.16 = 0.37\)</span> — другое число. Эта несимметричность и есть главная причина, по которой лектор отказывается называть KL «расстоянием».</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Для LLM KL между policy и reference никто не считает по полной формуле — суммировать по всему словарю на каждом шаге каждого ответа слишком дорого. Её оценивают на уже сгенерированных токенах как <span class="arithmatex">\(\log \pi_\theta(y_t \mid \ldots) - \log \pi_{\text{ref}}(y_t \mid \ldots)\)</span> и в InstructGPT-подобных реализациях вычитают из награды на каждом токене, а score reward model добавляют только на последнем. Так что точный ответ на вопрос «награда за токен или за весь ответ»: score reward model — за весь ответ, KL-штраф — потокенно.</p>
+</div>
+<h2 id="9-advantage-и-value-function">9. Advantage и value function<a class="headerlink" href="#9-advantage-и-value-function" title="Permanent link">¶</a></h2>
+<p>⏱ 57:56–1:03:39 · <a href="https://youtu.be/PmW_TMQ3l0I?t=3476">▶ смотреть на YouTube</a></p>
+<p>«Я немного слукавил»: максимизируют не reward, а <strong>advantage</strong> — насколько выход лучше того, что мы ожидали бы получить. Это делает обучение стабильнее. Advantage оценивают с помощью <strong>value function</strong>.</p>
+<p>Две величины (<a href="https://youtu.be/PmW_TMQ3l0I?t=3529">58:49</a>):</p>
+<ul>
+<li><strong>Reward</strong> — на уровне completion: по промпту и полному ответу говорит, насколько они хороши.</li>
+<li><strong>Value function</strong> — оценка на уровне токена. На вход — промпт и <em>частичная</em> генерация; на выход — оценка того, каким будет reward, если продолжить генерацию, следуя текущей policy. Лектор повторяет определение дважды, потому что оно «нагружено смыслом».</li>
+</ul>
+<p>Value function — то, что в статьях про PPO приходится обучать, и обучается она совместно с policy (<a href="https://youtu.be/PmW_TMQ3l0I?t=3640">1:00:40</a>): LLM, инициализированная SFT-моделью, генерирует; рядом стоит <strong>value head</strong>, который решает задачу регрессии (не классификации) — предсказать итоговый reward при продолжении по policy.</p>
+<p>Интуиция (<a href="https://youtu.be/PmW_TMQ3l0I?t=3742">1:02:22</a>): мы хотим не просто максимизировать награду, а сделать её относительной — сравнить с тем, что дал бы «средний» ответ. Условно:</p>
+<div class="arithmatex">\[A = r - b\]</div>
+<p>где <span class="arithmatex">\(r\)</span> — полученная награда, <span class="arithmatex">\(b\)</span> — baseline (ожидаемая награда), который и оценивает value function. Вычитание baseline уменьшает дисперсию оценок и ускоряет обучение. Точная формула advantage — <strong>GAE, generalized advantage estimation</strong> — «большая формула с несколькими гиперпараметрами», сознательно вынесена за рамки курса; интересующимся — статья «High-Dimensional Continuous Control Using Generalized Advantage Estimation» (математически тяжёлая).</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — связь с лекцией 6</p>
+<p>Идея «reward минус baseline» — ключ к GRPO, который разбирается в <a href="06-llm-reasoning.html">Лекции 6</a>. Там value function вообще не обучают: для одного промпта генерируют группу из нескольких ответов, baseline — средняя награда по группе, а advantage каждого ответа — его отклонение от среднего, делённое на разброс. То есть «средний ответ» из объяснения лектора берут буквально, сэмплируя его, вместо того чтобы предсказывать через value head. Оговорка 2026 года: деление на разброс (и потокенную нормировку на длину ответа) в Dr. GRPO признали источниками смещений, и в TRL по умолчанию их уже не используют.</p>
+</div>
+<h2 id="10-варианты-ppo-clip-и-kl-penalty">10. Варианты PPO: Clip и KL-penalty<a class="headerlink" href="#10-варианты-ppo-clip-и-kl-penalty" title="Permanent link">¶</a></h2>
+<p>⏱ 1:03:39–1:16:20 · <a href="https://youtu.be/PmW_TMQ3l0I?t=3819">▶ смотреть на YouTube</a></p>
+<p>Два типичных варианта loss из статьи про PPO.</p>
+<h3 id="ppo-clip-10340">PPO-Clip (<a href="https://youtu.be/PmW_TMQ3l0I?t=3820">1:03:40</a>)<a class="headerlink" href="#ppo-clip-10340" title="Permanent link">¶</a></h3>
+<p>Идея — не давать обновлениям модели быть слишком большими от одной итерации к другой:</p>
+<div class="arithmatex">\[L^{\text{CLIP}}(\theta) = \mathbb{E}\Big[\min\big(R(\theta)\,A,\ \mathrm{clip}\big(R(\theta),\,1-\epsilon,\,1+\epsilon\big)\,A\big)\Big]\]</div>
+<p>Лектор сразу разбирает то, что «путало и его самого» (<a href="https://youtu.be/PmW_TMQ3l0I?t=3875">1:04:35</a>):</p>
+<ul>
+<li>Записано как <span class="arithmatex">\(L\)</span> (loss), но эту величину <strong>максимизируют</strong>, а не минимизируют.</li>
+<li><span class="arithmatex">\(R(\theta)\)</span> — <strong>не reward</strong>, а ratio (отношение):</li>
+</ul>
+<div class="arithmatex">\[R(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)}\]</div>
+<p>то есть отношение вероятности токена по текущей policy к вероятности по policy с <strong>предыдущей итерации RL</strong> (<span class="arithmatex">\(\pi_{\theta_{\text{old}}}\)</span>). «Old» здесь — не SFT-модель, а модель с предыдущего шага.
+- <span class="arithmatex">\(A\)</span> — advantage: сложная функция reward и value function, говорящая, насколько хорош сгенерированный кусок.
+- <span class="arithmatex">\(\epsilon\)</span> — ширина коридора, в который зажимается ratio; <span class="arithmatex">\(\mathrm{clip}\)</span> обрезает <span class="arithmatex">\(R\)</span> до отрезка <span class="arithmatex">\([1-\epsilon,\ 1+\epsilon]\)</span>.</p>
+<p>Почему формула именно такая (<a href="https://youtu.be/PmW_TMQ3l0I?t=3994">1:06:34</a>):</p>
+<ul>
+<li><strong><span class="arithmatex">\(A &gt; 0\)</span></strong> — сгенерированное надо усилить, то есть увеличить его вероятность, то есть увеличить <span class="arithmatex">\(R\)</span>. Как функция от <span class="arithmatex">\(R\)</span>, <span class="arithmatex">\(L^{\text{CLIP}}\)</span> линейна (<span class="arithmatex">\(R \cdot A\)</span>) до <span class="arithmatex">\(1+\epsilon\)</span>, а дальше плоская: наращивать <span class="arithmatex">\(R\)</span> дальше невыгодно, обновление ограничено.</li>
+<li><strong><span class="arithmatex">\(A &lt; 0\)</span></strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=4104">1:08:24</a>) — сгенерированное нежелательно, нужно уменьшить его вероятность, то есть уменьшить <span class="arithmatex">\(R\)</span> (это тоже увеличивает <span class="arithmatex">\(L\)</span>), но не ниже <span class="arithmatex">\(1-\epsilon\)</span> — слишком большой шаг запрещён.</li>
+</ul>
+<p>Итого «сверхсложная формула» сводится к простому: усиливаем то, что нравится reward model, ослабляем то, что не нравится, и в обоих случаях ограничиваем размер шага. Лектор советует перечитать формулу с этой мыслью.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Возьмём <span class="arithmatex">\(\epsilon = 0.2\)</span> (значение из статьи PPO) и <span class="arithmatex">\(A = +2\)</span>. При ratio <span class="arithmatex">\(R = 0.9\)</span> оба аргумента <span class="arithmatex">\(\min\)</span> равны <span class="arithmatex">\(1.8\)</span> — градиент идёт, вероятность токена растёт. При <span class="arithmatex">\(R = 1.5\)</span> без clipping было бы <span class="arithmatex">\(3.0\)</span>, с clipping <span class="arithmatex">\(1.2 \cdot 2 = 2.4\)</span>; <span class="arithmatex">\(\min\)</span> выбирает <span class="arithmatex">\(2.4\)</span>, а эта ветка от <span class="arithmatex">\(\theta\)</span> не зависит — градиент нулевой, дальше «разгонять» токен нечем. Теперь <span class="arithmatex">\(A = -2\)</span>: при <span class="arithmatex">\(R = 0.5\)</span> имеем <span class="arithmatex">\(\min(-1.0,\ -1.6) = -1.6\)</span> — снова плоская ветка, ниже <span class="arithmatex">\(0.8\)</span> давить незачем; а при <span class="arithmatex">\(R = 1.5\)</span> получаем <span class="arithmatex">\(\min(-3.0,\ -2.4) = -3.0\)</span> — ветка без clipping, градиент толкает <span class="arithmatex">\(R\)</span> вниз. Заметьте асимметрию: <span class="arithmatex">\(\min\)</span> делает objective пессимистичной — clipping убирает стимул идти <em>дальше</em> в выгодную сторону, но никогда не мешает исправить шаг в невыгодную.</p>
+</div>
+<p><strong>Вопросы (<a href="https://youtu.be/PmW_TMQ3l0I?t=4222">1:10:22</a>–<a href="https://youtu.be/PmW_TMQ3l0I?t=4327">1:12:07</a>):</strong></p>
+<ul>
+<li><strong>Вопрос:</strong> что происходит в точке излома, где функция недифференцируема? — <strong>Ответ:</strong> то же, что с ReLU — те же методы.</li>
+<li><strong>Вопрос:</strong> почему ratio считается относительно предыдущей итерации, а не базовой модели? — <strong>Ответ:</strong> мало не уходить далеко от базовой модели — нужно ещё, чтобы обновления между итерациями не были экстремальными. Это дополнительное ограничение ради стабильности.</li>
+<li><strong>Вопрос:</strong> а базовая модель вообще учитывается? — <strong>Ответ:</strong> в этой формулировке нет, но в той, что реально используется для LLM, — да; сейчас увидим.</li>
+<li><strong>Вопрос:</strong> как вычисляется <span class="arithmatex">\(R\)</span>? — <strong>Ответ:</strong> из вероятности токена при данном входе — то есть из выходного распределения LLM.</li>
+</ul>
+<h3 id="kl-penalty-11207">KL-penalty (<a href="https://youtu.be/PmW_TMQ3l0I?t=4327">1:12:07</a>)<a class="headerlink" href="#kl-penalty-11207" title="Permanent link">¶</a></h3>
+<p>Второй вариант — с KL divergence:</p>
+<div class="arithmatex">\[L^{\text{KL}}(\theta) = \mathbb{E}\Big[R(\theta)\,A \;-\; \beta\,\mathrm{KL}\big(\pi_{\theta_{\text{old}}} \,\|\, \pi_\theta\big)\Big]\]</div>
+<p>то есть ratio умножить на advantage минус KL divergence между старой policy (предыдущая итерация) и текущей, с коэффициентом <span class="arithmatex">\(\beta\)</span>. В оригинальной статье PPO 2017 года «old» означает предыдущую RL-итерацию, но сейчас — в эпоху LLM, ставших популярными в 2020-е — туда обычно подставляют <strong>reference-модель</strong>. Более того, на практике часто смешивают оба варианта: KL к reference плюс clipping относительно предыдущей итерации. Формулировок loss много, «то, что я говорю, не всегда верно» — но так делают.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>PPO-Clip</th>
+<th>KL-penalty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Как ограничивается шаг</td>
+<td>ratio <span class="arithmatex">\(R(\theta)\)</span> зажимается в <span class="arithmatex">\([1-\epsilon, 1+\epsilon]\)</span></td>
+<td>штраф <span class="arithmatex">\(\beta \cdot \mathrm{KL}\)</span> в objective</td>
+</tr>
+<tr>
+<td>Относительно чего</td>
+<td>policy предыдущей итерации</td>
+<td>в статье 2017 — предыдущей итерации; для LLM — reference (SFT) модели</td>
+</tr>
+<tr>
+<td>Гиперпараметр</td>
+<td><span class="arithmatex">\(\epsilon\)</span></td>
+<td><span class="arithmatex">\(\beta\)</span></td>
+</tr>
+<tr>
+<td>На практике</td>
+<td>часто используют вместе: KL к reference + clipping к old</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="сколько-моделей-нужно-для-ppo-11400">Сколько моделей нужно для PPO (<a href="https://youtu.be/PmW_TMQ3l0I?t=4440">1:14:00</a>)<a class="headerlink" href="#сколько-моделей-нужно-для-ppo-11400" title="Permanent link">¶</a></h3>
+<ol>
+<li>Policy — обучаемая LLM.</li>
+<li>Value function — для оценки advantage.</li>
+<li>Reward model.</li>
+<li>Base / reference model — замороженная SFT-модель, с которой сравнивается текущая policy.</li>
+</ol>
+<p>Нужны ли все четыре, чтобы работало хорошо? «Maybe not». Сейчас набирают популярность другие методы — например, <strong>GRPO</strong> в контексте reasoning-моделей; его подробно разберут на лекции 6. Желающим заглянуть вперёд — статья DeepSeek «DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models», в которой GRPO и введён. PPO — лишь один популярный алгоритм, и даже внутри него много вариантов.</p>
+<h2 id="11-проблемы-rl-подхода">11. Проблемы RL-подхода<a class="headerlink" href="#11-проблемы-rl-подхода" title="Permanent link">¶</a></h2>
+<p>⏱ 1:16:20–1:19:58 · <a href="https://youtu.be/PmW_TMQ3l0I?t=4580">▶ смотреть на YouTube</a></p>
+<p>Трудности RL-based подходов, по пунктам:</p>
+<ol>
+<li><strong>Двухэтапность.</strong> Сначала reward model, потом policy. Сделали шаг 1, сделали шаг 2 — и обнаружили проблему в шаге 1: всё переделывать. Цепочка зависимостей, рецепт не из простых.</li>
+<li><strong>Много гиперпараметров</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=4633">1:17:13</a>): <span class="arithmatex">\(\beta\)</span> из KL-штрафа, <span class="arithmatex">\(\epsilon\)</span> из PPO-Clip, как минимум два в GAE. Одни работают лучше других, а каждое переобучение — заново весь пайплайн.</li>
+<li><strong>Нестабильность.</strong> Ограничение шага между итерациями помогает, но не всегда достаточно.</li>
+<li><strong>Метрика мониторинга</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=4688">1:18:08</a>). Естественный кандидат — средний reward, но это не лучший индикатор. При pre-training и SFT была cross-entropy loss, которая прямо показывала, насколько модель воспроизводит нужное поведение; здесь такого нет.</li>
+<li><strong>Exploration</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=4740">1:19:00</a>). Чтобы понять, какие completions делать чаще, а какие реже, нужно разнообразие генераций. Если на один промпт модель раз за разом выдаёт почти одно и то же, пространство возможных ответов не исследуется — приходится принуждать модель к exploration.</li>
+<li><strong>Неочевидность.</strong> Многие в аудитории с RL не знакомы — «я тоже не был», — и не вполне ясно, почему для этого этапа вообще нужен RL.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>Помимо среднего reward, за RL-обучением обычно следят по KL до reference-модели, средней длине ответа и reward на отложенных промптах, а раз в несколько сотен шагов гоняют внешние проверки — бенчмарки или LLM-судью (см. <a href="08-llm-evaluation.html">Лекцию 8</a>). Типичная картина reward hacking: reward монотонно растёт, KL и длина ответов растут вместе с ним, а внешние оценки стоят или падают. Обратный симптом — KL около нуля и неподвижный reward — обычно значит, что <span class="arithmatex">\(\beta\)</span> слишком велик или не хватает exploration.</p>
+</div>
+<h2 id="12-on-policy-и-off-policy">12. On-policy и off-policy<a class="headerlink" href="#12-on-policy-и-off-policy" title="Permanent link">¶</a></h2>
+<p>⏱ 1:19:58–1:22:43 · <a href="https://youtu.be/PmW_TMQ3l0I?t=4798">▶ смотреть на YouTube</a></p>
+<p>Термин, который будет встречаться постоянно. Ключевое отличие RL-обучения от SFT: в SFT есть промпт и готовый ответ, который модель должна имитировать, и эти данные не обязательно сгенерированы самой моделью. В RL же на каждой итерации модель сама генерирует выход, а затем оценка этого выхода используется для обновления.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>On-policy</th>
+<th>Off-policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Откуда генерации</td>
+<td>модель генерирует из своей текущей policy и на этом же оптимизируется</td>
+<td>обучение на генерациях, сделанных не той моделью, которую обучаем</td>
+</tr>
+<tr>
+<td>Пример</td>
+<td>PPO</td>
+<td>SFT-подобное обучение на чужих данных</td>
+</tr>
+</tbody>
+</table>
+<p>PPO — on-policy алгоритм.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — уточнение</p>
+<p>Строго говоря, PPO не совсем on-policy: каждую порцию rollouts используют для нескольких эпох градиентных шагов, и уже после первого шага policy отличается от той, что генерировала данные. Ratio <span class="arithmatex">\(R(\theta)\)</span> из предыдущего раздела — это и есть поправка на такое расхождение (importance sampling), а clipping не даёт ей уйти далеко; отсюда и «old» как предыдущая итерация. DPO в этом смысле off-policy метод: пары берутся из готового датасета, часто сгенерированного другими моделями, — это и есть distribution shift, о котором дальше скажет Shervine.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/PmW_TMQ3l0I?t=4866">1:21:06</a>):</strong> почему бы просто не сделать SFT на preference-данных? — <strong>Ответ:</strong> SFT говорит модели «при таком входе сгенерируй вот это», но не умеет сказать «вот это не генерируй». Если не переписать нежелательный ответ в идеальный, в традиционном SFT запретить его невозможно. Но вопрос отличный: минут через десять будет показан supervised-способ сделать то, что здесь делается через RL.</p>
+<h2 id="13-best-of-n">13. Best-of-N<a class="headerlink" href="#13-best-of-n" title="Permanent link">¶</a></h2>
+<p>⏱ 1:22:43–1:29:47 · <a href="https://youtu.be/PmW_TMQ3l0I?t=4963">▶ смотреть на YouTube</a></p>
+<p>Метод, который «на практике используют чаще, чем кажется», — для тех, у кого есть reward model, но кто не хочет делать RL: это дорого (много моделей) и обучение тяжело настроить. <strong>Best-of-N (BoN)</strong>: reward model используется не для обучения, а для выбора ответа, который вернуть пользователю.</p>
+<p>Схема: промпт → SFT-модель как есть, без дообучения, генерирует N completions (скажем, 4–5) → reward model ставит score каждой паре (промпт, completion) → возвращается лучшая.</p>
+<p>Пример (<a href="https://youtu.be/PmW_TMQ3l0I?t=5066">1:24:26</a>), он же обещанный ответ на вопрос «что выдаёт reward model». Промпт про мишку, три completions:</p>
+<table>
+<thead>
+<tr>
+<th>Completion</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>хороший развёрнутый ответ с идеями занятий</td>
+<td>0.8</td>
+</tr>
+<tr>
+<td>«не трать время на мишку»</td>
+<td><span class="arithmatex">\(-2\)</span></td>
+</tr>
+<tr>
+<td>«возьми мишку на пикник» — так себе</td>
+<td>между ними</td>
+</tr>
+</tbody>
+</table>
+<p>BoN вернёт первый.</p>
+<p><strong>Проблемы (<a href="https://youtu.be/PmW_TMQ3l0I?t=5122">1:25:22</a>), собранные из зала:</strong></p>
+<ul>
+<li>Если модель плохая, все N ответов будут плохими. Отчасти лечится достаточным N и высокой температурой — будет разнообразие, — но модель должна быть «хотя бы немного хорошей».</li>
+<li>Главная: модель запрашивается N раз. RL-обучение пропущено, но вся работа перенесена на inference, где как раз хочется экономить деньги и compute. При большом трафике это может не иметь смысла; перед выбором стоит оценить ожидаемый inference-трафик против стоимости обучения.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — на практике</p>
+<p>У best-of-N есть второе применение, которое лекция не упоминает: использовать его не на инференсе, а для сбора данных. В рецепте Llama 2 (2023) так и делали — генерировали несколько ответов, отбирали лучшие по reward model и делали на них обычный SFT (rejection sampling fine-tuning), и только потом запускали PPO. Это дёшево, не требует RL-инфраструктуры и уже даёт заметную часть выигрыша. А сама идея «потратить больше вычислений на инференсе ради лучшего ответа» вернётся в <a href="06-llm-reasoning.html">Лекции 6</a> как test-time compute у reasoning-моделей.</p>
+</div>
+<p><strong>Вопросы (<a href="https://youtu.be/PmW_TMQ3l0I?t=5228">1:27:08</a>–<a href="https://youtu.be/PmW_TMQ3l0I?t=5343">1:29:03</a>):</strong></p>
+<ul>
+<li><strong>Вопрос:</strong> сигмоида здесь не превращается в softmax? — <strong>Ответ:</strong> в BoN reward model уже обучена; <span class="arithmatex">\(\sigma\)</span> и pairwise-формулировка относятся к её обучению. В BoN модель просто N раз выдаёт score, и берётся максимальный.</li>
+<li><strong>Вопрос:</strong> а если все ответы плохие? — <strong>Ответ:</strong> справедливое опасение; модель должна быть хотя бы немного хорошей.</li>
+<li><strong>Вопрос:</strong> есть ли ограничения на шкалу score? — <strong>Ответ:</strong> для BoN шкала не важна: при любом масштабировании (например, нормальном) самый высокий score остаётся самым высоким. Шкала важна, когда reward входит в функцию потерь — как в RL; там и применяют нормализацию.</li>
+</ul>
+<h2 id="14-dpo">14. DPO<a class="headerlink" href="#14-dpo" title="Permanent link">¶</a></h2>
+<p>⏱ 1:29:47–≈1:47 · <a href="https://youtu.be/PmW_TMQ3l0I?t=5387">▶ смотреть на YouTube</a></p>
+<p>Afshine передаёт слово Shervine. План: сначала собрать жалобы на RL-мир, потом посмотреть, как их починили.</p>
+<h3 id="жалобы-12950">Жалобы (<a href="https://youtu.be/PmW_TMQ3l0I?t=5390">1:29:50</a>)<a class="headerlink" href="#жалобы-12950" title="Permanent link">¶</a></h3>
+<ol>
+<li>В PPO во время оптимизации приходится таскать четыре набора весов: policy текущей модели, old/reference-модель, а внутри advantage — ещё reward model и value function.</li>
+<li>Best-of-N: латентность и стоимость. Мысленный эксперимент (<a href="https://youtu.be/PmW_TMQ3l0I?t=5447">1:30:47</a>): пусть денег бесконечно и все N генераций идут параллельно. Всё равно ждём самую долгую из N. Распределение латентности не сосредоточено в одной точке, а распределение максимума из N сдвинуто вправо — ждём дольше, чем при одном проходе.</li>
+</ol>
+<p>Отсюда вопрос из зала «почему не supervised?» — именно этот путь исследовали авторы <strong>DPO, Direct Preference Optimization</strong>.</p>
+<h3 id="формула-13234">Формула (<a href="https://youtu.be/PmW_TMQ3l0I?t=5554">1:32:34</a>)<a class="headerlink" href="#формула-13234" title="Permanent link">¶</a></h3>
+<p>Вместо дорогого двухшагового процесса (reward model → итерации по весам) DPO оптимизирует одну функцию потерь прямо по весам модели:</p>
+<div class="arithmatex">\[\mathcal{L}_{\text{DPO}}(\pi_\theta;\, \pi_{\text{ref}}) = -\,\mathbb{E}_{(x,\, y_w,\, y_l)}\left[\log \sigma\left(\beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} \;-\; \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)}\right)\right]\]</div>
+<p>Что здесь есть: <span class="arithmatex">\(\pi_\theta\)</span> — обучаемая policy, <span class="arithmatex">\(\pi_{\text{ref}}\)</span> — замороженная SFT-модель, <span class="arithmatex">\(y_w\)</span> и <span class="arithmatex">\(y_l\)</span> — выигравший и проигравший ответы на промпт <span class="arithmatex">\(x\)</span>, <span class="arithmatex">\(\beta\)</span> — гиперпараметр, <span class="arithmatex">\(\sigma\)</span> — сигмоида. Чего нет — никакого <span class="arithmatex">\(r\)</span>: reward не участвует. Внутри сигмоиды — вероятности completions, и вычитание сравнивает, насколько вероятен выигравший ответ против проигравшего. Присмотревшись, узнаём Bradley-Terry от Afshine: матожидание <span class="arithmatex">\(\log \sigma(\cdot)\)</span> от разности двух слагаемых, каждое из которых играет роль reward. «Формула не очень красивая», но это прямое выражение через preference pairs.</p>
+<p>Отсюда название статьи — «Your Language Model Is Secretly a Reward Model» (<a href="https://youtu.be/PmW_TMQ3l0I?t=5669">1:34:29</a>): место, где в loss должен был стоять reward, занимает выражение через саму policy.</p>
+<h3 id="как-это-получено-1342913854">Как это получено (<a href="https://youtu.be/PmW_TMQ3l0I?t=5669">1:34:29</a>–<a href="https://youtu.be/PmW_TMQ3l0I?t=5934">1:38:54</a>)<a class="headerlink" href="#как-это-получено-1342913854" title="Permanent link">¶</a></h3>
+<p>Shervine предупреждает, что сильно упрощает тяжёлые выкладки статьи; дополнительных предположений в них нет, «просто цепочка преобразований».</p>
+<ol>
+<li><strong>Objective PPO.</strong> Максимизировать награду и минимизировать расхождение с reference-моделью; <span class="arithmatex">\(\beta\)</span> задаёт, насколько сильно штрафуется уход от базовой модели:</li>
+</ol>
+<div class="arithmatex">\[\max_{\pi} \; \mathbb{E}\big[r(x, y)\big] - \beta\, \mathrm{KL}\big(\pi \,\|\, \pi_{\text{ref}}\big)\]</div>
+<ol>
+<li><strong>Оптимальная policy.</strong> Авторы записали эту задачу и решили её аналитически. Оптимальная <span class="arithmatex">\(\pi^*\)</span> выражается через <span class="arithmatex">\(r\)</span>:</li>
+</ol>
+<div class="arithmatex">\[\pi^*(y \mid x) = \frac{1}{Z(x)}\, \pi_{\text{ref}}(y \mid x)\, \exp\!\Big(\frac{1}{\beta}\, r(x, y)\Big)\]</div>
+<p>где <span class="arithmatex">\(Z(x)\)</span> — partition function (статистическая сумма), которая только нормализует; она не вносит ничего нового, это функция уже имеющихся величин.</p>
+<ol>
+<li><strong>Перестановка.</strong> Из той же формулы reward выражается через <span class="arithmatex">\(\pi^*\)</span>:</li>
+</ol>
+<div class="arithmatex">\[r(x, y) = \beta \log \frac{\pi^*(y \mid x)}{\pi_{\text{ref}}(y \mid x)} + \beta \log Z(x)\]</div>
+<p>«Nothing too fancy» — просто перенос членов.</p>
+<ol>
+<li>
+<p><strong>Подстановка в Bradley-Terry</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=5822">1:37:02</a>). Ключевой ход статьи: узнать в этом выражении reward и подставить его в <span class="arithmatex">\(P(y_w \succ y_l) = \sigma\big(r(x, y_w) - r(x, y_l)\big)\)</span>. После подстановки reward исчезает — остаются только <span class="arithmatex">\(\beta\)</span> и policy. <em>Примечание:</em> слагаемое <span class="arithmatex">\(\beta \log Z(x)\)</span> одинаково для <span class="arithmatex">\(y_w\)</span> и <span class="arithmatex">\(y_l\)</span> и при вычитании сокращается, поэтому в итоговой формуле <span class="arithmatex">\(Z\)</span> нет.</p>
+</li>
+<li>
+<p><strong>Из вероятности в loss</strong> (<a href="https://youtu.be/PmW_TMQ3l0I?t=5875">1:37:55</a>). Тот же шаг, что делал Afshine для reward model: вероятность, которую хотим максимизировать, превращается в negative log-likelihood — это и есть <span class="arithmatex">\(\mathcal{L}_{\text{DPO}}\)</span>.</p>
+</li>
+</ol>
+<p><span class="arithmatex">\(\beta\)</span> — тот же коэффициент, что в PPO; порядок величины — около 0.1. Это гиперпараметр; оптимизируется только policy, preference pairs подаются на вход.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — пример</p>
+<p>Обозначим <span class="arithmatex">\(a = \log \pi_\theta(y \mid x) - \log \pi_{\text{ref}}(y \mid x)\)</span> — насколько policy сдвинула вероятность ответа относительно reference; тогда внутри сигмоиды стоит <span class="arithmatex">\(\beta (a_w - a_l)\)</span>, а <span class="arithmatex">\(\beta \cdot a\)</span> и есть тот самый «скрытый reward» из названия статьи. В начале обучения <span class="arithmatex">\(\pi_\theta = \pi_{\text{ref}}\)</span>, поэтому <span class="arithmatex">\(a_w = a_l = 0\)</span>, <span class="arithmatex">\(\sigma(0) = 0.5\)</span> и loss <span class="arithmatex">\(= \ln 2 \approx 0.69\)</span> для любой пары — удобная проверка, что код не сломан. Пусть после обучения <span class="arithmatex">\(a_w = +2\)</span> (выигравший ответ стал в <span class="arithmatex">\(e^2 \approx 7.4\)</span> раза вероятнее) и <span class="arithmatex">\(a_l = -3\)</span> (проигравший — в <span class="arithmatex">\(e^3 \approx 20\)</span> раз менее вероятен): при <span class="arithmatex">\(\beta = 0.1\)</span> аргумент равен <span class="arithmatex">\(0.1 \cdot 5 = 0.5\)</span>, <span class="arithmatex">\(\sigma(0.5) \approx 0.62\)</span>, loss <span class="arithmatex">\(\approx 0.47\)</span>. Обратите внимание, что в loss входит только разность <span class="arithmatex">\(a_w - a_l\)</span>: формально ничто не мешает модели понизить вероятность обоих ответов, лишь бы проигравший падал быстрее, — в ряде работ этот эффект обсуждается как likelihood displacement.</p>
+</div>
+<h3 id="dpo-против-rlhf-13854">DPO против RLHF (<a href="https://youtu.be/PmW_TMQ3l0I?t=5934">1:38:54</a>)<a class="headerlink" href="#dpo-против-rlhf-13854" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RLHF (PPO)</th>
+<th>DPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Этапов</td>
+<td>два: обучить reward model, затем обновлять policy</td>
+<td>один: loss прямо на preference pairs</td>
+</tr>
+<tr>
+<td>Моделей в памяти</td>
+<td>четыре: policy, reference, reward model, value function</td>
+<td>две: <span class="arithmatex">\(\pi_\theta\)</span> и <span class="arithmatex">\(\pi_{\text{ref}}\)</span></td>
+</tr>
+<tr>
+<td>Тип обучения</td>
+<td>нет прямой supervision — следующие обновления зависят от генераций текущей policy</td>
+<td>supervised</td>
+</tr>
+<tr>
+<td>Стабильность</td>
+<td>проблема</td>
+<td>проще</td>
+</tr>
+<tr>
+<td>Качество</td>
+<td>в целом выше</td>
+<td>чуть ниже, «почти на том же уровне»</td>
+</tr>
+<tr>
+<td>Слабое место</td>
+<td>сложность, гиперпараметры, «babysitting» обучения</td>
+<td>distribution shift</td>
+</tr>
+</tbody>
+</table>
+<p>Почему тогда не все используют DPO (<a href="https://youtu.be/PmW_TMQ3l0I?t=6050">1:40:50</a>)? Не всё так просто — у каждого метода свои плюсы и минусы. Статья, ссылка на которую приведена на слайде (название в субтитрах не прозвучало), сравнивает их на бенчмарках: в целом PPO работает лучше DPO. Прямая supervision в DPO имеет цену: модель фитится на данные, которые могут не совпадать с распределением, виденным ею при обучении. DPO позволяет вообще не думать о reward modeling и взять любой готовый preference-датасет — но ровно отсюда и берётся distribution shift. Варианты: сначала сделать SFT на данных, связанных с этими предпочтениями, — так получается лучше; или сгенерировать ответы самой моделью и разметить их — но это ещё одна статья расходов.</p>
+<div class="admonition tip">
+<p class="admonition-title">💡 Дополнение — что изменилось с тех пор</p>
+<p>По состоянию на 2026 год у DPO появилось целое семейство родственников: IPO, KTO (учится на одиночных «лайках / дизлайках» без пар), ORPO и SimPO (обходятся без reference-модели). С distribution shift борются «онлайн» или итеративным DPO — пары заново генерируют текущей моделью и размечают судьёй или reward model, то есть возвращают методу on-policy характер. К ноябрю 2026 в открытых рецептах post-training DPO стал лёгким и необязательным этапом (часть релизов обходится без него), а центр тяжести — и для reasoning, и для общих способностей — сместился к on-policy RL из GRPO-семейства с проверяемыми, рубричными и генеративными наградами; об этом <a href="06-llm-reasoning.html">Лекция 6</a> и <a href="../updates/05-llm-tuning-rlhf-dpo.html">актуализация</a>.</p>
+</div>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/PmW_TMQ3l0I?t=6106">1:41:46</a>):</strong> параметры оптимизируются относительно базовой модели? — <strong>Ответ:</strong> обновляется не базовая, а текущая модель. Базовая фиксирована на протяжении всех итераций и входит в loss. Итого два набора весов: один замороженный, один обновляемый — он и станет preference-tuned моделью.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/PmW_TMQ3l0I?t=6157">1:42:37</a>):</strong> можно ли вместо reference взять другую, большую модель? — <strong>Ответ:</strong> это был бы уже другой алгоритм, и смысл частично теряется: preference tuning выравнивает ответы относительно того, что модель уже выучила, поэтому естественно стартовать с последнего checkpoint. Готового ответа нет — может получиться интересное поведение, но с точки зрения loss это сомнительно. Реплика из зала: смену reference можно считать просто другой SFT-версией модели — лектор соглашается.</p>
+<h3 id="любимый-пример-14425">Любимый пример (<a href="https://youtu.be/PmW_TMQ3l0I?t=6265">1:44:25</a>)<a class="headerlink" href="#любимый-пример-14425" title="Permanent link">¶</a></h3>
+<p>Промпт из прошлой лекции: «можно ли стирать мишку в машинке?». После instruction tuning ответ был: «No, it might get damaged. Try hand washing it instead». Фактически верно — мишек действительно стирают руками. Что не так? Из зала: ответ грубоват, недружелюбен; тот, кто спрашивает, возможно, любит своего мишку, и сказать ему это стоило бы мягче. Это и есть суть preference tuning: мы не учим модель новым фактам, а работаем с уже существующим распределением completions и выравниваем его с тем, что предпочитает человек. Preference-tuned ответ: «It's better not to. Your teddy bear could get hurt. A gentle hand wash is safer» — те же факты, но тон гораздо приятнее.</p>
+<p><strong>Вопрос из зала (<a href="https://youtu.be/PmW_TMQ3l0I?t=6384">1:46:24</a>):</strong> каковы trade-offs и что используют на практике? — <strong>Ответ:</strong> зависит от бюджета на compute и от того, насколько вы готовы «нянчить» обучение. PPO очень трудно настроить правильно, зато даёт максимальный результат; DPO даёт почти тот же уровень с гораздо меньшими усилиями. Нужен быстрый preference tuning с хорошим, пусть и не лучшим, результатом — DPO. Вы эксперт в RL и хотите выжать последний процент — PPO.</p>
+<h2 id="ключевые-термины">Ключевые термины<a class="headerlink" href="#ключевые-термины" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Термин</th>
+<th>Что это (как объясняли на лекции)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Preference tuning</td>
+<td>Третий этап обучения LLM после pre-training и SFT: выравнивание модели с человеческими предпочтениями (тон, дружелюбие, безопасность), не обучение новым фактам</td>
+</tr>
+<tr>
+<td>Preference pair</td>
+<td>Промпт и два ответа на него — желательный (<span class="arithmatex">\(y_w\)</span>) и нежелательный (<span class="arithmatex">\(y_l\)</span>); основная единица данных на этом этапе</td>
+</tr>
+<tr>
+<td>Pointwise / pairwise / listwise</td>
+<td>Три способа разметки: оценка одного ответа; выбор лучшего из двух; ранжирование списка. На практике — pairwise с бинарной меткой</td>
+</tr>
+<tr>
+<td>LLM as a judge</td>
+<td>Использование LLM для сравнения двух ответов вместо человека; подробнее в следующих лекциях</td>
+</tr>
+<tr>
+<td>RLHF / RLAIF</td>
+<td>Reinforcement Learning from Human / AI Feedback: два этапа (reward model, затем RL); «human» или «AI» относится к тому, кто разметил пары</td>
+</tr>
+<tr>
+<td>Agent, state, action, policy</td>
+<td>Агент — LLM; состояние — вход на данный момент; действие — следующий токен; policy <span class="arithmatex">\(\pi_\theta(a \mid s)\)</span> — выходное распределение следующего токена</td>
+</tr>
+<tr>
+<td>Reward model (RM)</td>
+<td>Модель, которая по промпту и ответу выдаёт число на непрерывной шкале (хороший ≈ 1, плохой ≈ <span class="arithmatex">\(-2\)</span>). Обучается pairwise, работает pointwise; заморожена на RL-шаге</td>
+</tr>
+<tr>
+<td>Bradley-Terry</td>
+<td><span class="arithmatex">\(P(y_i \succ y_j) = \sigma(r_i - r_j)\)</span>: вероятность предпочтения через разность скалярных оценок; из неё выводится loss reward model и DPO</td>
+</tr>
+<tr>
+<td>Completion / rollout</td>
+<td>Полный ответ модели на промпт, за который даётся награда</td>
+</tr>
+<tr>
+<td>Reference model</td>
+<td>Замороженная SFT-модель, от которой policy не должна уходить далеко</td>
+</tr>
+<tr>
+<td>Reward hacking</td>
+<td>Модель максимизирует несовершенную награду, не достигая настоящей цели (пример с аплодисментами вместо информативности)</td>
+</tr>
+<tr>
+<td>KL divergence</td>
+<td><span class="arithmatex">\(\sum_i p_i \log(p_i / q_i)\)</span> — мера расхождения двух распределений; неотрицательна (неравенство Йенсена), равна нулю только при <span class="arithmatex">\(P = Q\)</span></td>
+</tr>
+<tr>
+<td>PPO</td>
+<td>Proximal Policy Optimization: максимизация advantage с ограничением на уход от reference-модели и на размер шага между итерациями</td>
+</tr>
+<tr>
+<td>Advantage</td>
+<td>Насколько выход лучше ожидаемого: reward минус baseline; снижает дисперсию, стабилизирует обучение. Точная формула — GAE</td>
+</tr>
+<tr>
+<td>Value function</td>
+<td>Токен-уровневая оценка будущего reward по частичной генерации; обучается совместно с policy через value head (регрессия)</td>
+</tr>
+<tr>
+<td>Ratio <span class="arithmatex">\(R(\theta)\)</span></td>
+<td>Отношение вероятности токена по текущей policy к вероятности по policy предыдущей итерации; не путать с reward</td>
+</tr>
+<tr>
+<td>PPO-Clip</td>
+<td>Вариант PPO, где ratio зажимается в <span class="arithmatex">\([1-\epsilon, 1+\epsilon]\)</span>, чтобы обновление не было слишком большим</td>
+</tr>
+<tr>
+<td>KL-penalty</td>
+<td>Вариант PPO со штрафом <span class="arithmatex">\(\beta \cdot \mathrm{KL}\)</span>; в статье 2017 — к старой policy, для LLM — к reference-модели</td>
+</tr>
+<tr>
+<td>On-policy / off-policy</td>
+<td>Обучение на генерациях текущей policy (PPO) против обучения на чужих данных</td>
+</tr>
+<tr>
+<td>Best-of-N (BoN)</td>
+<td>Без RL: сгенерировать N ответов SFT-моделью, оценить reward model, вернуть лучший; цена — N-кратный инференс и латентность</td>
+</tr>
+<tr>
+<td>DPO</td>
+<td>Direct Preference Optimization: supervised-loss прямо на preference pairs, без reward model и RL; нужны только <span class="arithmatex">\(\pi_\theta\)</span> и <span class="arithmatex">\(\pi_{\text{ref}}\)</span></td>
+</tr>
+<tr>
+<td>Partition function <span class="arithmatex">\(Z(x)\)</span></td>
+<td>Нормализующий множитель в формуле оптимальной policy; не вносит ничего нового</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\beta\)</span></td>
+<td>Коэффициент KL-штрафа в PPO и тот же гиперпараметр в DPO; типично около 0.1</td>
+</tr>
+<tr>
+<td>Distribution shift</td>
+<td>Слабое место DPO: обучение на готовом preference-датасете, не совпадающем с распределением, которое модель видела</td>
+</tr>
+</tbody>
+</table>
+<h2 id="главные-выводы">Главные выводы<a class="headerlink" href="#главные-выводы" title="Permanent link">¶</a></h2>
+<ul>
+<li>Preference tuning нужен не для новых знаний, а для тона и стиля: SFT-модель умеет отвечать, но не всегда так, как хочет человек. Если же модель ошибается массово — сначала проверьте SFT-датасет.</li>
+<li>Пары «лучше / хуже» собирать намного проще, чем эталонные ответы, и только они дают модели негативный сигнал — SFT говорит, что генерировать, но не что <em>не</em> генерировать.</li>
+<li>Bradley-Terry превращает pairwise-разметку в pointwise reward model: обучение на парах через <span class="arithmatex">\(-\log \sigma(r_w - r_l)\)</span>, а на выходе — одно число на (промпт, ответ).</li>
+<li>RL-objective для LLM — награда минус <span class="arithmatex">\(\beta \cdot \mathrm{KL}\)</span> от reference-модели. Без KL модель забудет выученное, переобучится на шумную reward model (reward hacking) и станет нестабильной.</li>
+<li>Оптимизируют не reward, а advantage (reward минус baseline из value function) — это снижает дисперсию; PPO-Clip и KL-penalty дополнительно ограничивают шаг от итерации к итерации.</li>
+<li>PPO тяжёл: четыре модели в памяти, двухэтапный пайплайн, много гиперпараметров (<span class="arithmatex">\(\beta\)</span>, <span class="arithmatex">\(\epsilon\)</span>, GAE), нестабильность, нет хорошей метрики мониторинга, нужна exploration.</li>
+<li>Best-of-N — способ использовать reward model без RL, но вся стоимость переезжает на инференс; даже при бесконечном compute латентность растёт как максимум из N.</li>
+<li>DPO решает ту же задачу аналитически: из оптимальной policy выражается reward, подставляется в Bradley-Terry — и остаётся supervised-loss с двумя моделями. «Your language model is secretly a reward model».</li>
+<li>На практике: PPO даёт лучший результат, но его трудно настроить; DPO почти так же хорош при гораздо меньших усилиях, но страдает от distribution shift. Выбор зависит от бюджета и экспертизы в RL.</li>
+</ul>
+<h2 id="вопросы-из-зала">Вопросы из зала<a class="headerlink" href="#вопросы-из-зала" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=577">09:37</a> Вопрос: есть ли аналог LoRA для preference tuning? → Ответ: LoRA сокращает число обучаемых параметров, preference tuning — другая objective; они совместимы, LoRA можно применять и здесь.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=1326">22:06</a> Вопрос: не слишком ли дорого делать это для всех пар? → Ответ: работают батчами; дорого примерно как любое обучение, но есть дополнительные компоненты по сравнению с SFT.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=1383">23:03</a> Вопрос: достаточно ли силён сигнал от награды? → Ответ: он разреженнее, чем в SFT — примерно один сигнал на completion; RLHF считают подходом со sparse signals.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=1494">24:54</a> Вопрос: награда за каждый токен или за весь ответ? → Ответ: за весь ответ целиком.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=2000">33:20</a> Вопрос лектора: какую loss использовать для reward model? → Студент: binary cross-entropy / negative log-likelihood — лектор выводит её из maximum likelihood по Bradley-Terry.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=2489">41:29</a> Вопрос: предпочтения зависят от задачи? → Ответ: reward задаётся вдоль измерения (полезность, дружелюбие, безопасность) — отдельные reward models или holistic score; guidelines для разметчиков должны быть максимально объективными.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=2600">43:20</a> Вопрос: reward model — регрессия или классификация? → Ответ: вероятностная формулировка, ближе к классификации (лучше / хуже), но используются сами score; шкала свободная и нормализуется на инференсе.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=2707">45:07</a> Вопрос: что выдаёт reward model? → Ответ: число на непрерывной шкале, например 1 для хорошего и <span class="arithmatex">\(-2\)</span>, <span class="arithmatex">\(-3\)</span> для плохого ответа.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=2929">48:49</a> Вопрос лектора: почему не уходить далеко от базовой модели? → Из зала: catastrophic forgetting; переобучение на шумной reward model (reward hacking); лектор добавляет нестабильность.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=3355">55:55</a> Вопрос лектора: KL divergence положительна? → Да, через неравенство Йенсена; ноль только при <span class="arithmatex">\(P = Q\)</span>.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=4222">1:10:22</a> Вопрос: как быть с недифференцируемостью clip? → Ответ: так же, как с ReLU.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=4222">1:10:22</a> Вопрос: почему ratio относительно предыдущей итерации, а не базовой модели? → Ответ: нужно ещё ограничивать шаг между итерациями ради стабильности; базовая модель входит через KL в LLM-формулировке.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=4276">1:11:16</a> Вопрос: как вычисляется <span class="arithmatex">\(R\)</span>? → Ответ: из вероятностей токенов в выходном распределении LLM.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=4866">1:21:06</a> Вопрос: почему не сделать SFT на preference-данных? → Ответ: SFT не умеет говорить «так не генерируй»; но supervised-вариант существует — DPO, через десять минут.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=5122">1:25:22</a> Вопрос лектора: в чём проблема best-of-N? → Из зала: плохая модель даст N плохих ответов; главное — N-кратная стоимость инференса.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=5228">1:27:08</a> Вопрос: сигмоида превращается в softmax? → Ответ: в BoN reward model уже обучена; pairwise-сигмоида относится к обучению, здесь просто берётся максимум из N score.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=5343">1:29:03</a> Вопрос: есть ли ограничения на шкалу reward? → Ответ: для BoN шкала не важна (максимум остаётся максимумом); она важна, когда reward входит в loss, как в RL.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=6106">1:41:46</a> Вопрос: в DPO оптимизируем относительно базовой модели? → Ответ: обновляется текущая модель; базовая зафиксирована и входит в loss — два набора весов.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=6157">1:42:37</a> Вопрос: можно ли взять другую модель в качестве reference? → Ответ: это другой алгоритм, смысл выравнивания собственного распределения теряется; по сути, это была бы другая SFT-версия модели.</li>
+<li><a href="https://youtu.be/PmW_TMQ3l0I?t=6384">1:46:24</a> Вопрос: какие trade-offs и что используют на практике? → Ответ: PPO — максимум качества, но трудно настроить; DPO — быстро и почти так же хорошо. Зависит от бюджета и экспертизы.</li>
+</ul>
+<h2 id="чем-можно-дополнить">Чем можно дополнить<a class="headerlink" href="#чем-можно-дополнить" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Канонический RLHF-пайплайн целиком.</strong> Лекция собирает его из частей; в одном месте он описан в статье OpenAI «Training language models to follow instructions with human feedback» (InstructGPT, 2022): SFT → reward model → PPO, с деталями про разметчиков, объёмы данных и подмешивание pre-training loss в RL-шаг, чтобы не терять знания. Искать: InstructGPT, PPO-ptx.</li>
+<li><strong>Policy gradient и REINFORCE.</strong> PPO — потомок простого policy gradient с градиентом вида <span class="arithmatex">\(\nabla_\theta \log \pi_\theta(y \mid x) \cdot A\)</span>. Зная эту формулу, легко увидеть, откуда берутся ratio, baseline и importance sampling. Искать: policy gradient theorem, REINFORCE, RLOO (REINFORCE leave-one-out — лёгкая альтернатива PPO для LLM).</li>
+<li><strong>Формула GAE и её гиперпараметры.</strong> Лектор оставил advantage «чёрным ящиком»; «два гиперпараметра» — это discount <span class="arithmatex">\(\gamma\)</span> и <span class="arithmatex">\(\lambda\)</span>, который балансирует смещение и дисперсию оценки. Искать: Generalized Advantage Estimation (Schulman et al.).</li>
+<li><strong>Переоптимизация reward model.</strong> Как далеко можно оптимизировать прокси-награду, прежде чем настоящее качество начнёт падать, и как это зависит от размера reward model и величины KL. Искать: «Scaling Laws for Reward Model Overoptimization», reward model ensembles, length bias.</li>
+<li><strong>Outcome vs process reward models.</strong> Награда за весь ответ (ORM) против награды за каждый шаг рассуждения (PRM) — мост к reasoning-моделям из <a href="06-llm-reasoning.html">Лекции 6</a>. Искать: process reward model, «Let's Verify Step by Step».</li>
+<li><strong>RL с проверяемыми наградами (RLVR).</strong> Когда ответ можно проверить программно — тестами для кода или сверкой ответа задачи, — reward model не нужна вовсе, и исчезает reward hacking через шумную модель. Это основа DeepSeek-R1 и темы <a href="06-llm-reasoning.html">Лекции 6</a>. Искать: RLVR, GRPO.</li>
+<li><strong>Семейство методов после DPO.</strong> IPO, KTO, ORPO, SimPO, online / iterative DPO — что каждый убирает из формулы (пары, reference-модель) и какой ценой. Искать по названиям методов.</li>
+<li><strong>Многоцелевые награды и safety.</strong> Лектор упомянул «измерения» (полезность, безопасность); в Llama 2 под них обучали две отдельные reward models и комбинировали их, а в Anthropic HH-RLHF helpfulness и harmlessness размечались как разные датасеты. Искать: helpfulness vs harmlessness, multi-objective RLHF.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="04-llm-training.html" class="md-footer__link md-footer__link--prev" aria-label="Назад: 4. Обучение LLM">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                4. Обучение LLM
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="06-llm-reasoning.html" class="md-footer__link md-footer__link--next" aria-label="Вперед: 6. Reasoning-модели и GRPO">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Вперед
+              </span>
+              <div class="md-ellipsis">
+                6. Reasoning-модели и GRPO
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../assets/katex/katex.min.js"></script>
+      
+        <script src="../assets/katex/contrib/auto-render.min.js"></script>
+      
+        <script src="../assets/js/math.js"></script>
+      
+        <script src="../assets/js/links.js"></script>
+      
+    
+  </body>
+</html>
