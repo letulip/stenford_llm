@@ -153,6 +153,10 @@ site_description: Конспекты девяти лекций Stanford CME295 (
 docs_dir: docs
 site_dir: site
 use_directory_urls: false
+site_url: https://letulip.github.io/stenford_llm/
+repo_url: https://github.com/letulip/stenford_llm
+repo_name: letulip/stenford_llm
+edit_uri: ""
 copyright: Конспекты собраны из открытых субтитров Stanford Online · лекторы Afshine Amidi и Shervine Amidi
 
 theme:

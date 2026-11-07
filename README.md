@@ -5,6 +5,8 @@
 - **Плейлист:** https://www.youtube.com/playlist?list=PLoROMvodv4rOCXd21gf0CF4xr35yINeOy
 - **Сайт курса и программа:** https://cme295.stanford.edu/syllabus/
 - **Канал:** Stanford Online
+- **Репозиторий:** https://github.com/letulip/stenford_llm
+- **Сайт (GitHub Pages):** https://letulip.github.io/stenford_llm/
 
 ## Как пользоваться
 
@@ -129,6 +131,8 @@ python3 -I tools/build_docs.py                                    # md -> docs/ 
 ```
 
 `.venv/bin/mkdocs build` кладёт готовый сайт в `site/`; его можно открыть и без сервера (`site/index.html`), не будет работать только поиск. Стили, скрипты и локальная копия KaTeX лежат в `site_src/`.
+
+Публикация: `.venv/bin/mkdocs gh-deploy` собирает сайт и отправляет его в ветку `gh-pages`, откуда его раздаёт GitHub Pages.
 
 ## Как это собрано
 
